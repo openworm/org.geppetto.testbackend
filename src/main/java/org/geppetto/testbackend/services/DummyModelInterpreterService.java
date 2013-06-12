@@ -15,7 +15,6 @@ import org.geppetto.core.model.state.StateTreeRoot;
 import org.geppetto.core.visualisation.model.Particle;
 import org.geppetto.core.visualisation.model.Point;
 import org.geppetto.core.visualisation.model.Scene;
-import org.geppetto.testbackend.models.DummyModel;
 
 public class DummyModelInterpreterService implements IModelInterpreter{
 
@@ -23,8 +22,6 @@ public class DummyModelInterpreterService implements IModelInterpreter{
 
 	@Override
 	public IModel readModel(URL url) throws ModelInterpreterException {
-
-		logger.warn("Returning model from Dummy Class");
 		ModelWrapper wrapper = new ModelWrapper(UUID.randomUUID().toString());
 		return wrapper;
 	}

@@ -5,8 +5,8 @@
 	<groupId>org.geppetto</groupId>
 	<artifactId>testbackend</artifactId>
 	<name>Geppetto Dummy Bundle</name>
-	<packaging>bundle</packaging>
 	<version>0.0.1</version>
+	<packaging>bundle</packaging>
 	<properties>
 		<spring.version>3.0.0.RELEASE</spring.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,7 +36,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>org.springframework.web</artifactId>
+			<artifactId>org.springframework.spring-library</artifactId>
+			<type>libd</type>
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
@@ -90,9 +91,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -101,7 +103,7 @@
 				<version>2.3.7</version>
 				<extensions>true</extensions>
 				<configuration>
-					<manifestLocation>src/main/webapp/META-INF</manifestLocation>
+					<manifestLocation>src/main/java/META-INF</manifestLocation>
 					<supportedProjectTypes>
 						<supportedProjectType>jar</supportedProjectType>
 						<supportedProjectType>bundle</supportedProjectType>
@@ -110,18 +112,11 @@
 						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+						<Include-Resource>
+							{maven-resources},META-INF/spring=src/main/java/META-INF/spring
+						</Include-Resource>
 					</instructions>
 				</configuration>
-				<executions>
-					<execution>
-						<id>bundle</id>
-						<goals>
-							<goal>manifest</goal>
-						</goals>
-						<phase>prepare-package</phase>
-						<inherited>true</inherited>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 		<pluginManagement>
