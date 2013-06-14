@@ -11,6 +11,12 @@ import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
 import org.geppetto.core.solver.ISolver;
 
+/**
+ * Dummy implementation of ISimulator. 
+ * 
+ * @author jrmartin
+ *
+ */
 public class DummySimulatorService extends ASimulator{
 
 	private static Log logger = LogFactory.getLog(DummySimulatorService.class);
@@ -20,7 +26,6 @@ public class DummySimulatorService extends ASimulator{
 	@Override
 	public void simulate(IRunConfiguration runConfiguration)
 			throws GeppettoExecutionException {
-		logger.info("Dummy Simulate method invoke");
 		StateTreeRoot results=sphSolver.solve(runConfiguration);
 		getListener().stateTreeUpdated(results);	
 	}
