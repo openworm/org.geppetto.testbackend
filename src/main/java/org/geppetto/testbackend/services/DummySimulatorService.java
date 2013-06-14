@@ -10,6 +10,7 @@ import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
 import org.geppetto.core.solver.ISolver;
+import org.springframework.stereotype.Service;
 
 /**
  * Dummy implementation of ISimulator. 
@@ -17,23 +18,20 @@ import org.geppetto.core.solver.ISolver;
  * @author jrmartin
  *
  */
+@Service
 public class DummySimulatorService extends ASimulator{
 
 	private static Log logger = LogFactory.getLog(DummySimulatorService.class);
 		
-	private ISolver sphSolver;
-
 	@Override
 	public void simulate(IRunConfiguration runConfiguration)
 			throws GeppettoExecutionException {
-		StateTreeRoot results=sphSolver.solve(runConfiguration);
-		getListener().stateTreeUpdated(results);	
+			
 	}
 	
 	public void initialize(IModel model, ISimulatorCallbackListener listener) throws GeppettoInitializationException
 	{
-		super.initialize(model, listener);
-		sphSolver.initialize(model);
+		
 	}
 
 }

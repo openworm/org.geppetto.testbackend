@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1371131607486
+Bnd-LastModified: 1371243522272
 Build-Jdk: 1.7.0_21
 Built-By: jrmartin
 Bundle-ClassPath: .
@@ -10,13 +10,13 @@ Bundle-Version: 0.0.1
 Created-By: Apache Maven Bundle Plugin
 Export-Package: org.geppetto.testbackend.services;uses:="org.geppetto.co
  re.model,org.apache.commons.logging,org.geppetto.core.model.state,org.g
- eppetto.core.visualisation.model,org.geppetto.core.simulation,org.geppe
- tto.core.common,org.geppetto.core.solver,org.geppetto.core.simulator";v
- ersion="0.0.1"
+ eppetto.core.visualisation.model,org.springframework.stereotype,org.gep
+ petto.core.simulation,org.geppetto.core.common,org.geppetto.core.simula
+ tor";version="0.0.1"
 Import-Package: org.apache.commons.logging;version="[1.1,2)",org.geppett
  o.core.common;version="[0.0,1)",org.geppetto.core.model;version="[0.0,1
  )",org.geppetto.core.model.state;version="[0.0,1)",org.geppetto.core.si
  mulation;version="[0.0,1)",org.geppetto.core.simulator;version="[0.0,1)
- ",org.geppetto.core.solver;version="[0.0,1)",org.geppetto.core.visualis
- ation.model;version="[0.0,1)"
+ ",org.geppetto.core.visualisation.model;version="[0.0,1)",org.springfra
+ mework.stereotype;version="[3.0,4)"
 Tool: Bnd-1.50.0

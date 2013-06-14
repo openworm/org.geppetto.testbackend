@@ -18,6 +18,7 @@ import org.geppetto.core.visualisation.model.Particle;
 import org.geppetto.core.visualisation.model.Point;
 import org.geppetto.core.visualisation.model.Scene;
 import org.geppetto.core.visualisation.model.Sphere;
+import org.springframework.stereotype.Service;
 
 /**
  * Dummy Implementation of IModelInterpreter.
@@ -27,71 +28,74 @@ import org.geppetto.core.visualisation.model.Sphere;
  * @author jrmartin
  *
  */
+@Service
 public class DummyModelInterpreterService implements IModelInterpreter{
 
 	private static Log logger = LogFactory.getLog(DummyModelInterpreterService.class);
 
 	private final static int NUMBER_OF_PARTICLES = 33;
+
+	private final static String TEST_NUMBER = "Test Number";
+	
+	private final static String TEST_ONE = "Test One";
+	
+	private final static String TEST_TWO = "Test Two";
+
+	private Random randomGenerator;
 	
 	public IModel readModel(URL url) throws ModelInterpreterException {
 		ModelWrapper wrapper = new ModelWrapper(UUID.randomUUID().toString());
 		
-		Random randomGenerator = new Random();
+		String testName = url.toString();
 		
-		for(int i =0; i<NUMBER_OF_PARTICLES; i++){
-			Particle particle = new Particle();
-			
-			//Create a Random position
-			Point position = new Point();
-			position.setX(randomGenerator.nextDouble());
-			position.setY(randomGenerator.nextDouble());
-			position.setZ(randomGenerator.nextDouble());
-			
-			particle.setPosition(position);
-			
-			//Add Random Particle to ModelWrapper
-			wrapper.wrapModel("p(" + String.valueOf(i) +")", particle);
-		}
+		wrapper.wrapModel(TEST_NUMBER, testName);
 		
 		return wrapper;
 	}
 
 	public Scene getSceneFromModel(IModel model, StateTreeRoot treeRoot)
 			throws ModelInterpreterException {
-		
+
+		String testNumber = model.getId();		
+
 		//Returning a dummy created scene 
+		return getSceneForTest(testNumber);		
+	}
+	
+	private Scene getSceneForTest(String testNumber){
+		
 		Scene scene = new Scene();
-
-		List<Entity> sceneEntities = scene.getEntities();
 		
-		//Random number generator for creating random number for 
-	    Random randomGenerator = new Random();
+		if(testNumber.equals(TEST_ONE)){
+			List<Entity> sceneEntities = scene.getEntities();
 
-		for(Entity entity : sceneEntities){
+			for(Entity entity : sceneEntities){
+				
+				//Create a Random position
+				Point position = new Point();
+				position.setX(getRandomGenerator().nextDouble());
+				position.setY(getRandomGenerator().nextDouble());
+				position.setZ(getRandomGenerator().nextDouble());
+				
+				Particle particle = new Particle();
+				particle.setPosition(position);
+				particle.setId("P0");
 			
-			//Create a Random position
-			Point position = new Point();
-			position.setX(randomGenerator.nextDouble());
-			position.setY(randomGenerator.nextDouble());
-			position.setZ(randomGenerator.nextDouble());
+				//Add created geometries to entities
+				entity.getGeometries().add(particle);
+			}
 			
-			//Create dummy Cylynder 
-			Cylinder cylynder = new Cylinder();
-			cylynder.setPosition(position);
-			
-			//Create dummy Sphere
-			Sphere sphere = new Sphere();
-			sphere.setRadius(randomGenerator.nextDouble());
-			sphere.setPosition(position);
-		
-			//Add created geometries to entities
-			entity.getGeometries().add(sphere);
-			entity.getGeometries().add(cylynder);
+			scene.setEntities(sceneEntities);
 		}
-		
-		scene.setEntities(sceneEntities);
 		
 		return scene;
 	}
 
+	private Random getRandomGenerator(){
+		if(randomGenerator == null){
+			randomGenerator = new Random();
+		}
+		
+		return randomGenerator;
+	}
 }
