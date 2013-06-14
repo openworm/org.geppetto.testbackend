@@ -37,20 +37,29 @@ public class DummyModelInterpreterService implements IModelInterpreter{
 
 	private final static String TEST_NUMBER = "Test Number";
 	
-	private final static String TEST_ONE = "Test One";
+	private final static String TEST_ONE = "TEST_ONE";
 	
-	private final static String TEST_TWO = "Test Two";
+	private final static String TEST_TWO = "TEST_TWO";
 
 	private Random randomGenerator;
 	
 	public IModel readModel(URL url) throws ModelInterpreterException {
 		ModelWrapper wrapper = new ModelWrapper(UUID.randomUUID().toString());
 		
-		String testName = url.toString();
+		String testName = getTestName(url.toString());
 		
 		wrapper.wrapModel(TEST_NUMBER, testName);
 		
 		return wrapper;
+	}
+	
+	private String getTestName(String url){
+		
+		if(url.contains(TEST_ONE)){
+			return TEST_ONE;
+		}
+		
+		return "";
 	}
 
 	public Scene getSceneFromModel(IModel model, StateTreeRoot treeRoot)

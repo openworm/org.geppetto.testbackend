@@ -6,7 +6,7 @@
 	</tns:configuration>
 	<tns:aspects>
 		<tns:modelInterpreter>dummyModelInterpreter</tns:modelInterpreter>
-		<tns:modelURL>TEST_ONE</tns:modelURL>
+		<tns:modelURL>https://dummyurl.com/TEST_ONE</tns:modelURL>
 		<tns:simulator>dummySimulator</tns:simulator>
 		<tns:id>dummyServices</tns:id>
 	</tns:aspects>
