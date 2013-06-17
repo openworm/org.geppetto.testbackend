@@ -22,19 +22,22 @@ import org.springframework.stereotype.Service;
 public class DummySimulatorService extends ASimulator{
 
 	private static Log logger = LogFactory.getLog(DummySimulatorService.class);
-		
+
 	StateTreeRoot tree = new StateTreeRoot("dummyServices");
-	
+
 	@Override
 	public void simulate(IRunConfiguration runConfiguration)
-			throws GeppettoExecutionException {
-			logger.info("Simulate in Dummy Simulator Service");
+			throws GeppettoExecutionException {		
 	}
-	
+
 	public void initialize(IModel model, ISimulatorCallbackListener listener) throws GeppettoInitializationException
 	{
-		logger.info("Initialize dummy simulator services and model");
 		super.initialize(model, listener);
+		try {
+			getListener().stateTreeUpdated(tree);
+		} catch (GeppettoExecutionException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
