@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1371449413728
+Bnd-LastModified: 1371551469163
 Build-Jdk: 1.7.0_21
-Built-By: jrmartin
+Built-By: matteocantarelli
 Bundle-ClassPath: .
 Bundle-ManifestVersion: 2
 Bundle-Name: Geppetto Dummy Bundle
@@ -11,12 +11,13 @@ Created-By: Apache Maven Bundle Plugin
 Export-Package: org.geppetto.testbackend.services;uses:="org.geppetto.co
  re.model,org.apache.commons.logging,org.geppetto.core.model.state,org.g
  eppetto.core.visualisation.model,org.springframework.stereotype,org.gep
- petto.core.simulation,org.geppetto.core.common,org.geppetto.core.simula
- tor";version="0.0.1"
+ petto.core.simulation,org.geppetto.core.model.values,org.geppetto.core.
+ common,org.geppetto.core.simulator";version="0.0.1"
 Import-Package: org.apache.commons.logging;version="[1.1,2)",org.geppett
  o.core.common;version="[0.0,1)",org.geppetto.core.model;version="[0.0,1
- )",org.geppetto.core.model.state;version="[0.0,1)",org.geppetto.core.si
- mulation;version="[0.0,1)",org.geppetto.core.simulator;version="[0.0,1)
- ",org.geppetto.core.visualisation.model;version="[0.0,1)",org.springfra
- mework.stereotype;version="[3.0,4)"
+ )",org.geppetto.core.model.state;version="[0.0,1)",org.geppetto.core.mo
+ del.values;version="[0.0,1)",org.geppetto.core.simulation;version="[0.0
+ ,1)",org.geppetto.core.simulator;version="[0.0,1)",org.geppetto.core.vi
+ sualisation.model;version="[0.0,1)",org.springframework.stereotype;vers
+ ion="[3.0,4)"
 Tool: Bnd-1.50.0
