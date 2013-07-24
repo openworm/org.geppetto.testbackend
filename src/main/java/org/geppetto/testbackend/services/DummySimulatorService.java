@@ -11,7 +11,6 @@ import org.geppetto.core.model.values.DoubleValue;
 import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
-import org.geppetto.core.solver.ISolver;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,7 +37,7 @@ public class DummySimulatorService extends ASimulator{
 		}
 	}
 
-	public void initialize(IModel model, ISimulatorCallbackListener listener) throws GeppettoInitializationException
+	public void initialize(IModel model, ISimulatorCallbackListener listener) throws GeppettoInitializationException, GeppettoExecutionException
 	{
 		super.initialize(model, listener);
 		tree.addChild(new SimpleStateNode("dummy"));
