@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.geppetto</groupId>
 	<artifactId>testbackend</artifactId>
-	<name>Geppetto Dummy Bundle</name>
-	<version>0.0.2</version>
+	<name>Geppetto Test Backend Bundle</name>
+	<version>0.0.3</version>
 	<packaging>bundle</packaging>
 	<properties>
 		<spring.version>3.0.0.RELEASE</spring.version>
@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>org.geppetto</groupId>
 			<artifactId>core</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.3</version>
 		</dependency>
 	</dependencies>
 	<repositories>
@@ -148,4 +148,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	<description>This bundle is used to test the frontend without having to depend on any specific backend module</description>
 </project>
