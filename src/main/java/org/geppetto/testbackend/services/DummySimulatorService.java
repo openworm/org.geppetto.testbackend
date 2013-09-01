@@ -41,6 +41,14 @@ public class DummySimulatorService extends ASimulator{
 	{
 		super.initialize(model, listener);
 		tree.addChild(new SimpleStateNode("dummy"));
+		
+		try {
+			((SimpleStateNode)tree.getChildren().get(0)).addValue(new DoubleValue(0d));
+			getListener().stateTreeUpdated(tree);
+		} catch (GeppettoExecutionException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }
