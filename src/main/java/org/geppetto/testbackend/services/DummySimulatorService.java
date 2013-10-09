@@ -1,9 +1,12 @@
 package org.geppetto.testbackend.services;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
+import org.geppetto.core.common.Variable;
 import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.state.SimpleStateNode;
 import org.geppetto.core.model.state.StateTreeRoot;
@@ -49,6 +52,18 @@ public class DummySimulatorService extends ASimulator{
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	public List<Variable> getForceableVariables() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Variable> getWatcheableVariables() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
