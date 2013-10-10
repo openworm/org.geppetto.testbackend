@@ -53,17 +53,16 @@ public class DummySimulatorService extends ASimulator{
 		}
 		
 	}
-
+	
 	@Override
 	public List<Variable> getForceableVariables() {
-		// TODO Auto-generated method stub
+		// TODO: return some dummy forceable variables 
 		return null;
 	}
 
 	@Override
-	public List<Variable> getWatcheableVariables() {
-		// TODO Auto-generated method stub
+	public List<Variable> getWatchableVariables() {
+		// TODO: return some dummy watchable variables
 		return null;
 	}
-
 }
