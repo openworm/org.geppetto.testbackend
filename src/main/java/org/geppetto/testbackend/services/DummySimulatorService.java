@@ -1,11 +1,13 @@
 package org.geppetto.testbackend.services;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
+import org.geppetto.core.common.IVariable;
 import org.geppetto.core.common.Variable;
 import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.state.SimpleStateNode;
@@ -26,6 +28,12 @@ import org.springframework.stereotype.Service;
 public class DummySimulatorService extends ASimulator{
 
 	private static Log logger = LogFactory.getLog(DummySimulatorService.class);
+	
+	// NOTE: there's no solver in the dummy so the forceable / watchable variables are declared here
+	// NOTE: this could be more elegantly injected via spring
+	private List<IVariable> forceableVariables = Arrays.asList((IVariable)new Variable("dummyFloat", Float.class), 
+															   (IVariable)new Variable("dummyInt", Integer.class));
+	private List<IVariable> watchableVariables = Arrays.asList((IVariable)new Variable("dummyInt", Integer.class));
 
 	StateTreeRoot tree = new StateTreeRoot("dummyServices");
 
@@ -55,14 +63,14 @@ public class DummySimulatorService extends ASimulator{
 	}
 	
 	@Override
-	public List<Variable> getForceableVariables() {
-		// TODO: return some dummy forceable variables 
-		return null;
+	public List<IVariable> getForceableVariables() {
+		// return some dummy forceable variables 
+		return forceableVariables;
 	}
 
 	@Override
-	public List<Variable> getWatchableVariables() {
-		// TODO: return some dummy watchable variables
-		return null;
+	public List<IVariable> getWatchableVariables() {
+		// return some dummy watchable variables
+		return watchableVariables;
 	}
 }
