@@ -13,12 +13,12 @@ import org.geppetto.core.model.IModelInterpreter;
 import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.ModelWrapper;
 import org.geppetto.core.model.state.StateTreeRoot;
-import org.geppetto.core.visualisation.model.Cylinder;
-import org.geppetto.core.visualisation.model.Entity;
-import org.geppetto.core.visualisation.model.Particle;
-import org.geppetto.core.visualisation.model.Point;
-import org.geppetto.core.visualisation.model.Scene;
-import org.geppetto.core.visualisation.model.Sphere;
+import org.geppetto.core.pojo.model.Cylinder;
+import org.geppetto.core.pojo.model.Entity;
+import org.geppetto.core.pojo.model.Particle;
+import org.geppetto.core.pojo.model.Point;
+import org.geppetto.core.pojo.model.Scene;
+import org.geppetto.core.pojo.model.Sphere;
 import org.springframework.stereotype.Service;
 
 /**
