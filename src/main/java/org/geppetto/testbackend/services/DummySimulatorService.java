@@ -7,6 +7,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
+import org.geppetto.core.data.model.AVariable;
+import org.geppetto.core.data.model.SimpleType;
+import org.geppetto.core.data.model.SimpleType.Type;
+import org.geppetto.core.data.model.SimpleVariable;
+import org.geppetto.core.data.model.VariableList;
 import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.state.SimpleStateNode;
 import org.geppetto.core.model.state.StateTreeRoot;
@@ -14,11 +19,6 @@ import org.geppetto.core.model.values.DoubleValue;
 import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
-import org.geppetto.core.pojo.model.AVariable;
-import org.geppetto.core.pojo.model.SimpleType;
-import org.geppetto.core.pojo.model.SimpleType.Type;
-import org.geppetto.core.pojo.model.SimpleVariable;
-import org.geppetto.core.pojo.model.VariableList;
 import org.springframework.stereotype.Service;
 
 /**
@@ -100,7 +100,7 @@ public class DummySimulatorService extends ASimulator{
 		vars.add(dummyInt);
 		vars.add(dummyFloat);
 		
-		this.watchableVariables.setEntities(vars);
+		this.watchableVariables.setVariables(vars);
 	}
 	
 	/**
@@ -119,6 +119,6 @@ public class DummySimulatorService extends ASimulator{
 		
 		vars.add(dummyInt);
 		
-		this.forceableVariables.setEntities(vars);
+		this.forceableVariables.setVariables(vars);
 	}
 }
