@@ -32,6 +32,9 @@ public class DummySimulatorService extends ASimulator{
 
 	private static Log logger = LogFactory.getLog(DummySimulatorService.class);
 	
+	// TODO: this should come from configuration
+	private final String aspectID = "dummy";
+	
 	private VariableList forceableVariables = new VariableList();
 	private VariableList watchableVariables = new VariableList();
 
@@ -88,12 +91,14 @@ public class DummySimulatorService extends ASimulator{
 		SimpleVariable dummyInt = new SimpleVariable();
 		SimpleType integerType = new SimpleType();
 		integerType.setType(Type.INTEGER);
+		dummyInt.setAspect(aspectID);
 		dummyInt.setName("dummyInt");
 		dummyInt.setType(integerType);
 		// dummyFloat
 		SimpleVariable dummyFloat = new SimpleVariable();
 		SimpleType floatType = new SimpleType();
 		floatType.setType(Type.FLOAT);
+		dummyFloat.setAspect(aspectID);
 		dummyFloat.setName("dummyInt");
 		dummyFloat.setType(floatType);
 		
@@ -114,6 +119,7 @@ public class DummySimulatorService extends ASimulator{
 		SimpleVariable dummyInt = new SimpleVariable();
 		SimpleType integerType = new SimpleType();
 		integerType.setType(Type.INTEGER);
+		dummyInt.setAspect(aspectID);
 		dummyInt.setName("dummyInt");
 		dummyInt.setType(integerType);
 		
