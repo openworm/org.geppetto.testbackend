@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
+import org.geppetto.core.data.model.VariableList;
 import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.state.SimpleStateNode;
 import org.geppetto.core.model.state.StateTreeRoot;
@@ -11,6 +12,7 @@ import org.geppetto.core.model.values.DoubleValue;
 import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,6 +26,9 @@ public class DummySimulatorService extends ASimulator{
 
 	private static Log logger = LogFactory.getLog(DummySimulatorService.class);
 
+	@Autowired
+	private SimulatorConfig dummySimulatorConfig;
+	
 	StateTreeRoot tree = new StateTreeRoot("dummyServices");
 
 	@Override
@@ -49,6 +54,23 @@ public class DummySimulatorService extends ASimulator{
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	public VariableList getForceableVariables() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public VariableList getWatchableVariables() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getCapacity() {
+		return this.dummySimulatorConfig.getSimulatorCapacity();
 	}
 
 }
