@@ -73,4 +73,9 @@ public class DummySimulatorService extends ASimulator{
 		return this.dummySimulatorConfig.getSimulatorCapacity();
 	}
 
+	@Override
+	public String getName() {
+		return this.dummySimulatorConfig.getSimulatorName();
+	}
+
 }
