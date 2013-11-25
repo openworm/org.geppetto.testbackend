@@ -37,6 +37,9 @@ public class DummySimulatorService extends ASimulator{
 	
 	private VariableList forceableVariables = new VariableList();
 	private VariableList watchableVariables = new VariableList();
+	
+	private List<String> watchList = new ArrayList<String>();
+	private boolean watch = false;
 
 	StateTreeRoot tree = new StateTreeRoot("dummyServices");
 
@@ -126,5 +129,25 @@ public class DummySimulatorService extends ASimulator{
 		vars.add(dummyInt);
 		
 		this.forceableVariables.setVariables(vars);
+	}
+
+	@Override
+	public void addWatchVariables(List<String> variableNames) {
+		watchList.addAll(variableNames);
+	}
+
+	@Override
+	public void startWatch() {
+		watch = true;
+	}
+
+	@Override
+	public void stopWatch() {
+		watch = false;
+	}
+
+	@Override
+	public void clearWatchVariables() {
+		watchList.clear();
 	}
 }
