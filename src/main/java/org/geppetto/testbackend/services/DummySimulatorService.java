@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 
 /**
  * Dummy implementation of ISimulator. 
- * 
  * @author jrmartin
  *
  */
@@ -49,7 +48,7 @@ public class DummySimulatorService extends ASimulator{
 	private List<String> watchList = new ArrayList<String>();
 	private boolean watch = false;
 
-	StateTreeRoot tree = new StateTreeRoot("dummyServices");
+	StateTreeRoot tree = new StateTreeRoot("dummySimulator");
 
 	public void initialize(IModel model, ISimulatorCallbackListener listener) throws GeppettoInitializationException, GeppettoExecutionException
 	{		
@@ -60,7 +59,7 @@ public class DummySimulatorService extends ASimulator{
 		super.initialize(model, listener);
 		
 		// init statetree
-		tree.addChild(new SimpleStateNode("dummy"));
+		tree.addChild(new SimpleStateNode("model-interpreter"));
 		((SimpleStateNode)tree.getChildren().get(0)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 		
 		getListener().stateTreeUpdated(tree);
@@ -69,7 +68,7 @@ public class DummySimulatorService extends ASimulator{
 	@Override
 	public void simulate(IRunConfiguration runConfiguration) throws GeppettoExecutionException {		
 
-		// throw some junk into state tree
+		// throw some junk into model-interpreter node as if results were being populated
 		((SimpleStateNode)tree.getChildren().get(0)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 		
 		if(watch)
@@ -88,8 +87,7 @@ public class DummySimulatorService extends ASimulator{
 		{
 			if(node.getName().equals("variable-watch"))
 			{
-				// replace with a new clean one if it exists
-				node = new CompositeStateNode("variable-watch");
+				// assign if it already exists
 				variableWatchNode = (CompositeStateNode) node;
 			}
 		}
@@ -97,8 +95,8 @@ public class DummySimulatorService extends ASimulator{
 		// add to tree if it doesn't exist
 		if(variableWatchNode == null)
 		{
-			CompositeStateNode variableWatch = new CompositeStateNode("variable-watch");
-			tree.addChild(variableWatch);
+			variableWatchNode = new CompositeStateNode("variable-watch");
+			tree.addChild(variableWatchNode);
 		}
 		
 		// check which watchable variables are being watched
@@ -109,7 +107,22 @@ public class DummySimulatorService extends ASimulator{
 				// if they are being watched add to state tree
 				if(varName.toLowerCase().equals(var.getName().toLowerCase()))
 				{
-					SimpleStateNode dummyNode = new SimpleStateNode(var.getName());
+					SimpleStateNode dummyNode = null;
+					
+					for(AStateNode child : variableWatchNode.getChildren()){
+						if(child.getName().equals(var.getName()))
+						{
+							// assign if it already exists
+							dummyNode = (SimpleStateNode) child;
+						}
+					}
+					
+					// only add if it's not already there
+					if(dummyNode == null){
+						dummyNode = new SimpleStateNode(var.getName());
+						variableWatchNode.addChild(dummyNode);
+					}
+					
 					AValue val = null;
 					
 					// NOTE: this is a dummy simulator so we're making values up - we wouldn't need to do this in a real one
@@ -123,8 +136,6 @@ public class DummySimulatorService extends ASimulator{
 					}
 					
 					dummyNode.addValue(val);
-					
-					variableWatchNode.addChild(dummyNode);
 				}
 			}
 		}
