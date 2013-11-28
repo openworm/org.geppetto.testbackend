@@ -41,8 +41,8 @@ public class DummySimulatorService extends ASimulator{
 	
 	// TODO: all this stuff should come from configuration
 	private final String aspectID = "dummy";
-	private final String WATCH_TREE_ID = "variable-watch";
-	private final String MODEL_TREE_ID = "model-interpreter";
+	private final String WATCH_TREE_ID = "variable_watch";
+	private final String MODEL_TREE_ID = "model_interpreter";
 	
 	private VariableList forceableVariables = new VariableList();
 	private VariableList watchableVariables = new VariableList();
@@ -50,7 +50,7 @@ public class DummySimulatorService extends ASimulator{
 	private List<String> watchList = new ArrayList<String>();
 	private boolean watch = false;
 
-	StateTreeRoot tree = new StateTreeRoot("dummySimulator");
+	StateTreeRoot tree = new StateTreeRoot("dummyServices");
 
 	public void initialize(IModel model, ISimulatorCallbackListener listener) throws GeppettoInitializationException, GeppettoExecutionException
 	{		

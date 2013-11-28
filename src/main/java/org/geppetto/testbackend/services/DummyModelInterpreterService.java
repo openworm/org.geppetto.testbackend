@@ -86,7 +86,7 @@ public class DummyModelInterpreterService implements IModelInterpreter {
 		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
 		AStateNode modelInterpreterRoot = null;
 		for (AStateNode node : treeRoot.getChildren()) {
-			if (node.getName().equals("model-interpreter")) {
+			if (node.getName().equals("model_interpreter")) {
 				modelInterpreterRoot = node;
 				break;
 			}
