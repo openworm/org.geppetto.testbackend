@@ -89,6 +89,7 @@ public class DummySimulatorService extends ASimulator{
 			{
 				// assign if it already exists
 				variableWatchNode = (CompositeStateNode) node;
+				break;
 			}
 		}
 		
