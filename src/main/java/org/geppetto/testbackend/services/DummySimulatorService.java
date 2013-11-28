@@ -39,8 +39,10 @@ public class DummySimulatorService extends ASimulator{
 	
 	private Random randomGenerator;
 	
-	// TODO: this should come from configuration
+	// TODO: all this stuff should come from configuration
 	private final String aspectID = "dummy";
+	private final String WATCH_TREE_ID = "variable-watch";
+	private final String MODEL_TREE_ID = "model-interpreter";
 	
 	private VariableList forceableVariables = new VariableList();
 	private VariableList watchableVariables = new VariableList();
@@ -59,7 +61,7 @@ public class DummySimulatorService extends ASimulator{
 		super.initialize(model, listener);
 		
 		// init statetree
-		tree.addChild(new SimpleStateNode("model-interpreter"));
+		tree.addChild(new SimpleStateNode(MODEL_TREE_ID));
 		((SimpleStateNode)tree.getChildren().get(0)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 		
 		getListener().stateTreeUpdated(tree);
@@ -85,7 +87,7 @@ public class DummySimulatorService extends ASimulator{
 		
 		for(AStateNode node : tree.getChildren())
 		{
-			if(node.getName().equals("variable-watch"))
+			if(node.getName().equals(WATCH_TREE_ID))
 			{
 				// assign if it already exists
 				variableWatchNode = (CompositeStateNode) node;
@@ -96,7 +98,7 @@ public class DummySimulatorService extends ASimulator{
 		// add to tree if it doesn't exist
 		if(variableWatchNode == null)
 		{
-			variableWatchNode = new CompositeStateNode("variable-watch");
+			variableWatchNode = new CompositeStateNode(WATCH_TREE_ID);
 			tree.addChild(variableWatchNode);
 		}
 		
@@ -215,11 +217,27 @@ public class DummySimulatorService extends ASimulator{
 	@Override
 	public void stopWatch() {
 		watch = false;
+		
+		// reset variable-watch branch of the state tree
+		flushWatchTree();
 	}
 
 	@Override
 	public void clearWatchVariables() {
 		watchList.clear();
+	}
+	
+	public void flushWatchTree()
+	{		
+		for(AStateNode node : tree.getChildren())
+		{
+			if(node.getName().equals(WATCH_TREE_ID))
+			{
+				// re-assign to empty node
+				node = new CompositeStateNode(WATCH_TREE_ID);
+				break;
+			}
+		}
 	}
 	
 	private Random getRandomGenerator()
