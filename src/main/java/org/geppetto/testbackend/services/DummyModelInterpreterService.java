@@ -12,7 +12,9 @@ import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.IModelInterpreter;
 import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.ModelWrapper;
+import org.geppetto.core.model.state.AStateNode;
 import org.geppetto.core.model.state.StateTreeRoot;
+import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.visualisation.model.Cylinder;
 import org.geppetto.core.visualisation.model.Entity;
 import org.geppetto.core.visualisation.model.Particle;
@@ -30,22 +32,20 @@ import org.springframework.stereotype.Service;
  * 
  */
 @Service
-public class DummyModelInterpreterService implements IModelInterpreter
-{
+public class DummyModelInterpreterService implements IModelInterpreter {
 
-	private static Log logger = LogFactory.getLog(DummyModelInterpreterService.class);
+	private static Log logger = LogFactory
+			.getLog(DummyModelInterpreterService.class);
 
 	private static final String TEST = "TEST";
 
-	private enum TEST_NO
-	{
+	private enum TEST_NO {
 		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX
 	}
 
 	private Random randomGenerator;
 
-	public IModel readModel(URL url) throws ModelInterpreterException
-	{
+	public IModel readModel(URL url) throws ModelInterpreterException {
 
 		logger.info("Reading Model using Dummy Motel Interpreter Service");
 
@@ -64,59 +64,69 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	 * Number of test to perform is included in the url value.
 	 * 
 	 * @param url
-	 *            - Dummy URL used to fullfill format requirements for file. Number of test included in URL at the end as in ; https://dummy.url/TEST_ONE
+	 *            - Dummy URL used to fullfill format requirements for file.
+	 *            Number of test included in URL at the end as in ;
+	 *            https://dummy.url/TEST_ONE
 	 * @return
 	 */
-	private TEST_NO getTestName(String url)
-	{
-		return TEST_NO.valueOf(url.substring(url.lastIndexOf("/")+1));
+	private TEST_NO getTestName(String url) {
+		return TEST_NO.valueOf(url.substring(url.lastIndexOf("/") + 1));
 	}
 
 	/**
-	 * Return a newly created scene after adding geometries with random positions.
+	 * Return a newly created scene after adding geometries with random
+	 * positions.
 	 */
-	public Scene getSceneFromModel(IModel model, StateTreeRoot treeRoot) throws ModelInterpreterException
-	{
+	public Scene getSceneFromModel(IModel model, StateTreeRoot treeRoot) throws ModelInterpreterException {
 
 		logger.info("Using DummyModelInterpreter to create Scene from IModel");
 
 		ModelWrapper modelWrapper = (ModelWrapper) model;
+
+		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
+		AStateNode modelInterpreterRoot = null;
+		for (AStateNode node : treeRoot.getChildren()) {
+			if (node.getName().equals("model_interpreter")) {
+				modelInterpreterRoot = node;
+				break;
+			}
+		}
+		modelInterpreterRoot.apply(removeVisitor);
 		
 		// Returning a dummy created scene
-		return getSceneForTest((TEST_NO)modelWrapper.getModel(TEST));
+		return getSceneForTest((TEST_NO) modelWrapper.getModel(TEST));
 	}
 
 	/**
-	 * Creates a Scene with random geometries added. A different scene is created for each different test
+	 * Creates a Scene with random geometries added. A different scene is
+	 * created for each different test
 	 * 
 	 * @param testNumber
 	 *            - Test Number to be perform
 	 * @return
 	 */
-	private Scene getSceneForTest(TEST_NO test)
-	{
+	private Scene getSceneForTest(TEST_NO test) {
 
 		Scene scene = new Scene();
-		switch (test)
-		{
-			case TEST_ONE:
-				scene.setEntities(createTestOneEntities(scene,100));
-				break;
-			case TEST_TWO:
-				scene.setEntities(createTestOneEntities(scene,10000));
-				break;
-			case TEST_THREE:
-				scene.setEntities(createTestOneEntities(scene,100000));
-				break;
-			case TEST_FOUR:
-				scene.setEntities(createTestTwoEntities(scene,50));
-				break;
-			case TEST_FIVE:
-				scene.setEntities(createTestTwoEntities(scene,500));
-				break;
-			case TEST_SIX:
-				scene.setEntities(createTestTwoEntities(scene,20000));
-				break;
+		switch (test) {
+		case TEST_ONE:
+			scene.setEntities(createTestOneEntities(scene, 100));
+			break;
+		case TEST_TWO:
+			scene.setEntities(createTestOneEntities(scene, 10000));
+			break;
+		case TEST_THREE:
+			scene.setEntities(createTestOneEntities(scene, 100000));
+			break;
+		case TEST_FOUR:
+			scene.setEntities(createTestTwoEntities(scene, 50));
+			break;
+		case TEST_FIVE:
+			scene.setEntities(createTestTwoEntities(scene, 500));
+			break;
+		case TEST_SIX:
+			scene.setEntities(createTestTwoEntities(scene, 20000));
+			break;
 		}
 		return scene;
 	}
@@ -127,15 +137,14 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	 * @param scene
 	 * @return
 	 */
-	private List<Entity> createTestOneEntities(Scene scene, int numberOfParticles)
-	{
+	private List<Entity> createTestOneEntities(Scene scene,
+			int numberOfParticles) {
 		List<Entity> sceneEntities = new ArrayList<Entity>();
 		Entity newEntity = new Entity();
 		newEntity.setId("E1");
 		sceneEntities.add(newEntity);
 
-		for(int i = 0; i < numberOfParticles; i++)
-		{
+		for (int i = 0; i < numberOfParticles; i++) {
 			// Create a Position
 			Point position = new Point();
 			position.setX(getRandomGenerator().nextDouble() * 10);
@@ -160,12 +169,11 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	 * @param scene
 	 * @return
 	 */
-	private List<Entity> createTestTwoEntities(Scene scene, int numberOfGeometries )
-	{
+	private List<Entity> createTestTwoEntities(Scene scene,
+			int numberOfGeometries) {
 		List<Entity> sceneEntities = new ArrayList<Entity>();
 
-		for(int i = 0; i < numberOfGeometries; i++)
-		{
+		for (int i = 0; i < numberOfGeometries; i++) {
 
 			// Create a Random position
 			Point position = new Point();
@@ -206,10 +214,8 @@ public class DummyModelInterpreterService implements IModelInterpreter
 		return sceneEntities;
 	}
 
-	private Random getRandomGenerator()
-	{
-		if(randomGenerator == null)
-		{
+	private Random getRandomGenerator() {
+		if (randomGenerator == null) {
 			randomGenerator = new Random();
 		}
 		return randomGenerator;
