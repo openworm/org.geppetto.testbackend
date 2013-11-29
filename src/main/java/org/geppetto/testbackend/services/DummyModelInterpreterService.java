@@ -12,8 +12,8 @@ import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.IModelInterpreter;
 import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.ModelWrapper;
-import org.geppetto.core.model.state.AStateNode;
 import org.geppetto.core.model.state.StateTreeRoot;
+import org.geppetto.core.model.state.StateTreeRoot.SUBTREE;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.visualisation.model.Cylinder;
 import org.geppetto.core.visualisation.model.Entity;
@@ -84,14 +84,7 @@ public class DummyModelInterpreterService implements IModelInterpreter {
 		ModelWrapper modelWrapper = (ModelWrapper) model;
 
 		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
-		AStateNode modelInterpreterRoot = null;
-		for (AStateNode node : treeRoot.getChildren()) {
-			if (node.getName().equals("model_interpreter")) {
-				modelInterpreterRoot = node;
-				break;
-			}
-		}
-		modelInterpreterRoot.apply(removeVisitor);
+		treeRoot.getSubTree(SUBTREE.MODEL_TREE).apply(removeVisitor);
 		
 		// Returning a dummy created scene
 		return getSceneForTest((TEST_NO) modelWrapper.getModel(TEST));
