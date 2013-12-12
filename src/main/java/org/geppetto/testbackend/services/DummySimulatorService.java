@@ -180,8 +180,6 @@ public class DummySimulatorService extends ASimulator
 		getForceableVariables().setVariables(vars);
 	}
 
-
-
 	private Random getRandomGenerator()
 	{
 		if(randomGenerator == null)
