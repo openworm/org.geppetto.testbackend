@@ -11,4 +11,5 @@
 		<tns:id>dummyServices</tns:id>
 	</tns:aspects>
 	<tns:name>dummyServices</tns:name>
+	<tns:script>https://raw.github.com/openworm/org.geppetto.testbackend/master/src/main/resources/TestSimulationScript.js</tns:script>
 </tns:simulation>
