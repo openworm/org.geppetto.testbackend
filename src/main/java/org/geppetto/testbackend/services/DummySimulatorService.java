@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
+import org.geppetto.core.data.model.VariableList;
 import org.geppetto.core.data.model.AVariable;
 import org.geppetto.core.data.model.SimpleType;
 import org.geppetto.core.data.model.SimpleType.Type;
@@ -23,6 +24,7 @@ import org.geppetto.core.model.values.ValuesFactory;
 import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -37,6 +39,10 @@ public class DummySimulatorService extends ASimulator
 
 	private static Log _logger = LogFactory.getLog(DummySimulatorService.class);
 
+	@Autowired
+	private SimulatorConfig dummySimulatorConfig;
+	
+	StateTreeRoot tree = new StateTreeRoot("dummyServices");
 	private Random randomGenerator;
 
 	// TODO: all this stuff should come from configuration
@@ -63,6 +69,15 @@ public class DummySimulatorService extends ASimulator
 	}
 
 	@Override
+	public int getCapacity() {
+		return this.dummySimulatorConfig.getSimulatorCapacity();
+	}
+
+	@Override
+	public String getName() {
+		return this.dummySimulatorConfig.getSimulatorName();
+	}
+
 	public void simulate(IRunConfiguration runConfiguration) throws GeppettoExecutionException
 	{
 		// throw some junk into model-interpreter node as if results were being populated
