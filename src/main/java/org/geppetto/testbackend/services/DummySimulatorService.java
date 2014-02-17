@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geppetto.core.beans.SimulatorConfig;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
 import org.geppetto.core.data.model.VariableList;
@@ -70,11 +71,6 @@ public class DummySimulatorService extends ASimulator
 		setForceableVariables();
 		
 		getListener().stateTreeUpdated(_stateTree);
-	}
-
-	@Override
-	public int getCapacity() {
-		return this.dummySimulatorConfig.getSimulatorCapacity();
 	}
 
 	@Override

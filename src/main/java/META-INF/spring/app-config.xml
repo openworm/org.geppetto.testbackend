@@ -12,8 +12,7 @@
 	<context:component-scan base-package="org.geppetto.simulator.sph" />
 		
 	<!-- Add flag for Simulation Run Mode --> 
-	<bean id="dummySimulatorConfig" class="org.geppetto.testbackend.services.SimulatorConfig"> 
-		<property name="simulatorCapacity" value="10" />
+	<bean id="dummySimulatorConfig" class="org.geppetto.core.beans.SimulatorConfig">
 		<property name="simulatorName" value="DummySimulator" />
 	</bean>
 </beans>
