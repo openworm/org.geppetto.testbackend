@@ -24,7 +24,7 @@
 			<entry key="discoverableID" value="dummySimulator" />
 		</osgi:service-properties>
 	</osgi:service>
-	<bean id="dummySimulatorService" scope="thread" class="org.geppetto.testbackend.services.DummySimulatorService" destroy-method="destroy">
+	<bean id="dummySimulatorService" scope="thread" class="org.geppetto.testbackend.services.DummySimulatorService">
 	<aop:scoped-proxy proxy-target-class="false"/>
 	</bean>
 </beans>
