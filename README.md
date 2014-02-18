@@ -1,6 +1,9 @@
-org.geppetto.testbackend
-======================================
+[![Build Status](https://travis-ci.org/openworm/org.geppetto.testbackend.png?branch=master)](https://travis-ci.org/openworm/org.geppetto.testbackend)
 
-Geppetto TestBackend Bundle [OpenWorm Project](http://openworm.org)
+<p align="center">
+  <img src="https://raw.github.com/openworm/org.geppetto.frontend/master/src/main/webapp/images/geppetto-logo@2x.png" alt="Geppetto logo"/>
+</p>
 
-Please see installation information [available online](http://bit.ly/NBuKjd).
+# Geppetto test backend
+
+This module contains a dummy backend for Geppetto which allows testing the different frontend features without running any real solver or simulator.
