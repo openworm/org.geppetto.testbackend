@@ -5,7 +5,7 @@
 	<groupId>org.geppetto</groupId>
 	<artifactId>testbackend</artifactId>
 	<name>Geppetto Test Backend Bundle</name>
-	<version>0.0.9</version>
+	<version>0.1.0</version>
 	<packaging>bundle</packaging>
 	<properties>
 		<spring.version>3.0.0.RELEASE</spring.version>
@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>org.geppetto</groupId>
 			<artifactId>core</artifactId>
-			<version>0.0.9</version>
+			<version>0.1.0</version>
 		</dependency>
 	</dependencies>
 	<repositories>
@@ -67,6 +67,11 @@
 			<name>SpringSource Enterprise Bundle Repository - External Library Releases</name>
 			<url>http://repository.springsource.com/maven/libraries/external</url>
 		</repository>
+		<repository>
+        <id>springbyexample.org</id>
+        <name>Spring by Example</name>
+        <url>http://www.springbyexample.org/maven/repo</url>
+    </repository>
 	</repositories>
 	<build>
 		<plugins>
@@ -115,6 +120,9 @@
 						<Include-Resource>
 							{maven-resources},META-INF/spring=src/main/java/META-INF/spring
 						</Include-Resource>
+						<Import-Package>
+							org.springframework.context.support,org.springframework.web.context.request,org.aopalliance.aop,org.springframework.aop,,org.springframework.aop.scope,org.springframework.aop.framework,*
+						</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>

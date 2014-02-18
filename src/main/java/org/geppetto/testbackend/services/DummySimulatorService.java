@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geppetto.core.beans.SimulatorConfig;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
 import org.geppetto.core.data.model.VariableList;
@@ -56,21 +57,20 @@ public class DummySimulatorService extends ASimulator
 
 	public void initialize(IModel model, ISimulatorCallbackListener listener) throws GeppettoInitializationException, GeppettoExecutionException
 	{
-		// populate watch / force variables
-		setWatchableVariables();
-		setForceableVariables();
-
 		super.initialize(model, listener);
 
+		if(_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE)!=null){
+			_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).getChildren().clear();
+		}
+		
 		// init statetree
 		((SimpleStateNode)_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).addChild(new SimpleStateNode("dummyChild"))).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
+		// populate watch / force variables
+		setWatchableVariables();
+		setForceableVariables();
+		
 		getListener().stateTreeUpdated(_stateTree);
-	}
-
-	@Override
-	public int getCapacity() {
-		return this.dummySimulatorConfig.getSimulatorCapacity();
 	}
 
 	@Override
