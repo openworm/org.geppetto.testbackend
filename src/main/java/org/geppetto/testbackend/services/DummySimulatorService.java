@@ -48,7 +48,8 @@ public class DummySimulatorService extends ASimulator
 	
 	StateTreeRoot tree = new StateTreeRoot("dummyServices");
 	private Random randomGenerator;
-	private double timeTracker = 0.00;
+	private double timeTracker = 0;
+	private double step = 0.05;
 	
 	// TODO: all this stuff should come from configuration
 	private final String _aspectID = "dummy";
@@ -75,8 +76,7 @@ public class DummySimulatorService extends ASimulator
 		setWatchableVariables();
 		setForceableVariables();
 		
-		CompositeStateNode time = _stateTree.getSubTree(SUBTREE.TIME_STEP);
-		time.addChild(updateTimeNode());
+		updateTimeNode();
 		
 		getListener().stateTreeUpdated(_stateTree);
 	}
@@ -107,8 +107,7 @@ public class DummySimulatorService extends ASimulator
 	private void updateStateTreeForWatch()
 	{
 		CompositeStateNode watchTree = _stateTree.getSubTree(SUBTREE.WATCH_TREE);
-		CompositeStateNode time = _stateTree.getSubTree(SUBTREE.TIME_STEP);
-		time.addChild(updateTimeNode());
+		updateTimeNode();
 		
 		// check which watchable variables are being watched
 		for(AVariable var : getWatchableVariables().getVariables())
@@ -217,14 +216,21 @@ public class DummySimulatorService extends ASimulator
 		return randomGenerator;
 	}
 	
-	private SimpleStateNode updateTimeNode(){
-		AValue t = ValuesFactory.getDoubleValue(timeTracker);
-		
-		SimpleStateNode timeNode = new SimpleStateNode("time");
-		timeNode.addValue(t);
-		
-		timeTracker += 0.05;
+	private void updateTimeNode(){
+		CompositeStateNode time = _stateTree.getSubTree(SUBTREE.TIME_STEP);
 
-		return timeNode;
+		AValue stepVal = ValuesFactory.getDoubleValue(step);
+		AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
+		
+		SimpleStateNode stepNode = new SimpleStateNode("step");
+		stepNode.addValue(stepVal);
+
+		SimpleStateNode timeNode = new SimpleStateNode("time");
+		timeNode.addValue(timeVal);
+		
+	
+		time.addChild(stepNode);
+		time.addChild(timeNode);
+		timeTracker += step;
 	}
 }
