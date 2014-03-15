@@ -10,7 +10,7 @@ var options = {yaxis:{min:0,max:1},xaxis:{min:0,max:100,show:false}};
 
 Plot1.setOptions(options)
 
-Plot1.plotData("dummyDouble");
+Plot1.plotState("dummyDouble");
 
 Plot1.setPosition(400,300);
 
