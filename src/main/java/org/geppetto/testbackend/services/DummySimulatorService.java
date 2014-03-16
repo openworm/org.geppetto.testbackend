@@ -1,10 +1,10 @@
 package org.geppetto.testbackend.services;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 
 import org.apache.commons.logging.Log;
@@ -12,7 +12,6 @@ import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.beans.SimulatorConfig;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
-import org.geppetto.core.data.model.VariableList;
 import org.geppetto.core.data.model.AVariable;
 import org.geppetto.core.data.model.SimpleType;
 import org.geppetto.core.data.model.SimpleType.Type;
@@ -50,7 +49,8 @@ public class DummySimulatorService extends ASimulator
 	private Random randomGenerator;
 	private double timeTracker = 0;
 	private double step = 0.05;
-	
+	DecimalFormat df2 = new DecimalFormat("###.##");
+	  
 	// TODO: all this stuff should come from configuration
 	private final String _aspectID = "dummy";
 
@@ -147,7 +147,7 @@ public class DummySimulatorService extends ASimulator
 						val = ValuesFactory.getFloatValue(getRandomGenerator().nextFloat());
 					}
 					
-					val.setUnit("V");
+					val.setUnit("mV");
 
 					dummyNode.addValue(val);
 				}
@@ -216,21 +216,40 @@ public class DummySimulatorService extends ASimulator
 		return randomGenerator;
 	}
 	
+	/**
+	 * Create Time Tree
+	 */
 	private void updateTimeNode(){
 		CompositeStateNode time = _stateTree.getSubTree(SUBTREE.TIME_STEP);
 
-		AValue stepVal = ValuesFactory.getDoubleValue(step);
-		AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
-		
-		SimpleStateNode stepNode = new SimpleStateNode("step");
-		stepNode.addValue(stepVal);
+		if(time.getChildren().size() == 0){
+			AValue stepVal = ValuesFactory.getDoubleValue(step);
+			AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
 
-		SimpleStateNode timeNode = new SimpleStateNode("time");
-		timeNode.addValue(timeVal);
-		
-	
-		time.addChild(stepNode);
-		time.addChild(timeNode);
+			SimpleStateNode stepNode = new SimpleStateNode("step");
+			stepNode.addValue(stepVal);
+
+			SimpleStateNode timeNode = new SimpleStateNode("time");
+			timeNode.addValue(timeVal);
+
+
+			time.addChild(stepNode);
+			time.addChild(timeNode);
+		}
+		else{
+			for(AStateNode child : time.getChildren()){
+				if(child.getName().equals("time")){
+					AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
+					((SimpleStateNode)child).addValue(timeVal);
+				}
+				else if(child.getName().equals("step")){
+					AValue timeVal = ValuesFactory.getDoubleValue(step);
+					((SimpleStateNode)child).addValue(timeVal);
+				}
+			}
+		}
 		timeTracker += step;
+		
+		timeTracker = Double.valueOf(df2.format(timeTracker));
 	}
 }
