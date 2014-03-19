@@ -1,15 +1,17 @@
 package org.geppetto.testbackend.services;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.measure.unit.Unit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.beans.SimulatorConfig;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
-import org.geppetto.core.data.model.VariableList;
 import org.geppetto.core.data.model.AVariable;
 import org.geppetto.core.data.model.SimpleType;
 import org.geppetto.core.data.model.SimpleType.Type;
@@ -45,7 +47,10 @@ public class DummySimulatorService extends ASimulator
 	
 	StateTreeRoot tree = new StateTreeRoot("dummyServices");
 	private Random randomGenerator;
-
+	private double timeTracker = 0;
+	private double step = 0.05;
+	DecimalFormat df2 = new DecimalFormat("###.##");
+	  
 	// TODO: all this stuff should come from configuration
 	private final String _aspectID = "dummy";
 
@@ -63,12 +68,15 @@ public class DummySimulatorService extends ASimulator
 			_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).getChildren().clear();
 		}
 		
+		SimpleStateNode child = new SimpleStateNode("dummyChild");
 		// init statetree
-		((SimpleStateNode)_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).addChild(new SimpleStateNode("dummyChild"))).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
+		((SimpleStateNode)_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).addChild(child)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
 		// populate watch / force variables
 		setWatchableVariables();
 		setForceableVariables();
+		
+		updateTimeNode();
 		
 		getListener().stateTreeUpdated(_stateTree);
 	}
@@ -95,10 +103,12 @@ public class DummySimulatorService extends ASimulator
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	private void updateStateTreeForWatch()
 	{
 		CompositeStateNode watchTree = _stateTree.getSubTree(SUBTREE.WATCH_TREE);
-
+		updateTimeNode();
+		
 		// check which watchable variables are being watched
 		for(AVariable var : getWatchableVariables().getVariables())
 		{
@@ -125,7 +135,7 @@ public class DummySimulatorService extends ASimulator
 						watchTree.addChild(dummyNode);
 					}
 
-					AValue val = null;
+					AValue<Unit> val = null;
 
 					// NOTE: this is a dummy simulator so we're making values up - we wouldn't need to do this in a real one
 					if(varName.toLowerCase().contains("double"))
@@ -136,6 +146,8 @@ public class DummySimulatorService extends ASimulator
 					{
 						val = ValuesFactory.getFloatValue(getRandomGenerator().nextFloat());
 					}
+					
+					val.setUnit("mV");
 
 					dummyNode.addValue(val);
 				}
@@ -202,5 +214,42 @@ public class DummySimulatorService extends ASimulator
 			randomGenerator = new Random();
 		}
 		return randomGenerator;
+	}
+	
+	/**
+	 * Create Time Tree
+	 */
+	private void updateTimeNode(){
+		CompositeStateNode time = _stateTree.getSubTree(SUBTREE.TIME_STEP);
+
+		if(time.getChildren().size() == 0){
+			AValue stepVal = ValuesFactory.getDoubleValue(step);
+			AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
+
+			SimpleStateNode stepNode = new SimpleStateNode("step");
+			stepNode.addValue(stepVal);
+
+			SimpleStateNode timeNode = new SimpleStateNode("time");
+			timeNode.addValue(timeVal);
+
+
+			time.addChild(stepNode);
+			time.addChild(timeNode);
+		}
+		else{
+			for(AStateNode child : time.getChildren()){
+				if(child.getName().equals("time")){
+					AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
+					((SimpleStateNode)child).addValue(timeVal);
+				}
+				else if(child.getName().equals("step")){
+					AValue timeVal = ValuesFactory.getDoubleValue(step);
+					((SimpleStateNode)child).addValue(timeVal);
+				}
+			}
+		}
+		timeTracker += step;
+		
+		timeTracker = Double.valueOf(df2.format(timeTracker));
 	}
 }
