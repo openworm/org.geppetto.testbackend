@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.measure.converter.RationalConverter;
+import javax.measure.converter.UnitConverter;
 import javax.measure.unit.Unit;
 
 import org.apache.commons.logging.Log;
@@ -27,6 +29,7 @@ import org.geppetto.core.model.values.ValuesFactory;
 import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
+import org.jscience.physics.amount.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,10 +48,14 @@ public class DummySimulatorService extends ASimulator
 	@Autowired
 	private SimulatorConfig dummySimulatorConfig;
 	
+	DecimalFormat df = new DecimalFormat("0.E0");
+
 	StateTreeRoot tree = new StateTreeRoot("dummyServices");
 	private Random randomGenerator;
 	private double timeTracker = 0;
 	private double step = 0.05;
+	private String scaleFactor = null;
+	
 	DecimalFormat df2 = new DecimalFormat("###.##");
 	  
 	// TODO: all this stuff should come from configuration
@@ -97,7 +104,7 @@ public class DummySimulatorService extends ASimulator
 			updateStateTreeForWatch();
 		}
 
-		getListener().stateTreeUpdated(_stateTree);
+		getListener().stateTreeUpdated(_stateTree);		
 	}
 
 	/**
@@ -148,14 +155,38 @@ public class DummySimulatorService extends ASimulator
 					}
 					
 					val.setUnit("mV");
+					
+					if(scaleFactor == null){
+						calculateScaleFactor(val);
+					}
+
+					val.setScalingFactor(scaleFactor);
 
 					dummyNode.addValue(val);
+					
+					updateTimeNode();
 				}
 			}
 		}
 	}
 
 
+
+	private void calculateScaleFactor(AValue val) {
+		String unit = val.getStringValue() + " " + "mV";
+		Amount<?> m2 = Amount.valueOf(unit);
+
+		Unit<?> sUnit = m2.getUnit().getStandardUnit();
+
+		UnitConverter r = m2.getUnit().getConverterTo(sUnit);
+
+		long factor = 0; 
+		if(r instanceof RationalConverter ){
+			factor = ((RationalConverter) r).getDivisor();
+		}
+		
+		scaleFactor = df.format(factor);;
+	}
 
 	/**
 	 * Populates some dummy state variables to test list variables functionality
@@ -226,6 +257,11 @@ public class DummySimulatorService extends ASimulator
 			AValue stepVal = ValuesFactory.getDoubleValue(step);
 			AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
 
+			//Add the name of the simulator to tree time node, to distinguis it from other
+			//times from other simulators
+			SimpleStateNode name = new SimpleStateNode("simulator");
+			name.addValue(ValuesFactory.getStringValue(this.getName()));
+			
 			SimpleStateNode stepNode = new SimpleStateNode("step");
 			stepNode.addValue(stepVal);
 
@@ -240,10 +276,12 @@ public class DummySimulatorService extends ASimulator
 			for(AStateNode child : time.getChildren()){
 				if(child.getName().equals("time")){
 					AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
+					timeVal.setUnit("ms");
 					((SimpleStateNode)child).addValue(timeVal);
 				}
 				else if(child.getName().equals("step")){
 					AValue timeVal = ValuesFactory.getDoubleValue(step);
+					timeVal.setUnit("ms");
 					((SimpleStateNode)child).addValue(timeVal);
 				}
 			}
