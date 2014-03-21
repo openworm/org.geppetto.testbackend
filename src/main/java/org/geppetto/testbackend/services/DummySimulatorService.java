@@ -142,7 +142,7 @@ public class DummySimulatorService extends ASimulator
 						watchTree.addChild(dummyNode);
 					}
 
-					AValue<Unit> val = null;
+					AValue val = null;
 
 					// NOTE: this is a dummy simulator so we're making values up - we wouldn't need to do this in a real one
 					if(varName.toLowerCase().contains("double"))
