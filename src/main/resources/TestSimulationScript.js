@@ -6,8 +6,24 @@ Simulation.startWatch();
 
 G.addWidget(Widgets.PLOT);
 
-Plot1.plotData(dummyDouble);
+var options = {yaxis:{min:0,max:1},xaxis:{min:0,max:40}};
 
-Plot1.setPosition(400,300);
+Plot1.setOptions(options)
+
+Plot1.plotState("dummyDouble");
+
+Plot1.setPosition(32,239);
 
 Plot1.setSize(300, 400);
+
+G.addWidget(Widgets.PLOT);
+
+Plot2.setOptions(options)
+
+Plot2.plotState("dummyFloat");
+
+Plot2.setPosition(835,176);
+
+G.wait(1000);
+
+Plot1.plotState("dummyFloat");
