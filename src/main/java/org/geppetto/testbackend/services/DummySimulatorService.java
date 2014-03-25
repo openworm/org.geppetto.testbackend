@@ -82,9 +82,7 @@ public class DummySimulatorService extends ASimulator
 		// populate watch / force variables
 		setWatchableVariables();
 		setForceableVariables();
-		
-		updateTimeNode();
-		
+				
 		getListener().stateTreeUpdated(_stateTree);
 	}
 
