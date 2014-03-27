@@ -10,7 +10,7 @@ var options = {yaxis:{min:0,max:1},xaxis:{min:0,max:40}};
 
 Plot1.setOptions(options)
 
-Plot1.plotState("dummyDouble");
+Plot1.plotData("dummyDouble");
 
 Plot1.setPosition(32,239);
 
@@ -20,10 +20,10 @@ G.addWidget(Widgets.PLOT);
 
 Plot2.setOptions(options)
 
-Plot2.plotState("dummyFloat");
+Plot2.plotData("dummyFloat");
 
 Plot2.setPosition(835,176);
 
 G.wait(1000);
 
-Plot1.plotState("dummyFloat");
+Plot1.plotData("dummyFloat");
