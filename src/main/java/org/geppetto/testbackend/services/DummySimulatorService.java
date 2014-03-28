@@ -82,9 +82,7 @@ public class DummySimulatorService extends ASimulator
 		// populate watch / force variables
 		setWatchableVariables();
 		setForceableVariables();
-		
-		updateTimeNode();
-		
+				
 		getListener().stateTreeUpdated(_stateTree);
 	}
 
@@ -142,7 +140,7 @@ public class DummySimulatorService extends ASimulator
 						watchTree.addChild(dummyNode);
 					}
 
-					AValue<Unit> val = null;
+					AValue val = null;
 
 					// NOTE: this is a dummy simulator so we're making values up - we wouldn't need to do this in a real one
 					if(varName.toLowerCase().contains("double"))
@@ -154,13 +152,13 @@ public class DummySimulatorService extends ASimulator
 						val = ValuesFactory.getFloatValue(getRandomGenerator().nextFloat());
 					}
 					
-					val.setUnit("mV");
+					dummyNode.setUnit("mV");
 					
 					if(scaleFactor == null){
 						calculateScaleFactor(val);
 					}
 
-					val.setScalingFactor(scaleFactor);
+					dummyNode.setScalingFactor(scaleFactor);
 
 					dummyNode.addValue(val);
 					
@@ -264,11 +262,12 @@ public class DummySimulatorService extends ASimulator
 			
 			SimpleStateNode stepNode = new SimpleStateNode("step");
 			stepNode.addValue(stepVal);
+			stepNode.setUnit("ms");
 
 			SimpleStateNode timeNode = new SimpleStateNode("time");
 			timeNode.addValue(timeVal);
-
-
+			timeNode.setUnit("ms");
+			
 			time.addChild(stepNode);
 			time.addChild(timeNode);
 		}
@@ -276,12 +275,10 @@ public class DummySimulatorService extends ASimulator
 			for(AStateNode child : time.getChildren()){
 				if(child.getName().equals("time")){
 					AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
-					timeVal.setUnit("ms");
 					((SimpleStateNode)child).addValue(timeVal);
 				}
 				else if(child.getName().equals("step")){
 					AValue timeVal = ValuesFactory.getDoubleValue(step);
-					timeVal.setUnit("ms");
 					((SimpleStateNode)child).addValue(timeVal);
 				}
 			}
