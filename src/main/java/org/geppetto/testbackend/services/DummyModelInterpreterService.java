@@ -1,6 +1,7 @@
 package org.geppetto.testbackend.services;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -46,13 +47,13 @@ public class DummyModelInterpreterService implements IModelInterpreter
 
 	private Random randomGenerator;
 
-	public IModel readModel(URL url) throws ModelInterpreterException
+	public IModel readModel(URL url, List<URL> recordings, String instancePath) throws ModelInterpreterException
 	{
 
 		logger.info("Reading Model using Dummy Motel Interpreter Service");
 
 		ModelWrapper wrapper = new ModelWrapper(UUID.randomUUID().toString());
-
+		wrapper.setInstancePath(instancePath);
 		TEST_NO test = getTestName(url.toString());
 
 		logger.warn("Wrap Model " + test);
