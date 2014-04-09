@@ -67,7 +67,7 @@ public class DummySimulatorService extends ASimulator
 		_stateTree = new StateTreeRoot("dummyServices");
 	}
 
-	public void initialize(IModel model, ISimulatorCallbackListener listener) throws GeppettoInitializationException, GeppettoExecutionException
+	public void initialize(List<IModel> model, ISimulatorCallbackListener listener) throws GeppettoInitializationException, GeppettoExecutionException
 	{
 		super.initialize(model, listener);
 
