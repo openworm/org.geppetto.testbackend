@@ -20,8 +20,8 @@ import org.geppetto.core.data.model.SimpleType.Type;
 import org.geppetto.core.data.model.SimpleVariable;
 import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.state.AStateNode;
-import org.geppetto.core.model.state.CompositeStateNode;
-import org.geppetto.core.model.state.SimpleStateNode;
+import org.geppetto.core.model.state.ACompositeStateNode;
+import org.geppetto.core.model.state.StateVariableNode;
 import org.geppetto.core.model.state.StateTreeRoot;
 import org.geppetto.core.model.state.StateTreeRoot.SUBTREE;
 import org.geppetto.core.model.values.AValue;
@@ -75,9 +75,9 @@ public class DummySimulatorService extends ASimulator
 			_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).getChildren().clear();
 		}
 		
-		SimpleStateNode child = new SimpleStateNode("dummyChild");
+		StateVariableNode child = new StateVariableNode("dummyChild");
 		// init statetree
-		((SimpleStateNode)_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).addChild(child)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
+		((StateVariableNode)_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).addChild(child)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
 		// populate watch / force variables
 		setWatchableVariables();
@@ -94,7 +94,7 @@ public class DummySimulatorService extends ASimulator
 	public void simulate(IRunConfiguration runConfiguration) throws GeppettoExecutionException
 	{
 		// throw some junk into model-interpreter node as if results were being populated
-		((SimpleStateNode) _stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).getChildren().get(0)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
+		((StateVariableNode) _stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).getChildren().get(0)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
 		if(isWatching())
 		{
@@ -111,7 +111,7 @@ public class DummySimulatorService extends ASimulator
 	@SuppressWarnings("unchecked")
 	private void updateStateTreeForWatch()
 	{
-		CompositeStateNode watchTree = _stateTree.getSubTree(SUBTREE.WATCH_TREE);
+		ACompositeStateNode watchTree = _stateTree.getSubTree(SUBTREE.WATCH_TREE);
 		updateTimeNode();
 		
 		// check which watchable variables are being watched
@@ -122,21 +122,21 @@ public class DummySimulatorService extends ASimulator
 				// if they are being watched add to state tree
 				if(varName.toLowerCase().equals(var.getName().toLowerCase()))
 				{
-					SimpleStateNode dummyNode = null;
+					StateVariableNode dummyNode = null;
 
 					for(AStateNode child : watchTree.getChildren())
 					{
 						if(child.getName().equals(var.getName()))
 						{
 							// assign if it already exists
-							dummyNode = (SimpleStateNode) child;
+							dummyNode = (StateVariableNode) child;
 						}
 					}
 
 					// only add if it's not already there
 					if(dummyNode == null)
 					{
-						dummyNode = new SimpleStateNode(var.getName());
+						dummyNode = new StateVariableNode(var.getName());
 						watchTree.addChild(dummyNode);
 					}
 
@@ -249,7 +249,7 @@ public class DummySimulatorService extends ASimulator
 	 * Create Time Tree
 	 */
 	private void updateTimeNode(){
-		CompositeStateNode time = _stateTree.getSubTree(SUBTREE.TIME_STEP);
+		ACompositeStateNode time = _stateTree.getSubTree(SUBTREE.TIME_STEP);
 
 		if(time.getChildren().size() == 0){
 			AValue stepVal = ValuesFactory.getDoubleValue(step);
@@ -257,14 +257,14 @@ public class DummySimulatorService extends ASimulator
 
 			//Add the name of the simulator to tree time node, to distinguis it from other
 			//times from other simulators
-			SimpleStateNode name = new SimpleStateNode("simulator");
+			StateVariableNode name = new StateVariableNode("simulator");
 			name.addValue(ValuesFactory.getStringValue(this.getName()));
 			
-			SimpleStateNode stepNode = new SimpleStateNode("step");
+			StateVariableNode stepNode = new StateVariableNode("step");
 			stepNode.addValue(stepVal);
 			stepNode.setUnit("ms");
 
-			SimpleStateNode timeNode = new SimpleStateNode("time");
+			StateVariableNode timeNode = new StateVariableNode("time");
 			timeNode.addValue(timeVal);
 			timeNode.setUnit("ms");
 			
@@ -275,11 +275,11 @@ public class DummySimulatorService extends ASimulator
 			for(AStateNode child : time.getChildren()){
 				if(child.getName().equals("time")){
 					AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
-					((SimpleStateNode)child).addValue(timeVal);
+					((StateVariableNode)child).addValue(timeVal);
 				}
 				else if(child.getName().equals("step")){
 					AValue timeVal = ValuesFactory.getDoubleValue(step);
-					((SimpleStateNode)child).addValue(timeVal);
+					((StateVariableNode)child).addValue(timeVal);
 				}
 			}
 		}
