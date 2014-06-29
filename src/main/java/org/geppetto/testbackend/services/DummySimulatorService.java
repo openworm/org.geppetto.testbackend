@@ -19,11 +19,11 @@ import org.geppetto.core.data.model.SimpleType;
 import org.geppetto.core.data.model.SimpleType.Type;
 import org.geppetto.core.data.model.SimpleVariable;
 import org.geppetto.core.model.IModel;
-import org.geppetto.core.model.state.AStateNode;
+import org.geppetto.core.model.state.ANode;
 import org.geppetto.core.model.state.ACompositeStateNode;
 import org.geppetto.core.model.state.StateVariableNode;
-import org.geppetto.core.model.state.StateTreeRoot;
-import org.geppetto.core.model.state.StateTreeRoot.SUBTREE;
+import org.geppetto.core.model.state.AspectTreeNode;
+import org.geppetto.core.model.state.AspectTreeNode.SUBTREE;
 import org.geppetto.core.model.values.AValue;
 import org.geppetto.core.model.values.ValuesFactory;
 import org.geppetto.core.simulation.IRunConfiguration;
@@ -50,7 +50,7 @@ public class DummySimulatorService extends ASimulator
 	
 	DecimalFormat df = new DecimalFormat("0.E0");
 
-	StateTreeRoot tree = new StateTreeRoot("dummyServices");
+	AspectTreeNode tree = new AspectTreeNode("dummyServices");
 	private Random randomGenerator;
 	private double timeTracker = 0;
 	private double step = 0.05;
@@ -64,20 +64,20 @@ public class DummySimulatorService extends ASimulator
 	public DummySimulatorService()
 	{
 		super();
-		_stateTree = new StateTreeRoot("dummyServices");
+		_stateTree = new AspectTreeNode("dummyServices");
 	}
 
 	public void initialize(List<IModel> model, ISimulatorCallbackListener listener) throws GeppettoInitializationException, GeppettoExecutionException
 	{
 		super.initialize(model, listener);
 
-		if(_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE)!=null){
-			_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).getChildren().clear();
+		if(_stateTree.getSubTree(AspectTreeNode.SUBTREE.MODEL_TREE)!=null){
+			_stateTree.getSubTree(AspectTreeNode.SUBTREE.MODEL_TREE).getChildren().clear();
 		}
 		
 		StateVariableNode child = new StateVariableNode("dummyChild");
 		// init statetree
-		((StateVariableNode)_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).addChild(child)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
+		((StateVariableNode)_stateTree.getSubTree(AspectTreeNode.SUBTREE.MODEL_TREE).addChild(child)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
 		// populate watch / force variables
 		setWatchableVariables();
@@ -94,7 +94,7 @@ public class DummySimulatorService extends ASimulator
 	public void simulate(IRunConfiguration runConfiguration) throws GeppettoExecutionException
 	{
 		// throw some junk into model-interpreter node as if results were being populated
-		((StateVariableNode) _stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).getChildren().get(0)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
+		((StateVariableNode) _stateTree.getSubTree(AspectTreeNode.SUBTREE.MODEL_TREE).getChildren().get(0)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
 		if(isWatching())
 		{
@@ -124,7 +124,7 @@ public class DummySimulatorService extends ASimulator
 				{
 					StateVariableNode dummyNode = null;
 
-					for(AStateNode child : watchTree.getChildren())
+					for(ANode child : watchTree.getChildren())
 					{
 						if(child.getName().equals(var.getName()))
 						{
@@ -272,7 +272,7 @@ public class DummySimulatorService extends ASimulator
 			time.addChild(timeNode);
 		}
 		else{
-			for(AStateNode child : time.getChildren()){
+			for(ANode child : time.getChildren()){
 				if(child.getName().equals("time")){
 					AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
 					((StateVariableNode)child).addValue(timeVal);
