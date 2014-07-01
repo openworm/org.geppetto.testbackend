@@ -14,14 +14,14 @@ import org.geppetto.core.model.ModelWrapper;
 import org.geppetto.core.model.simulation.Aspect;
 import org.geppetto.core.model.state.AspectNode;
 import org.geppetto.core.model.state.AspectTreeNode;
-import org.geppetto.core.model.state.AspectTreeNode.SUBTREE;
+import org.geppetto.core.model.state.ANode.SUBTREE;
+import org.geppetto.core.model.state.CylinderNode;
 import org.geppetto.core.model.state.EntityNode;
+import org.geppetto.core.model.state.ParticleNode;
+import org.geppetto.core.model.state.SphereNode;
+import org.geppetto.core.model.state.VisualModelNode;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
-import org.geppetto.core.visualisation.model.Cylinder;
-import org.geppetto.core.visualisation.model.Particle;
 import org.geppetto.core.visualisation.model.Point;
-import org.geppetto.core.visualisation.model.Sphere;
-import org.geppetto.core.visualisation.model.VisualModel;
 import org.springframework.stereotype.Service;
 
 /**
@@ -141,7 +141,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	{
 		entity.setId("E1");
 		
-		VisualModel visualModel=new VisualModel();
+		VisualModelNode visualModel=new VisualModelNode();
 		visualModel.setId("V1");
 		entity.getAspects().get(0).getVisualModel().add(visualModel);
 		
@@ -154,7 +154,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 			position.setZ(getRandomGenerator().nextDouble() * 10);
 
 			// Create particle and set position
-			Particle particle = new Particle();
+			ParticleNode particle = new ParticleNode();
 			particle.setPosition(position);
 			particle.setId("P" + i);
 
@@ -173,7 +173,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	{
 
 		newEntity.setId("E" + numberOfGeometries);
-		VisualModel visualModel=new VisualModel();
+		VisualModelNode visualModel=new VisualModelNode();
 		visualModel.setId("V1");
 		newEntity.getAspects().get(0).getVisualModel().add(visualModel);
 		
@@ -193,7 +193,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 			position2.setZ(getRandomGenerator().nextDouble() * 100);
 
 			// Create a new Cylinder
-			Cylinder cylynder = new Cylinder();
+			CylinderNode cylynder = new CylinderNode();
 			cylynder.setPosition(position);
 			cylynder.setDistal(position2);
 			cylynder.setId("C" + i);
@@ -201,7 +201,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 			cylynder.setRadiusTop(getRandomGenerator().nextDouble() * 10);
 
 			// Create new sphere and set values
-			Sphere sphere = new Sphere();
+			SphereNode sphere = new SphereNode();
 			sphere.setPosition(position2);
 			sphere.setId("S" + i);
 			sphere.setRadius(getRandomGenerator().nextDouble() * 10);

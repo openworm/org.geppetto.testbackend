@@ -23,7 +23,7 @@ import org.geppetto.core.model.state.ANode;
 import org.geppetto.core.model.state.ACompositeStateNode;
 import org.geppetto.core.model.state.StateVariableNode;
 import org.geppetto.core.model.state.AspectTreeNode;
-import org.geppetto.core.model.state.AspectTreeNode.SUBTREE;
+import org.geppetto.core.model.state.ANode.SUBTREE;
 import org.geppetto.core.model.values.AValue;
 import org.geppetto.core.model.values.ValuesFactory;
 import org.geppetto.core.simulation.IRunConfiguration;
