@@ -11,15 +11,16 @@ import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.IModelInterpreter;
 import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.ModelWrapper;
+import org.geppetto.core.model.runtime.ACompositeNode;
+import org.geppetto.core.model.runtime.AspectNode;
+import org.geppetto.core.model.runtime.AspectTreeNode;
+import org.geppetto.core.model.runtime.CylinderNode;
+import org.geppetto.core.model.runtime.EntityNode;
+import org.geppetto.core.model.runtime.ParticleNode;
+import org.geppetto.core.model.runtime.SphereNode;
+import org.geppetto.core.model.runtime.VisualModelNode;
+import org.geppetto.core.model.runtime.AspectTreeNode.ASPECTTREE;
 import org.geppetto.core.model.simulation.Aspect;
-import org.geppetto.core.model.state.AspectNode;
-import org.geppetto.core.model.state.AspectTreeNode;
-import org.geppetto.core.model.state.ANode.SUBTREE;
-import org.geppetto.core.model.state.CylinderNode;
-import org.geppetto.core.model.state.EntityNode;
-import org.geppetto.core.model.state.ParticleNode;
-import org.geppetto.core.model.state.SphereNode;
-import org.geppetto.core.model.state.VisualModelNode;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.visualisation.model.Point;
 import org.springframework.stereotype.Service;
@@ -88,7 +89,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 		ModelWrapper modelWrapper = (ModelWrapper) model;
 
 		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
-		stateTree.getSubTree(SUBTREE.MODEL_TREE).apply(removeVisitor);
+		stateTree.getSubTree(ASPECTTREE.MODEL_TREE).apply(removeVisitor);
 
 		// Returning a dummy created scene
 		EntityNode EntityNode = new EntityNode();

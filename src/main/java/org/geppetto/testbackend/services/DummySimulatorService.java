@@ -19,11 +19,12 @@ import org.geppetto.core.data.model.SimpleType;
 import org.geppetto.core.data.model.SimpleType.Type;
 import org.geppetto.core.data.model.SimpleVariable;
 import org.geppetto.core.model.IModel;
-import org.geppetto.core.model.state.ANode;
-import org.geppetto.core.model.state.ACompositeStateNode;
-import org.geppetto.core.model.state.StateVariableNode;
-import org.geppetto.core.model.state.AspectTreeNode;
-import org.geppetto.core.model.state.ANode.SUBTREE;
+import org.geppetto.core.model.runtime.ACompositeNode;
+import org.geppetto.core.model.runtime.ANode;
+import org.geppetto.core.model.runtime.AspectTreeNode;
+import org.geppetto.core.model.runtime.CompositeVariableNode;
+import org.geppetto.core.model.runtime.StateVariableNode;
+import org.geppetto.core.model.runtime.AspectTreeNode.ASPECTTREE;
 import org.geppetto.core.model.values.AValue;
 import org.geppetto.core.model.values.ValuesFactory;
 import org.geppetto.core.simulation.IRunConfiguration;
@@ -71,13 +72,13 @@ public class DummySimulatorService extends ASimulator
 	{
 		super.initialize(model, listener);
 
-		if(_stateTree.getSubTree(AspectTreeNode.SUBTREE.MODEL_TREE)!=null){
-			_stateTree.getSubTree(AspectTreeNode.SUBTREE.MODEL_TREE).getChildren().clear();
+		if(_stateTree.getSubTree(AspectTreeNode.ASPECTTREE.MODEL_TREE)!=null){
+			_stateTree.getSubTree(AspectTreeNode.ASPECTTREE.MODEL_TREE).getChildren().clear();
 		}
 		
 		StateVariableNode child = new StateVariableNode("dummyChild");
 		// init statetree
-		((StateVariableNode)_stateTree.getSubTree(AspectTreeNode.SUBTREE.MODEL_TREE).addChild(child)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
+		((StateVariableNode)_stateTree.getSubTree(AspectTreeNode.ASPECTTREE.MODEL_TREE).addChild(child)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
 		// populate watch / force variables
 		setWatchableVariables();
@@ -94,7 +95,7 @@ public class DummySimulatorService extends ASimulator
 	public void simulate(IRunConfiguration runConfiguration) throws GeppettoExecutionException
 	{
 		// throw some junk into model-interpreter node as if results were being populated
-		((StateVariableNode) _stateTree.getSubTree(AspectTreeNode.SUBTREE.MODEL_TREE).getChildren().get(0)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
+		((StateVariableNode) _stateTree.getSubTree(AspectTreeNode.ASPECTTREE.MODEL_TREE).getChildren().get(0)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
 		if(isWatching())
 		{
@@ -111,7 +112,7 @@ public class DummySimulatorService extends ASimulator
 	@SuppressWarnings("unchecked")
 	private void updateStateTreeForWatch()
 	{
-		ACompositeStateNode watchTree = _stateTree.getSubTree(SUBTREE.WATCH_TREE);
+		ACompositeNode watchTree = _stateTree.getSubTree(ASPECTTREE.WATCH_TREE);
 		updateTimeNode();
 		
 		// check which watchable variables are being watched
@@ -249,7 +250,7 @@ public class DummySimulatorService extends ASimulator
 	 * Create Time Tree
 	 */
 	private void updateTimeNode(){
-		ACompositeStateNode time = _stateTree.getSubTree(SUBTREE.TIME_STEP);
+		ACompositeNode time = new CompositeVariableNode();
 
 		if(time.getChildren().size() == 0){
 			AValue stepVal = ValuesFactory.getDoubleValue(step);
