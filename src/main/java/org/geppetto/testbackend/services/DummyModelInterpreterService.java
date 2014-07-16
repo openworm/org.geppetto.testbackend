@@ -13,13 +13,12 @@ import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.ModelWrapper;
 import org.geppetto.core.model.runtime.ACompositeNode;
 import org.geppetto.core.model.runtime.AspectNode;
-import org.geppetto.core.model.runtime.AspectTreeNode;
+import org.geppetto.core.model.runtime.AspectSubTreeNode;
 import org.geppetto.core.model.runtime.CylinderNode;
 import org.geppetto.core.model.runtime.EntityNode;
 import org.geppetto.core.model.runtime.ParticleNode;
 import org.geppetto.core.model.runtime.SphereNode;
-import org.geppetto.core.model.runtime.VisualModelNode;
-import org.geppetto.core.model.runtime.AspectTreeNode.ASPECTTREE;
+import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
 import org.geppetto.core.model.simulation.Aspect;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.visualisation.model.Point;
@@ -76,28 +75,28 @@ public class DummyModelInterpreterService implements IModelInterpreter
 		return TEST_NO.valueOf(url.substring(url.lastIndexOf("/") + 1));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.geppetto.core.model.IModelInterpreter#getVisualEntity(org.geppetto.core.model.IModel, org.geppetto.core.model.simulation.Aspect, org.geppetto.core.model.state.StateTreeRoot)
-	 */
-	@Override
-	public EntityNode getVisualEntity(IModel model, Aspect aspect, AspectTreeNode stateTree) throws ModelInterpreterException
-	{
-		logger.info("Using DummyModelInterpreter to create Scene from IModel");
-
-		ModelWrapper modelWrapper = (ModelWrapper) model;
-
-		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
-		stateTree.getSubTree(ASPECTTREE.MODEL_TREE).apply(removeVisitor);
-
-		// Returning a dummy created scene
-		EntityNode EntityNode = new EntityNode();
-		AspectNode caspect = new AspectNode();
-		aspect.setId(aspect.getId());
-		EntityNode.getAspects().add(caspect);
-		return populateEntityForTest(EntityNode, (TEST_NO) modelWrapper.getModel(TEST));
-	}
+//	/*
+//	 * (non-Javadoc)
+//	 * 
+//	 * @see org.geppetto.core.model.IModelInterpreter#getVisualEntity(org.geppetto.core.model.IModel, org.geppetto.core.model.simulation.Aspect, org.geppetto.core.model.state.StateTreeRoot)
+//	 */
+//	@Override
+//	public EntityNode getVisualEntity(IModel model, Aspect aspect, AspectSubTreeNode stateTree) throws ModelInterpreterException
+//	{
+//		logger.info("Using DummyModelInterpreter to create Scene from IModel");
+//
+//		ModelWrapper modelWrapper = (ModelWrapper) model;
+//
+//		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
+//		stateTree.getSubTree(ASPECTTREE.MODEL_TREE).apply(removeVisitor);
+//
+//		// Returning a dummy created scene
+//		EntityNode EntityNode = new EntityNode();
+//		AspectNode caspect = new AspectNode();
+//		aspect.setId(aspect.getId());
+//		EntityNode.getAspects().add(caspect);
+//		return populateEntityForTest(EntityNode, (TEST_NO) modelWrapper.getModel(TEST));
+//	}
 
 	/**
 	 * Creates a Scene with random geometries added. A different scene is created for each different test
@@ -142,10 +141,6 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	{
 		entity.setId("E1");
 		
-		VisualModelNode visualModel=new VisualModelNode();
-		visualModel.setId("V1");
-		entity.getAspects().get(0).getVisualModel().add(visualModel);
-		
 		for(int i = 0; i < numberOfParticles; i++)
 		{
 			// Create a Position
@@ -159,8 +154,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 			particle.setPosition(position);
 			particle.setId("P" + i);
 
-			// Add created geometries to entities
-			visualModel.getObjects().add(particle);
+			entity.addChild(particle);
 		}
 	}
 
@@ -174,9 +168,6 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	{
 
 		newEntity.setId("E" + numberOfGeometries);
-		VisualModelNode visualModel=new VisualModelNode();
-		visualModel.setId("V1");
-		newEntity.getAspects().get(0).getVisualModel().add(visualModel);
 		
 		for(int i = 0; i < numberOfGeometries; i++)
 		{
@@ -194,7 +185,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 			position2.setZ(getRandomGenerator().nextDouble() * 100);
 
 			// Create a new Cylinder
-			CylinderNode cylynder = new CylinderNode();
+			CylinderNode cylynder = new CylinderNode("cylynder");
 			cylynder.setPosition(position);
 			cylynder.setDistal(position2);
 			cylynder.setId("C" + i);
@@ -202,7 +193,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 			cylynder.setRadiusTop(getRandomGenerator().nextDouble() * 10);
 
 			// Create new sphere and set values
-			SphereNode sphere = new SphereNode();
+			SphereNode sphere = new SphereNode("sphere");
 			sphere.setPosition(position2);
 			sphere.setId("S" + i);
 			sphere.setRadius(getRandomGenerator().nextDouble() * 10);
@@ -211,8 +202,8 @@ public class DummyModelInterpreterService implements IModelInterpreter
 			
 
 			// Add created geometries to entities
-			visualModel.getObjects().add(cylynder);
-			visualModel.getObjects().add(sphere);
+			newEntity.addChild(cylynder);
+			newEntity.addChild(sphere);
 		}
 
 	}
@@ -227,12 +218,6 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	}
 
 	@Override
-	public boolean populateVisualTree(AspectNode aspectNode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public boolean populateModelTree(AspectNode aspectNode) {
 		// TODO Auto-generated method stub
 		return false;
@@ -242,6 +227,12 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	public boolean populateRuntimeTree(AspectNode aspectNode) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public String getName()
+	{
+		return "Dummy Model Interpreter";
 	}
 
 }

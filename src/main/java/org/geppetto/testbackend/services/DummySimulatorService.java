@@ -19,12 +19,15 @@ import org.geppetto.core.data.model.SimpleType;
 import org.geppetto.core.data.model.SimpleType.Type;
 import org.geppetto.core.data.model.SimpleVariable;
 import org.geppetto.core.model.IModel;
+import org.geppetto.core.model.ModelInterpreterException;
+import org.geppetto.core.model.quantities.PhysicalQuantity;
 import org.geppetto.core.model.runtime.ACompositeNode;
 import org.geppetto.core.model.runtime.ANode;
-import org.geppetto.core.model.runtime.AspectTreeNode;
+import org.geppetto.core.model.runtime.AspectNode;
+import org.geppetto.core.model.runtime.AspectSubTreeNode;
 import org.geppetto.core.model.runtime.CompositeVariableNode;
-import org.geppetto.core.model.runtime.StateVariableNode;
-import org.geppetto.core.model.runtime.AspectTreeNode.ASPECTTREE;
+import org.geppetto.core.model.runtime.VariableNode;
+import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
 import org.geppetto.core.model.values.AValue;
 import org.geppetto.core.model.values.ValuesFactory;
 import org.geppetto.core.simulation.IRunConfiguration;
@@ -51,7 +54,7 @@ public class DummySimulatorService extends ASimulator
 	
 	DecimalFormat df = new DecimalFormat("0.E0");
 
-	AspectTreeNode tree = new AspectTreeNode("dummyServices");
+	AspectSubTreeNode tree = new AspectSubTreeNode("dummyServices");
 	private Random randomGenerator;
 	private double timeTracker = 0;
 	private double step = 0.05;
@@ -65,21 +68,25 @@ public class DummySimulatorService extends ASimulator
 	public DummySimulatorService()
 	{
 		super();
-		_stateTree = new AspectTreeNode("dummyServices");
+		_stateTree = new AspectSubTreeNode("dummyServices");
 	}
 
 	public void initialize(List<IModel> model, ISimulatorCallbackListener listener) throws GeppettoInitializationException, GeppettoExecutionException
 	{
 		super.initialize(model, listener);
 
-		if(_stateTree.getSubTree(AspectTreeNode.ASPECTTREE.MODEL_TREE)!=null){
-			_stateTree.getSubTree(AspectTreeNode.ASPECTTREE.MODEL_TREE).getChildren().clear();
+		if(_stateTree.getSubTree(AspectSubTreeNode.AspectTreeType.MODEL_TREE)!=null){
+			_stateTree.getSubTree(AspectSubTreeNode.AspectTreeType.MODEL_TREE).getChildren().clear();
 		}
 		
-		StateVariableNode child = new StateVariableNode("dummyChild");
+		VariableNode child = new VariableNode("dummyChild");
 		// init statetree
-		((StateVariableNode)_stateTree.getSubTree(AspectTreeNode.ASPECTTREE.MODEL_TREE).addChild(child)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
+		PhysicalQuantity q = new PhysicalQuantity();
+		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
+		
+		((VariableNode)_stateTree.getSubTree(AspectSubTreeNode.AspectTreeType.MODEL_TREE).addChild(child)).addPhysicalQuantity(q);
+		
 		// populate watch / force variables
 		setWatchableVariables();
 		setForceableVariables();
@@ -94,8 +101,10 @@ public class DummySimulatorService extends ASimulator
 
 	public void simulate(IRunConfiguration runConfiguration) throws GeppettoExecutionException
 	{
+		PhysicalQuantity q = new PhysicalQuantity();
+		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 		// throw some junk into model-interpreter node as if results were being populated
-		((StateVariableNode) _stateTree.getSubTree(AspectTreeNode.ASPECTTREE.MODEL_TREE).getChildren().get(0)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
+		((VariableNode) _stateTree.getSubTree(AspectSubTreeNode.AspectTreeType.MODEL_TREE).getChildren().get(0)).addPhysicalQuantity(q);
 
 		if(isWatching())
 		{
@@ -112,7 +121,7 @@ public class DummySimulatorService extends ASimulator
 	@SuppressWarnings("unchecked")
 	private void updateStateTreeForWatch()
 	{
-		ACompositeNode watchTree = _stateTree.getSubTree(ASPECTTREE.WATCH_TREE);
+		ACompositeNode watchTree = _stateTree.getSubTree(AspectTreeType.WATCH_TREE);
 		updateTimeNode();
 		
 		// check which watchable variables are being watched
@@ -123,24 +132,25 @@ public class DummySimulatorService extends ASimulator
 				// if they are being watched add to state tree
 				if(varName.toLowerCase().equals(var.getName().toLowerCase()))
 				{
-					StateVariableNode dummyNode = null;
+					VariableNode dummyNode = null;
 
 					for(ANode child : watchTree.getChildren())
 					{
 						if(child.getName().equals(var.getName()))
 						{
 							// assign if it already exists
-							dummyNode = (StateVariableNode) child;
+							dummyNode = (VariableNode) child;
 						}
 					}
 
 					// only add if it's not already there
 					if(dummyNode == null)
 					{
-						dummyNode = new StateVariableNode(var.getName());
+						dummyNode = new VariableNode(var.getName());
 						watchTree.addChild(dummyNode);
 					}
 
+					PhysicalQuantity p = new PhysicalQuantity();
 					AValue val = null;
 
 					// NOTE: this is a dummy simulator so we're making values up - we wouldn't need to do this in a real one
@@ -153,15 +163,15 @@ public class DummySimulatorService extends ASimulator
 						val = ValuesFactory.getFloatValue(getRandomGenerator().nextFloat());
 					}
 					
-					dummyNode.setUnit("mV");
+					p.setUnit("mV");
 					
 					if(scaleFactor == null){
 						calculateScaleFactor(val);
 					}
 
-					dummyNode.setScalingFactor(scaleFactor);
+					p.setScalingFactor(scaleFactor);
 
-					dummyNode.addValue(val);
+					p.setValue(val);
 					
 					updateTimeNode();
 				}
@@ -253,21 +263,26 @@ public class DummySimulatorService extends ASimulator
 		ACompositeNode time = new CompositeVariableNode();
 
 		if(time.getChildren().size() == 0){
+			PhysicalQuantity stepQ = new PhysicalQuantity();
 			AValue stepVal = ValuesFactory.getDoubleValue(step);
+			stepQ.setValue(stepVal);
+			
+			PhysicalQuantity timeQ = new PhysicalQuantity();
 			AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
-
+			timeQ.setValue(timeVal);
+			
 			//Add the name of the simulator to tree time node, to distinguis it from other
 			//times from other simulators
-			StateVariableNode name = new StateVariableNode("simulator");
-			name.addValue(ValuesFactory.getStringValue(this.getName()));
+			VariableNode name = new VariableNode("simulator");
+			PhysicalQuantity q = new PhysicalQuantity();
+			q.setValue(ValuesFactory.getStringValue(this.getName()));
+			name.addPhysicalQuantity(q);
 			
-			StateVariableNode stepNode = new StateVariableNode("step");
-			stepNode.addValue(stepVal);
-			stepNode.setUnit("ms");
+			VariableNode stepNode = new VariableNode("step");
+			stepNode.addPhysicalQuantity(stepQ);
 
-			StateVariableNode timeNode = new StateVariableNode("time");
-			timeNode.addValue(timeVal);
-			timeNode.setUnit("ms");
+			VariableNode timeNode = new VariableNode("time");
+			timeNode.addPhysicalQuantity(timeQ);
 			
 			time.addChild(stepNode);
 			time.addChild(timeNode);
@@ -275,17 +290,28 @@ public class DummySimulatorService extends ASimulator
 		else{
 			for(ANode child : time.getChildren()){
 				if(child.getName().equals("time")){
+					PhysicalQuantity q = new PhysicalQuantity();
 					AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
-					((StateVariableNode)child).addValue(timeVal);
+					q.setValue(timeVal);
+					((VariableNode)child).addPhysicalQuantity(q);
 				}
 				else if(child.getName().equals("step")){
+					PhysicalQuantity q = new PhysicalQuantity();
 					AValue timeVal = ValuesFactory.getDoubleValue(step);
-					((StateVariableNode)child).addValue(timeVal);
+					q.setValue(timeVal);
+					((VariableNode)child).addPhysicalQuantity(q);
 				}
 			}
 		}
 		timeTracker += step;
 		
 		timeTracker = Double.valueOf(df2.format(timeTracker));
+	}
+
+	@Override
+	public boolean populateVisualTree(AspectNode aspectNode) throws ModelInterpreterException
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
