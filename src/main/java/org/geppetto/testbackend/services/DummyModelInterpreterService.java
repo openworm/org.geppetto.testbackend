@@ -1,6 +1,7 @@
 package org.geppetto.testbackend.services;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -11,16 +12,22 @@ import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.IModelInterpreter;
 import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.ModelWrapper;
+import org.geppetto.core.model.quantities.PhysicalQuantity;
 import org.geppetto.core.model.runtime.ACompositeNode;
 import org.geppetto.core.model.runtime.AspectNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode;
 import org.geppetto.core.model.runtime.CylinderNode;
+import org.geppetto.core.model.runtime.DynamicsSpecificationNode;
 import org.geppetto.core.model.runtime.EntityNode;
+import org.geppetto.core.model.runtime.FunctionNode;
+import org.geppetto.core.model.runtime.ParameterSpecificationNode;
 import org.geppetto.core.model.runtime.ParticleNode;
 import org.geppetto.core.model.runtime.SphereNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
+import org.geppetto.core.model.runtime.VisualGroupNode;
 import org.geppetto.core.model.simulation.Aspect;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
+import org.geppetto.core.model.values.StringValue;
 import org.geppetto.core.visualisation.model.Point;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +47,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 
 	private static final String TEST = "TEST";
 
-	private enum TEST_NO
+	public enum TEST_NO
 	{
 		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX
 	}
@@ -75,158 +82,52 @@ public class DummyModelInterpreterService implements IModelInterpreter
 		return TEST_NO.valueOf(url.substring(url.lastIndexOf("/") + 1));
 	}
 
-//	/*
-//	 * (non-Javadoc)
-//	 * 
-//	 * @see org.geppetto.core.model.IModelInterpreter#getVisualEntity(org.geppetto.core.model.IModel, org.geppetto.core.model.simulation.Aspect, org.geppetto.core.model.state.StateTreeRoot)
-//	 */
-//	@Override
-//	public EntityNode getVisualEntity(IModel model, Aspect aspect, AspectSubTreeNode stateTree) throws ModelInterpreterException
-//	{
-//		logger.info("Using DummyModelInterpreter to create Scene from IModel");
-//
-//		ModelWrapper modelWrapper = (ModelWrapper) model;
-//
-//		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
-//		stateTree.getSubTree(ASPECTTREE.MODEL_TREE).apply(removeVisitor);
-//
-//		// Returning a dummy created scene
-//		EntityNode EntityNode = new EntityNode();
-//		AspectNode caspect = new AspectNode();
-//		aspect.setId(aspect.getId());
-//		EntityNode.getAspects().add(caspect);
-//		return populateEntityForTest(EntityNode, (TEST_NO) modelWrapper.getModel(TEST));
-//	}
-
-	/**
-	 * Creates a Scene with random geometries added. A different scene is created for each different test
-	 * 
-	 * @param testNumber
-	 *            - Test Number to be perform
-	 * @return
-	 */
-	private EntityNode populateEntityForTest(EntityNode entity, TEST_NO test)
-	{
-		switch(test)
-		{
-			case TEST_ONE:
-				createTestOneEntities(entity, 100);
-				break;
-			case TEST_TWO:
-				createTestOneEntities(entity, 10000);
-				break;
-			case TEST_THREE:
-				createTestOneEntities(entity, 100000);
-				break;
-			case TEST_FOUR:
-				createTestTwoEntities(entity, 50);
-				break;
-			case TEST_FIVE:
-				createTestTwoEntities(entity, 500);
-				break;
-			case TEST_SIX:
-				createTestTwoEntities(entity, 20000);
-				break;
-		}
-		return entity;
-	}
-
-	/**
-	 * Add 100 particles to scene for test 1.
-	 * 
-	 * @param scene
-	 * @return
-	 */
-	private void createTestOneEntities(EntityNode entity, int numberOfParticles)
-	{
-		entity.setId("E1");
-		
-		for(int i = 0; i < numberOfParticles; i++)
-		{
-			// Create a Position
-			Point position = new Point();
-			position.setX(getRandomGenerator().nextDouble() * 10);
-			position.setY(getRandomGenerator().nextDouble() * 10);
-			position.setZ(getRandomGenerator().nextDouble() * 10);
-
-			// Create particle and set position
-			ParticleNode particle = new ParticleNode();
-			particle.setPosition(position);
-			particle.setId("P" + i);
-
-			entity.addChild(particle);
-		}
-	}
-
-	/**
-	 * Create test 2 Scene, which consists of 50 triangles and cylinders
-	 * 
-	 * @param scene
-	 * @return
-	 */
-	private void createTestTwoEntities(EntityNode newEntity, int numberOfGeometries)
-	{
-
-		newEntity.setId("E" + numberOfGeometries);
-		
-		for(int i = 0; i < numberOfGeometries; i++)
-		{
-
-			// Create a Random position
-			Point position = new Point();
-			position.setX(0.0);
-			position.setY(0.0);
-			position.setZ(((double) i) + 0.3);
-
-			// Create a Random position
-			Point position2 = new Point();
-			position2.setX(0.0);
-			position2.setY(0.0);
-			position2.setZ(getRandomGenerator().nextDouble() * 100);
-
-			// Create a new Cylinder
-			CylinderNode cylynder = new CylinderNode("cylynder");
-			cylynder.setPosition(position);
-			cylynder.setDistal(position2);
-			cylynder.setId("C" + i);
-			cylynder.setRadiusBottom(getRandomGenerator().nextDouble() * 10);
-			cylynder.setRadiusTop(getRandomGenerator().nextDouble() * 10);
-
-			// Create new sphere and set values
-			SphereNode sphere = new SphereNode("sphere");
-			sphere.setPosition(position2);
-			sphere.setId("S" + i);
-			sphere.setRadius(getRandomGenerator().nextDouble() * 10);
-
-			// Add new entity before using it
-			
-
-			// Add created geometries to entities
-			newEntity.addChild(cylynder);
-			newEntity.addChild(sphere);
-		}
-
-	}
-
-	private Random getRandomGenerator()
-	{
-		if(randomGenerator == null)
-		{
-			randomGenerator = new Random();
-		}
-		return randomGenerator;
-	}
-
 	@Override
 	public boolean populateModelTree(AspectNode aspectNode) {
-		// TODO Auto-generated method stub
+		AspectSubTreeNode modelTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.MODEL_TREE);
+		
+		DynamicsSpecificationNode dynamics = new DynamicsSpecificationNode("Dynamics");
+		
+		PhysicalQuantity value = new PhysicalQuantity();
+		value.setScalingFactor("10");
+		value.setUnit("ms");
+		value.setValue(new StringValue("10"));
+		dynamics.setInitialConditions(value);
+		
+		FunctionNode function = new FunctionNode("Function");
+		function.setExpression("y=x+2");
+		
+		dynamics.setDynamics(function);
+		
+		ParameterSpecificationNode parameter = new ParameterSpecificationNode("Parameter");
+		
+		PhysicalQuantity value1 = new PhysicalQuantity();
+		value1.setScalingFactor("10");
+		value1.setUnit("ms");
+		value1.setValue(new StringValue("10"));	
+		
+		parameter.setValue(value1);
+		
+		FunctionNode functionNode = new FunctionNode("Function Node");
+		function.setExpression("y=x^2");
+		List<String> arguments = new ArrayList<String>();
+		arguments.add("1");
+		function.setArgument(arguments);
+				
+		modelTree.addChild(parameter);
+		modelTree.addChild(dynamics);
+		modelTree.addChild(functionNode);
+		
 		return false;
 	}
 
 	@Override
 	public boolean populateRuntimeTree(AspectNode aspectNode) {
-		// TODO Auto-generated method stub
-		return false;
+		AspectSubTreeNode modelTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.MODEL_TREE);
+		AspectSubTreeNode visualizationTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.VISUALIZATION_TREE);
+		AspectSubTreeNode simulationTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.WATCH_TREE);
+		
+		return true;
 	}
 
 	@Override

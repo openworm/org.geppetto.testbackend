@@ -20,19 +20,26 @@ import org.geppetto.core.data.model.SimpleType.Type;
 import org.geppetto.core.data.model.SimpleVariable;
 import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.ModelInterpreterException;
+import org.geppetto.core.model.ModelWrapper;
 import org.geppetto.core.model.quantities.PhysicalQuantity;
 import org.geppetto.core.model.runtime.ACompositeNode;
 import org.geppetto.core.model.runtime.ANode;
 import org.geppetto.core.model.runtime.AspectNode;
-import org.geppetto.core.model.runtime.AspectSubTreeNode;
 import org.geppetto.core.model.runtime.CompositeVariableNode;
+import org.geppetto.core.model.runtime.CylinderNode;
+import org.geppetto.core.model.runtime.ParticleNode;
+import org.geppetto.core.model.runtime.SphereNode;
 import org.geppetto.core.model.runtime.VariableNode;
+import org.geppetto.core.model.runtime.VisualGroupNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
+import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.model.values.AValue;
 import org.geppetto.core.model.values.ValuesFactory;
 import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
+import org.geppetto.core.visualisation.model.Point;
+import org.geppetto.testbackend.services.DummyModelInterpreterService.TEST_NO;
 import org.jscience.physics.amount.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,12 +56,18 @@ public class DummySimulatorService extends ASimulator
 
 	private static Log _logger = LogFactory.getLog(DummySimulatorService.class);
 
+	private static final String TEST = "TEST";
+
+	public enum TEST_NO
+	{
+		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX
+	}
+	
 	@Autowired
 	private SimulatorConfig dummySimulatorConfig;
 	
 	DecimalFormat df = new DecimalFormat("0.E0");
 
-	AspectSubTreeNode tree = new AspectSubTreeNode("dummyServices");
 	private Random randomGenerator;
 	private double timeTracker = 0;
 	private double step = 0.05;
@@ -68,30 +81,21 @@ public class DummySimulatorService extends ASimulator
 	public DummySimulatorService()
 	{
 		super();
-		_stateTree = new AspectSubTreeNode("dummyServices");
 	}
 
 	public void initialize(List<IModel> model, ISimulatorCallbackListener listener) throws GeppettoInitializationException, GeppettoExecutionException
 	{
 		super.initialize(model, listener);
-
-		if(_stateTree.getSubTree(AspectSubTreeNode.AspectTreeType.MODEL_TREE)!=null){
-			_stateTree.getSubTree(AspectSubTreeNode.AspectTreeType.MODEL_TREE).getChildren().clear();
-		}
 		
 		VariableNode child = new VariableNode("dummyChild");
 		// init statetree
 
 		PhysicalQuantity q = new PhysicalQuantity();
 		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
-		
-		((VariableNode)_stateTree.getSubTree(AspectSubTreeNode.AspectTreeType.MODEL_TREE).addChild(child)).addPhysicalQuantity(q);
-		
+				
 		// populate watch / force variables
 		setWatchableVariables();
-		setForceableVariables();
-				
-		getListener().stateTreeUpdated(_stateTree);
+		setForceableVariables();				
 	}
 
 	@Override
@@ -99,29 +103,27 @@ public class DummySimulatorService extends ASimulator
 		return this.dummySimulatorConfig.getSimulatorName();
 	}
 
-	public void simulate(IRunConfiguration runConfiguration) throws GeppettoExecutionException
+	public void simulate(IRunConfiguration runConfiguration, AspectNode aspect) throws GeppettoExecutionException
 	{
 		PhysicalQuantity q = new PhysicalQuantity();
 		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
-		// throw some junk into model-interpreter node as if results were being populated
-		((VariableNode) _stateTree.getSubTree(AspectSubTreeNode.AspectTreeType.MODEL_TREE).getChildren().get(0)).addPhysicalQuantity(q);
 
 		if(isWatching())
 		{
 			// add values of variables being watched to state tree
-			updateStateTreeForWatch();
+			updateStateTreeForWatch(aspect);
 		}
 
-		getListener().stateTreeUpdated(_stateTree);		
+		getListener().stateTreeUpdated(aspect);		
 	}
 
 	/**
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	private void updateStateTreeForWatch()
+	private void updateStateTreeForWatch(AspectNode aspect)
 	{
-		ACompositeNode watchTree = _stateTree.getSubTree(AspectTreeType.WATCH_TREE);
+		ACompositeNode watchTree = aspect.getSubTree(AspectTreeType.WATCH_TREE);
 		updateTimeNode();
 		
 		// check which watchable variables are being watched
@@ -311,7 +313,132 @@ public class DummySimulatorService extends ASimulator
 	@Override
 	public boolean populateVisualTree(AspectNode aspectNode) throws ModelInterpreterException
 	{
+		ModelWrapper modelWrapper = (ModelWrapper) aspectNode.getModel();
+
+		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
+		aspectNode.getSubTree(AspectTreeType.VISUALIZATION_TREE).apply(removeVisitor);
+
+		populateEntityForTest(aspectNode,(TEST_NO)modelWrapper.getModel(TEST));
+		return true;
+	}
+	
+	/**
+	 * Creates a Scene with random geometries added. A different scene is created for each different test
+	 * 
+	 * @param testNumber
+	 *            - Test Number to be perform
+	 * @return
+	 */
+	private void populateEntityForTest(AspectNode aspect, TEST_NO test)
+	{
+		switch(test)
+		{
+			case TEST_ONE:
+				createTestOneEntities(aspect, 100);
+				break;
+			case TEST_TWO:
+				createTestOneEntities(aspect, 10000);
+				break;
+			case TEST_THREE:
+				createTestOneEntities(aspect, 100000);
+				break;
+			case TEST_FOUR:
+				createTestTwoEntities(aspect, 50);
+				break;
+			case TEST_FIVE:
+				createTestTwoEntities(aspect, 500);
+				break;
+			case TEST_SIX:
+				createTestTwoEntities(aspect, 20000);
+				break;
+		}
+	}
+
+	/**
+	 * Add 100 particles to scene for test 1.
+	 * 
+	 * @param scene
+	 * @return
+	 */
+	private void createTestOneEntities(AspectNode aspect, int numberOfParticles)
+	{
+		VisualGroupNode visualGroup = new VisualGroupNode("Test One");
+		visualGroup.setId("E1");
+		
+		for(int i = 0; i < numberOfParticles; i++)
+		{
+			// Create a Position
+			Point position = new Point();
+			position.setX(getRandomGenerator().nextDouble() * 10);
+			position.setY(getRandomGenerator().nextDouble() * 10);
+			position.setZ(getRandomGenerator().nextDouble() * 10);
+
+			// Create particle and set position
+			ParticleNode particle = new ParticleNode("particle");
+			particle.setPosition(position);
+			particle.setId("P" + i);
+
+			visualGroup.addChild(particle);
+		}
+		aspect.getSubTree(AspectTreeType.VISUALIZATION_TREE).addChild(visualGroup);
+	}
+
+	/**
+	 * Create test 2 Scene, which consists of 50 triangles and cylinders
+	 * 
+	 * @param scene
+	 * @return
+	 */
+	private void createTestTwoEntities(AspectNode aspect, int numberOfGeometries)
+	{
+
+		VisualGroupNode visualGroup = new VisualGroupNode("Test Two");
+		visualGroup.setId("E" + numberOfGeometries);
+		
+		for(int i = 0; i < numberOfGeometries; i++)
+		{
+
+			// Create a Random position
+			Point position = new Point();
+			position.setX(0.0);
+			position.setY(0.0);
+			position.setZ(((double) i) + 0.3);
+
+			// Create a Random position
+			Point position2 = new Point();
+			position2.setX(0.0);
+			position2.setY(0.0);
+			position2.setZ(getRandomGenerator().nextDouble() * 100);
+
+			// Create a new Cylinder
+			CylinderNode cylynder = new CylinderNode("cylynder");
+			cylynder.setPosition(position);
+			cylynder.setDistal(position2);
+			cylynder.setId("C" + i);
+			cylynder.setRadiusBottom(getRandomGenerator().nextDouble() * 10);
+			cylynder.setRadiusTop(getRandomGenerator().nextDouble() * 10);
+
+			// Create new sphere and set values
+			SphereNode sphere = new SphereNode("sphere");
+			sphere.setPosition(position2);
+			sphere.setId("S" + i);
+			sphere.setRadius(getRandomGenerator().nextDouble() * 10);
+
+			// Add new entity before using it
+			
+
+			// Add created geometries to entities
+			visualGroup.addChild(cylynder);
+			visualGroup.addChild(sphere);
+		}
+		
+		aspect.getSubTree(AspectTreeType.VISUALIZATION_TREE).addChild(visualGroup);
+	}
+
+	@Override
+	public String getId()
+	{
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 }
