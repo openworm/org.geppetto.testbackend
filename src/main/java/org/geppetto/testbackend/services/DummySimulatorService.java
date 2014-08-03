@@ -25,6 +25,7 @@ import org.geppetto.core.model.quantities.PhysicalQuantity;
 import org.geppetto.core.model.runtime.ACompositeNode;
 import org.geppetto.core.model.runtime.ANode;
 import org.geppetto.core.model.runtime.AspectNode;
+import org.geppetto.core.model.runtime.AspectSubTreeNode;
 import org.geppetto.core.model.runtime.CompositeVariableNode;
 import org.geppetto.core.model.runtime.CylinderNode;
 import org.geppetto.core.model.runtime.ParticleNode;
@@ -39,7 +40,6 @@ import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
 import org.geppetto.core.visualisation.model.Point;
-import org.geppetto.testbackend.services.DummyModelInterpreterService.TEST_NO;
 import org.jscience.physics.amount.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,7 +95,9 @@ public class DummySimulatorService extends ASimulator
 				
 		// populate watch / force variables
 		setWatchableVariables();
-		setForceableVariables();				
+		setForceableVariables();
+		
+		getListener().stateTreeUpdated();	
 	}
 
 	@Override
@@ -108,13 +110,40 @@ public class DummySimulatorService extends ASimulator
 		PhysicalQuantity q = new PhysicalQuantity();
 		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
+		updateVisualTree(aspect);
+		
 		if(isWatching())
 		{
 			// add values of variables being watched to state tree
 			updateStateTreeForWatch(aspect);
 		}
 
-		getListener().stateTreeUpdated(aspect);		
+		getListener().stateTreeUpdated();		
+	}
+
+	private void updateVisualTree(AspectNode aspect) {
+		AspectSubTreeNode vis = (AspectSubTreeNode) aspect.getSubTree(AspectTreeType.VISUALIZATION_TREE);
+		
+		for(ANode node : vis.getChildren()){
+			if(node instanceof VisualGroupNode){
+				for(ANode n : ((VisualGroupNode) node).getChildren()){
+					updateNode((ParticleNode) n);
+				}
+			}
+			else if(node instanceof ParticleNode){
+				updateNode((ParticleNode) node);
+			}
+		}
+	}
+	
+	private void updateNode(ParticleNode particle){
+		// Create a Position
+		Point position = new Point();
+		position.setX(getRandomGenerator().nextDouble() * 10);
+		position.setY(getRandomGenerator().nextDouble() * 10);
+		position.setZ(getRandomGenerator().nextDouble() * 10);
+		
+		particle.setPosition(position);
 	}
 
 	/**
@@ -362,7 +391,7 @@ public class DummySimulatorService extends ASimulator
 	 */
 	private void createTestOneEntities(AspectNode aspect, int numberOfParticles)
 	{
-		VisualGroupNode visualGroup = new VisualGroupNode("Test One");
+		VisualGroupNode visualGroup = new VisualGroupNode("TestOne");
 		visualGroup.setId("E1");
 		
 		for(int i = 0; i < numberOfParticles; i++)
@@ -374,7 +403,7 @@ public class DummySimulatorService extends ASimulator
 			position.setZ(getRandomGenerator().nextDouble() * 10);
 
 			// Create particle and set position
-			ParticleNode particle = new ParticleNode("particle");
+			ParticleNode particle = new ParticleNode("particle-"+i);
 			particle.setPosition(position);
 			particle.setId("P" + i);
 
@@ -392,7 +421,7 @@ public class DummySimulatorService extends ASimulator
 	private void createTestTwoEntities(AspectNode aspect, int numberOfGeometries)
 	{
 
-		VisualGroupNode visualGroup = new VisualGroupNode("Test Two");
+		VisualGroupNode visualGroup = new VisualGroupNode("TestTwo");
 		visualGroup.setId("E" + numberOfGeometries);
 		
 		for(int i = 0; i < numberOfGeometries; i++)

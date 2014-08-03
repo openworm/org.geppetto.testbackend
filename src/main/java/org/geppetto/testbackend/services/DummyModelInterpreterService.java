@@ -29,6 +29,7 @@ import org.geppetto.core.model.simulation.Aspect;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.model.values.StringValue;
 import org.geppetto.core.visualisation.model.Point;
+import org.geppetto.testbackend.services.DummySimulatorService.TEST_NO;
 import org.springframework.stereotype.Service;
 
 /**
@@ -47,10 +48,6 @@ public class DummyModelInterpreterService implements IModelInterpreter
 
 	private static final String TEST = "TEST";
 
-	public enum TEST_NO
-	{
-		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX
-	}
 
 	private Random randomGenerator;
 
