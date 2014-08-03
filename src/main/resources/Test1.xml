@@ -2,17 +2,16 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.openworm.org/simulationSchema ../../src/main/resources/schema/simulationSchema.xsd ">
 	<tns:entity>
-		<tns:id>dummyServices</tns:id>
+		<tns:id>TestOne</tns:id>
 		<tns:aspect>
 			<tns:id>dummyServices</tns:id>
 			<tns:simulator>
 				<tns:simulatorId>dummySimulator</tns:simulatorId>
 			</tns:simulator>
 			<tns:model>
-				<tns:modelInterpreteIdr>dummyModelInterpreter</tns:modelInterpreterId>
+				<tns:modelInterpreterId>dummyModelInterpreter</tns:modelInterpreterId>
 				<tns:modelURL>https://dummyurl.com/TEST_ONE</tns:modelURL>
-			</tns:model>
-			
+			</tns:model>		
 		</tns:aspect>
 	</tns:entity>
 </tns:simulation>
