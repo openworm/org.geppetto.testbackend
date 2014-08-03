@@ -4,14 +4,15 @@
 	<tns:entity>
 		<tns:id>dummyServices</tns:id>
 		<tns:aspect>
-			<tns:model>
-				<tns:modelInterpreter>dummyModelInterpreter</tns:modelInterpreter>
-				<tns:modelURL>https://dummyurl.com/TEST_ONE</tns:modelURL>
-			</tns:model>
+			<tns:id>dummyServices</tns:id>
 			<tns:simulator>
 				<tns:simulatorId>dummySimulator</tns:simulatorId>
 			</tns:simulator>
-			<tns:id>dummyServices</tns:id>
+			<tns:model>
+				<tns:modelInterpreteIdr>dummyModelInterpreter</tns:modelInterpreterId>
+				<tns:modelURL>https://dummyurl.com/TEST_ONE</tns:modelURL>
+			</tns:model>
+			
 		</tns:aspect>
 	</tns:entity>
 </tns:simulation>
