@@ -27,6 +27,7 @@ import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
 import org.geppetto.core.model.runtime.VisualGroupNode;
 import org.geppetto.core.model.simulation.Aspect;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
+import org.geppetto.core.model.values.DoubleValue;
 import org.geppetto.core.model.values.StringValue;
 import org.geppetto.core.visualisation.model.Point;
 import org.geppetto.testbackend.services.DummySimulatorService.TEST_NO;
@@ -88,7 +89,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 		PhysicalQuantity value = new PhysicalQuantity();
 		value.setScalingFactor("10");
 		value.setUnit("ms");
-		value.setValue(new StringValue("10"));
+		value.setValue(new DoubleValue(10));
 		dynamics.setInitialConditions(value);
 		
 		FunctionNode function = new FunctionNode("Function");
@@ -101,15 +102,15 @@ public class DummyModelInterpreterService implements IModelInterpreter
 		PhysicalQuantity value1 = new PhysicalQuantity();
 		value1.setScalingFactor("10");
 		value1.setUnit("ms");
-		value1.setValue(new StringValue("10"));	
+		value1.setValue(new DoubleValue(10));	
 		
 		parameter.setValue(value1);
 		
-		FunctionNode functionNode = new FunctionNode("Function Node");
-		function.setExpression("y=x^2");
+		FunctionNode functionNode = new FunctionNode("FunctionNode");
+		functionNode.setExpression("y=x^2");
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("1");
-		function.setArgument(arguments);
+		functionNode.setArgument(arguments);
 				
 		modelTree.addChild(parameter);
 		modelTree.addChild(dynamics);
