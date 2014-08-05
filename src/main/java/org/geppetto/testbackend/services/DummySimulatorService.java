@@ -26,12 +26,12 @@ import org.geppetto.core.model.runtime.ACompositeNode;
 import org.geppetto.core.model.runtime.ANode;
 import org.geppetto.core.model.runtime.AspectNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode;
-import org.geppetto.core.model.runtime.CompositeVariableNode;
+import org.geppetto.core.model.runtime.CompositeNode;
 import org.geppetto.core.model.runtime.CylinderNode;
 import org.geppetto.core.model.runtime.ParticleNode;
 import org.geppetto.core.model.runtime.SphereNode;
 import org.geppetto.core.model.runtime.VariableNode;
-import org.geppetto.core.model.runtime.VisualGroupNode;
+import org.geppetto.core.model.runtime.CompositeNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.model.values.AValue;
@@ -125,8 +125,8 @@ public class DummySimulatorService extends ASimulator
 		AspectSubTreeNode vis = (AspectSubTreeNode) aspect.getSubTree(AspectTreeType.VISUALIZATION_TREE);
 		
 		for(ANode node : vis.getChildren()){
-			if(node instanceof VisualGroupNode){
-				for(ANode n : ((VisualGroupNode) node).getChildren()){
+			if(node instanceof CompositeNode){
+				for(ANode n : ((CompositeNode) node).getChildren()){
 					updateNode((ParticleNode) n);
 				}
 			}
@@ -291,7 +291,7 @@ public class DummySimulatorService extends ASimulator
 	 * Create Time Tree
 	 */
 	private void updateTimeNode(){
-		ACompositeNode time = new CompositeVariableNode();
+		ACompositeNode time = new CompositeNode();
 
 		if(time.getChildren().size() == 0){
 			PhysicalQuantity stepQ = new PhysicalQuantity();
@@ -391,8 +391,7 @@ public class DummySimulatorService extends ASimulator
 	 */
 	private void createTestOneEntities(AspectNode aspect, int numberOfParticles)
 	{
-		VisualGroupNode visualGroup = new VisualGroupNode("TestOne");
-		visualGroup.setId("E1");
+		CompositeNode visualGroup = new CompositeNode("TestOne");
 		
 		for(int i = 0; i < numberOfParticles; i++)
 		{
@@ -421,8 +420,7 @@ public class DummySimulatorService extends ASimulator
 	private void createTestTwoEntities(AspectNode aspect, int numberOfGeometries)
 	{
 
-		VisualGroupNode visualGroup = new VisualGroupNode("TestTwo");
-		visualGroup.setId("E" + numberOfGeometries);
+		CompositeNode visualGroup = new CompositeNode("TestTwo");
 		
 		for(int i = 0; i < numberOfGeometries; i++)
 		{
