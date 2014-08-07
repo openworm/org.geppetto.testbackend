@@ -1,14 +1,17 @@
 <tns:simulation xmlns:tns="http://www.openworm.org/simulationSchema"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.openworm.org/simulationSchema ../../src/main/resources/schema/simulationSchema.xsd ">
-	<tns:configuration>
-		<tns:outputFormat>RAW</tns:outputFormat>
-	</tns:configuration>
-	<tns:aspects>
-		<tns:modelInterpreter>dummyModelInterpreter</tns:modelInterpreter>
-		<tns:modelURL>https://dummyurl.com/TEST_THREE</tns:modelURL>
-		<tns:simulator>dummySimulator</tns:simulator>
-		<tns:id>dummyServices</tns:id>
-	</tns:aspects>
-	<tns:name>dummyServices</tns:name>
+	<tns:entity>
+		<tns:id>TestThree</tns:id>
+		<tns:aspect>
+			<tns:id>dummyServices</tns:id>
+			<tns:simulator>
+				<tns:simulatorId>dummySimulator</tns:simulatorId>
+			</tns:simulator>
+			<tns:model>
+				<tns:modelInterpreterId>dummyModelInterpreter</tns:modelInterpreterId>
+				<tns:modelURL>https://dummyurl.com/TEST_THREE</tns:modelURL>
+			</tns:model>		
+		</tns:aspect>
+	</tns:entity>
 </tns:simulation>

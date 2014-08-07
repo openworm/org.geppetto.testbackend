@@ -1,6 +1,7 @@
 package org.geppetto.testbackend.services;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -11,17 +12,24 @@ import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.IModelInterpreter;
 import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.ModelWrapper;
+import org.geppetto.core.model.quantities.PhysicalQuantity;
+import org.geppetto.core.model.runtime.ACompositeNode;
+import org.geppetto.core.model.runtime.AspectNode;
+import org.geppetto.core.model.runtime.AspectSubTreeNode;
+import org.geppetto.core.model.runtime.CylinderNode;
+import org.geppetto.core.model.runtime.DynamicsSpecificationNode;
+import org.geppetto.core.model.runtime.EntityNode;
+import org.geppetto.core.model.runtime.FunctionNode;
+import org.geppetto.core.model.runtime.ParameterSpecificationNode;
+import org.geppetto.core.model.runtime.ParticleNode;
+import org.geppetto.core.model.runtime.SphereNode;
+import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
 import org.geppetto.core.model.simulation.Aspect;
-import org.geppetto.core.model.state.StateTreeRoot;
-import org.geppetto.core.model.state.StateTreeRoot.SUBTREE;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
-import org.geppetto.core.visualisation.model.CAspect;
-import org.geppetto.core.visualisation.model.CEntity;
-import org.geppetto.core.visualisation.model.Cylinder;
-import org.geppetto.core.visualisation.model.Particle;
+import org.geppetto.core.model.values.DoubleValue;
+import org.geppetto.core.model.values.StringValue;
 import org.geppetto.core.visualisation.model.Point;
-import org.geppetto.core.visualisation.model.Sphere;
-import org.geppetto.core.visualisation.model.VisualModel;
+import org.geppetto.testbackend.services.DummySimulatorService.TEST_NO;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,10 +48,6 @@ public class DummyModelInterpreterService implements IModelInterpreter
 
 	private static final String TEST = "TEST";
 
-	private enum TEST_NO
-	{
-		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX
-	}
 
 	private Random randomGenerator;
 
@@ -75,154 +79,58 @@ public class DummyModelInterpreterService implements IModelInterpreter
 		return TEST_NO.valueOf(url.substring(url.lastIndexOf("/") + 1));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.geppetto.core.model.IModelInterpreter#getVisualEntity(org.geppetto.core.model.IModel, org.geppetto.core.model.simulation.Aspect, org.geppetto.core.model.state.StateTreeRoot)
-	 */
 	@Override
-	public CEntity getVisualEntity(IModel model, Aspect aspect, StateTreeRoot stateTree) throws ModelInterpreterException
-	{
-		logger.info("Using DummyModelInterpreter to create Scene from IModel");
-
-		ModelWrapper modelWrapper = (ModelWrapper) model;
-
-		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
-		stateTree.getSubTree(SUBTREE.MODEL_TREE).apply(removeVisitor);
-
-		// Returning a dummy created scene
-		CEntity centity = new CEntity();
-		CAspect caspect = new CAspect();
-		aspect.setId(aspect.getId());
-		centity.getAspects().add(caspect);
-		return populateEntityForTest(centity, (TEST_NO) modelWrapper.getModel(TEST));
-	}
-
-	/**
-	 * Creates a Scene with random geometries added. A different scene is created for each different test
-	 * 
-	 * @param testNumber
-	 *            - Test Number to be perform
-	 * @return
-	 */
-	private CEntity populateEntityForTest(CEntity entity, TEST_NO test)
-	{
-		switch(test)
-		{
-			case TEST_ONE:
-				createTestOneEntities(entity, 100);
-				break;
-			case TEST_TWO:
-				createTestOneEntities(entity, 10000);
-				break;
-			case TEST_THREE:
-				createTestOneEntities(entity, 100000);
-				break;
-			case TEST_FOUR:
-				createTestTwoEntities(entity, 50);
-				break;
-			case TEST_FIVE:
-				createTestTwoEntities(entity, 500);
-				break;
-			case TEST_SIX:
-				createTestTwoEntities(entity, 20000);
-				break;
-		}
-		return entity;
-	}
-
-	/**
-	 * Add 100 particles to scene for test 1.
-	 * 
-	 * @param scene
-	 * @return
-	 */
-	private void createTestOneEntities(CEntity entity, int numberOfParticles)
-	{
-		entity.setId("E1");
+	public boolean populateModelTree(AspectNode aspectNode) {
+		AspectSubTreeNode modelTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.MODEL_TREE);
 		
-		VisualModel visualModel=new VisualModel();
-		visualModel.setId("V1");
-		entity.getAspects().get(0).getVisualModel().add(visualModel);
+		DynamicsSpecificationNode dynamics = new DynamicsSpecificationNode("Dynamics");
 		
-		for(int i = 0; i < numberOfParticles; i++)
-		{
-			// Create a Position
-			Point position = new Point();
-			position.setX(getRandomGenerator().nextDouble() * 10);
-			position.setY(getRandomGenerator().nextDouble() * 10);
-			position.setZ(getRandomGenerator().nextDouble() * 10);
-
-			// Create particle and set position
-			Particle particle = new Particle();
-			particle.setPosition(position);
-			particle.setId("P" + i);
-
-			// Add created geometries to entities
-			visualModel.getObjects().add(particle);
-		}
+		PhysicalQuantity value = new PhysicalQuantity();
+		value.setScalingFactor("10");
+		value.setUnit("ms");
+		value.setValue(new DoubleValue(10));
+		dynamics.setInitialConditions(value);
+		
+		FunctionNode function = new FunctionNode("Function");
+		function.setExpression("y=x+2");
+		
+		dynamics.setDynamics(function);
+		
+		ParameterSpecificationNode parameter = new ParameterSpecificationNode("Parameter");
+		
+		PhysicalQuantity value1 = new PhysicalQuantity();
+		value1.setScalingFactor("10");
+		value1.setUnit("ms");
+		value1.setValue(new DoubleValue(10));	
+		
+		parameter.setValue(value1);
+		
+		FunctionNode functionNode = new FunctionNode("FunctionNode");
+		functionNode.setExpression("y=x^2");
+		List<String> arguments = new ArrayList<String>();
+		arguments.add("1");
+		functionNode.setArgument(arguments);
+				
+		modelTree.addChild(parameter);
+		modelTree.addChild(dynamics);
+		modelTree.addChild(functionNode);
+		
+		return false;
 	}
 
-	/**
-	 * Create test 2 Scene, which consists of 50 triangles and cylinders
-	 * 
-	 * @param scene
-	 * @return
-	 */
-	private void createTestTwoEntities(CEntity newEntity, int numberOfGeometries)
-	{
-
-		newEntity.setId("E" + numberOfGeometries);
-		VisualModel visualModel=new VisualModel();
-		visualModel.setId("V1");
-		newEntity.getAspects().get(0).getVisualModel().add(visualModel);
+	@Override
+	public boolean populateRuntimeTree(AspectNode aspectNode) {
+		AspectSubTreeNode modelTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.MODEL_TREE);
+		AspectSubTreeNode visualizationTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.VISUALIZATION_TREE);
+		AspectSubTreeNode simulationTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.WATCH_TREE);
 		
-		for(int i = 0; i < numberOfGeometries; i++)
-		{
-
-			// Create a Random position
-			Point position = new Point();
-			position.setX(0.0);
-			position.setY(0.0);
-			position.setZ(((double) i) + 0.3);
-
-			// Create a Random position
-			Point position2 = new Point();
-			position2.setX(0.0);
-			position2.setY(0.0);
-			position2.setZ(getRandomGenerator().nextDouble() * 100);
-
-			// Create a new Cylinder
-			Cylinder cylynder = new Cylinder();
-			cylynder.setPosition(position);
-			cylynder.setDistal(position2);
-			cylynder.setId("C" + i);
-			cylynder.setRadiusBottom(getRandomGenerator().nextDouble() * 10);
-			cylynder.setRadiusTop(getRandomGenerator().nextDouble() * 10);
-
-			// Create new sphere and set values
-			Sphere sphere = new Sphere();
-			sphere.setPosition(position2);
-			sphere.setId("S" + i);
-			sphere.setRadius(getRandomGenerator().nextDouble() * 10);
-
-			// Add new entity before using it
-			
-
-			// Add created geometries to entities
-			visualModel.getObjects().add(cylynder);
-			visualModel.getObjects().add(sphere);
-		}
-
+		return true;
 	}
 
-	private Random getRandomGenerator()
+	@Override
+	public String getName()
 	{
-		if(randomGenerator == null)
-		{
-			randomGenerator = new Random();
-		}
-		return randomGenerator;
+		return "Dummy Model Interpreter";
 	}
 
 }

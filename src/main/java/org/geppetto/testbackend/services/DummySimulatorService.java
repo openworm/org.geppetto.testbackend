@@ -19,16 +19,27 @@ import org.geppetto.core.data.model.SimpleType;
 import org.geppetto.core.data.model.SimpleType.Type;
 import org.geppetto.core.data.model.SimpleVariable;
 import org.geppetto.core.model.IModel;
-import org.geppetto.core.model.state.AStateNode;
-import org.geppetto.core.model.state.CompositeStateNode;
-import org.geppetto.core.model.state.SimpleStateNode;
-import org.geppetto.core.model.state.StateTreeRoot;
-import org.geppetto.core.model.state.StateTreeRoot.SUBTREE;
+import org.geppetto.core.model.ModelInterpreterException;
+import org.geppetto.core.model.ModelWrapper;
+import org.geppetto.core.model.quantities.PhysicalQuantity;
+import org.geppetto.core.model.runtime.ACompositeNode;
+import org.geppetto.core.model.runtime.ANode;
+import org.geppetto.core.model.runtime.AspectNode;
+import org.geppetto.core.model.runtime.AspectSubTreeNode;
+import org.geppetto.core.model.runtime.CompositeNode;
+import org.geppetto.core.model.runtime.CylinderNode;
+import org.geppetto.core.model.runtime.ParticleNode;
+import org.geppetto.core.model.runtime.SphereNode;
+import org.geppetto.core.model.runtime.VariableNode;
+import org.geppetto.core.model.runtime.CompositeNode;
+import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
+import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.model.values.AValue;
 import org.geppetto.core.model.values.ValuesFactory;
 import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
+import org.geppetto.core.visualisation.model.Point;
 import org.jscience.physics.amount.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,12 +56,18 @@ public class DummySimulatorService extends ASimulator
 
 	private static Log _logger = LogFactory.getLog(DummySimulatorService.class);
 
+	private static final String TEST = "TEST";
+
+	public enum TEST_NO
+	{
+		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX
+	}
+	
 	@Autowired
 	private SimulatorConfig dummySimulatorConfig;
 	
 	DecimalFormat df = new DecimalFormat("0.E0");
 
-	StateTreeRoot tree = new StateTreeRoot("dummyServices");
 	private Random randomGenerator;
 	private double timeTracker = 0;
 	private double step = 0.05;
@@ -64,26 +81,23 @@ public class DummySimulatorService extends ASimulator
 	public DummySimulatorService()
 	{
 		super();
-		_stateTree = new StateTreeRoot("dummyServices");
 	}
 
 	public void initialize(List<IModel> model, ISimulatorCallbackListener listener) throws GeppettoInitializationException, GeppettoExecutionException
 	{
 		super.initialize(model, listener);
-
-		if(_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE)!=null){
-			_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).getChildren().clear();
-		}
 		
-		SimpleStateNode child = new SimpleStateNode("dummyChild");
+		VariableNode child = new VariableNode("dummyChild");
 		// init statetree
-		((SimpleStateNode)_stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).addChild(child)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
+		PhysicalQuantity q = new PhysicalQuantity();
+		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
+				
 		// populate watch / force variables
 		setWatchableVariables();
 		setForceableVariables();
-				
-		getListener().stateTreeUpdated(_stateTree);
+		
+		getListener().stateTreeUpdated();	
 	}
 
 	@Override
@@ -91,27 +105,54 @@ public class DummySimulatorService extends ASimulator
 		return this.dummySimulatorConfig.getSimulatorName();
 	}
 
-	public void simulate(IRunConfiguration runConfiguration) throws GeppettoExecutionException
+	public void simulate(IRunConfiguration runConfiguration, AspectNode aspect) throws GeppettoExecutionException
 	{
-		// throw some junk into model-interpreter node as if results were being populated
-		((SimpleStateNode) _stateTree.getSubTree(StateTreeRoot.SUBTREE.MODEL_TREE).getChildren().get(0)).addValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
+		PhysicalQuantity q = new PhysicalQuantity();
+		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
+		updateVisualTree(aspect);
+		
 		if(isWatching())
 		{
 			// add values of variables being watched to state tree
-			updateStateTreeForWatch();
+			updateStateTreeForWatch(aspect);
 		}
 
-		getListener().stateTreeUpdated(_stateTree);		
+		getListener().stateTreeUpdated();		
+	}
+
+	private void updateVisualTree(AspectNode aspect) {
+		AspectSubTreeNode vis = (AspectSubTreeNode) aspect.getSubTree(AspectTreeType.VISUALIZATION_TREE);
+		
+		for(ANode node : vis.getChildren()){
+			if(node instanceof CompositeNode){
+				for(ANode n : ((CompositeNode) node).getChildren()){
+					updateNode((ParticleNode) n);
+				}
+			}
+			else if(node instanceof ParticleNode){
+				updateNode((ParticleNode) node);
+			}
+		}
+	}
+	
+	private void updateNode(ParticleNode particle){
+		// Create a Position
+		Point position = new Point();
+		position.setX(getRandomGenerator().nextDouble() * 10);
+		position.setY(getRandomGenerator().nextDouble() * 10);
+		position.setZ(getRandomGenerator().nextDouble() * 10);
+		
+		particle.setPosition(position);
 	}
 
 	/**
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	private void updateStateTreeForWatch()
+	private void updateStateTreeForWatch(AspectNode aspect)
 	{
-		CompositeStateNode watchTree = _stateTree.getSubTree(SUBTREE.WATCH_TREE);
+		ACompositeNode watchTree = aspect.getSubTree(AspectTreeType.WATCH_TREE);
 		updateTimeNode();
 		
 		// check which watchable variables are being watched
@@ -122,24 +163,25 @@ public class DummySimulatorService extends ASimulator
 				// if they are being watched add to state tree
 				if(varName.toLowerCase().equals(var.getName().toLowerCase()))
 				{
-					SimpleStateNode dummyNode = null;
+					VariableNode dummyNode = null;
 
-					for(AStateNode child : watchTree.getChildren())
+					for(ANode child : watchTree.getChildren())
 					{
 						if(child.getName().equals(var.getName()))
 						{
 							// assign if it already exists
-							dummyNode = (SimpleStateNode) child;
+							dummyNode = (VariableNode) child;
 						}
 					}
 
 					// only add if it's not already there
 					if(dummyNode == null)
 					{
-						dummyNode = new SimpleStateNode(var.getName());
+						dummyNode = new VariableNode(var.getName());
 						watchTree.addChild(dummyNode);
 					}
 
+					PhysicalQuantity p = new PhysicalQuantity();
 					AValue val = null;
 
 					// NOTE: this is a dummy simulator so we're making values up - we wouldn't need to do this in a real one
@@ -152,15 +194,15 @@ public class DummySimulatorService extends ASimulator
 						val = ValuesFactory.getFloatValue(getRandomGenerator().nextFloat());
 					}
 					
-					dummyNode.setUnit("mV");
+					p.setUnit("mV");
 					
 					if(scaleFactor == null){
 						calculateScaleFactor(val);
 					}
 
-					dummyNode.setScalingFactor(scaleFactor);
+					p.setScalingFactor(scaleFactor);
 
-					dummyNode.addValue(val);
+					p.setValue(val);
 					
 					updateTimeNode();
 				}
@@ -249,42 +291,181 @@ public class DummySimulatorService extends ASimulator
 	 * Create Time Tree
 	 */
 	private void updateTimeNode(){
-		CompositeStateNode time = _stateTree.getSubTree(SUBTREE.TIME_STEP);
+		ACompositeNode time = new CompositeNode();
 
 		if(time.getChildren().size() == 0){
+			PhysicalQuantity stepQ = new PhysicalQuantity();
 			AValue stepVal = ValuesFactory.getDoubleValue(step);
+			stepQ.setValue(stepVal);
+			
+			PhysicalQuantity timeQ = new PhysicalQuantity();
 			AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
-
+			timeQ.setValue(timeVal);
+			
 			//Add the name of the simulator to tree time node, to distinguis it from other
 			//times from other simulators
-			SimpleStateNode name = new SimpleStateNode("simulator");
-			name.addValue(ValuesFactory.getStringValue(this.getName()));
+			VariableNode name = new VariableNode("simulator");
+			PhysicalQuantity q = new PhysicalQuantity();
+			q.setValue(ValuesFactory.getStringValue(this.getName()));
+			name.addPhysicalQuantity(q);
 			
-			SimpleStateNode stepNode = new SimpleStateNode("step");
-			stepNode.addValue(stepVal);
-			stepNode.setUnit("ms");
+			VariableNode stepNode = new VariableNode("step");
+			stepNode.addPhysicalQuantity(stepQ);
 
-			SimpleStateNode timeNode = new SimpleStateNode("time");
-			timeNode.addValue(timeVal);
-			timeNode.setUnit("ms");
+			VariableNode timeNode = new VariableNode("time");
+			timeNode.addPhysicalQuantity(timeQ);
 			
 			time.addChild(stepNode);
 			time.addChild(timeNode);
 		}
 		else{
-			for(AStateNode child : time.getChildren()){
+			for(ANode child : time.getChildren()){
 				if(child.getName().equals("time")){
+					PhysicalQuantity q = new PhysicalQuantity();
 					AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
-					((SimpleStateNode)child).addValue(timeVal);
+					q.setValue(timeVal);
+					((VariableNode)child).addPhysicalQuantity(q);
 				}
 				else if(child.getName().equals("step")){
+					PhysicalQuantity q = new PhysicalQuantity();
 					AValue timeVal = ValuesFactory.getDoubleValue(step);
-					((SimpleStateNode)child).addValue(timeVal);
+					q.setValue(timeVal);
+					((VariableNode)child).addPhysicalQuantity(q);
 				}
 			}
 		}
 		timeTracker += step;
 		
 		timeTracker = Double.valueOf(df2.format(timeTracker));
+	}
+
+	@Override
+	public boolean populateVisualTree(AspectNode aspectNode) throws ModelInterpreterException
+	{
+		ModelWrapper modelWrapper = (ModelWrapper) aspectNode.getModel();
+
+		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
+		aspectNode.getSubTree(AspectTreeType.VISUALIZATION_TREE).apply(removeVisitor);
+
+		populateEntityForTest(aspectNode,(TEST_NO)modelWrapper.getModel(TEST));
+		return true;
+	}
+	
+	/**
+	 * Creates a Scene with random geometries added. A different scene is created for each different test
+	 * 
+	 * @param testNumber
+	 *            - Test Number to be perform
+	 * @return
+	 */
+	private void populateEntityForTest(AspectNode aspect, TEST_NO test)
+	{
+		switch(test)
+		{
+			case TEST_ONE:
+				createTestOneEntities(aspect, 100);
+				break;
+			case TEST_TWO:
+				createTestOneEntities(aspect, 10000);
+				break;
+			case TEST_THREE:
+				createTestOneEntities(aspect, 100000);
+				break;
+			case TEST_FOUR:
+				createTestTwoEntities(aspect, 50);
+				break;
+			case TEST_FIVE:
+				createTestTwoEntities(aspect, 500);
+				break;
+			case TEST_SIX:
+				createTestTwoEntities(aspect, 20000);
+				break;
+		}
+	}
+
+	/**
+	 * Add 100 particles to scene for test 1.
+	 * 
+	 * @param scene
+	 * @return
+	 */
+	private void createTestOneEntities(AspectNode aspect, int numberOfParticles)
+	{
+		CompositeNode visualGroup = new CompositeNode("TestOne");
+		
+		for(int i = 0; i < numberOfParticles; i++)
+		{
+			// Create a Position
+			Point position = new Point();
+			position.setX(getRandomGenerator().nextDouble() * 10);
+			position.setY(getRandomGenerator().nextDouble() * 10);
+			position.setZ(getRandomGenerator().nextDouble() * 10);
+
+			// Create particle and set position
+			ParticleNode particle = new ParticleNode("particle-"+i);
+			particle.setPosition(position);
+			particle.setId("P" + i);
+
+			visualGroup.addChild(particle);
+		}
+		aspect.getSubTree(AspectTreeType.VISUALIZATION_TREE).addChild(visualGroup);
+	}
+
+	/**
+	 * Create test 2 Scene, which consists of 50 triangles and cylinders
+	 * 
+	 * @param scene
+	 * @return
+	 */
+	private void createTestTwoEntities(AspectNode aspect, int numberOfGeometries)
+	{
+
+		CompositeNode visualGroup = new CompositeNode("TestTwo");
+		
+		for(int i = 0; i < numberOfGeometries; i++)
+		{
+
+			// Create a Random position
+			Point position = new Point();
+			position.setX(0.0);
+			position.setY(0.0);
+			position.setZ(((double) i) + 0.3);
+
+			// Create a Random position
+			Point position2 = new Point();
+			position2.setX(0.0);
+			position2.setY(0.0);
+			position2.setZ(getRandomGenerator().nextDouble() * 100);
+
+			// Create a new Cylinder
+			CylinderNode cylynder = new CylinderNode("cylynder");
+			cylynder.setPosition(position);
+			cylynder.setDistal(position2);
+			cylynder.setId("C" + i);
+			cylynder.setRadiusBottom(getRandomGenerator().nextDouble() * 10);
+			cylynder.setRadiusTop(getRandomGenerator().nextDouble() * 10);
+
+			// Create new sphere and set values
+			SphereNode sphere = new SphereNode("sphere");
+			sphere.setPosition(position2);
+			sphere.setId("S" + i);
+			sphere.setRadius(getRandomGenerator().nextDouble() * 10);
+
+			// Add new entity before using it
+			
+
+			// Add created geometries to entities
+			visualGroup.addChild(cylynder);
+			visualGroup.addChild(sphere);
+		}
+		
+		aspect.getSubTree(AspectTreeType.VISUALIZATION_TREE).addChild(visualGroup);
+	}
+
+	@Override
+	public String getId()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
