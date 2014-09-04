@@ -14,5 +14,5 @@
 			</tns:model>		
 		</tns:aspect>
 	</tns:entity>
-	<tns:script>https://raw.github.com/openworm/org.geppetto.testbackend/development/src/main/resources/TestSimulationScript.js</tns:script>
+	<tns:script>https://raw.github.com/openworm/org.geppetto.testbackend/referencing_variables/src/main/resources/TestSimulationScript.js</tns:script>
 </tns:simulation>
