@@ -291,7 +291,7 @@ public class DummySimulatorService extends ASimulator
 	 * Create Time Tree
 	 */
 	private void updateTimeNode(){
-		ACompositeNode time = new CompositeNode();
+		ACompositeNode time = new CompositeNode("dummyID");
 
 		if(time.getChildren().size() == 0){
 			PhysicalQuantity stepQ = new PhysicalQuantity();
