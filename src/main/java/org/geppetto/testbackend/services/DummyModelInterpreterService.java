@@ -13,23 +13,15 @@ import org.geppetto.core.model.IModelInterpreter;
 import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.ModelWrapper;
 import org.geppetto.core.model.quantities.PhysicalQuantity;
-import org.geppetto.core.model.runtime.ACompositeNode;
 import org.geppetto.core.model.runtime.AspectNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode;
-import org.geppetto.core.model.runtime.CylinderNode;
 import org.geppetto.core.model.runtime.DynamicsSpecificationNode;
-import org.geppetto.core.model.runtime.EntityNode;
 import org.geppetto.core.model.runtime.FunctionNode;
 import org.geppetto.core.model.runtime.ParameterSpecificationNode;
-import org.geppetto.core.model.runtime.ParticleNode;
-import org.geppetto.core.model.runtime.SphereNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
-import org.geppetto.core.model.simulation.Aspect;
-import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.model.values.DoubleValue;
-import org.geppetto.core.model.values.StringValue;
-import org.geppetto.core.visualisation.model.Point;
 import org.geppetto.testbackend.services.DummySimulatorService.TEST_NO;
+import org.geppetto.testbackend.utilities.Utilities;
 import org.springframework.stereotype.Service;
 
 /**
@@ -58,25 +50,13 @@ public class DummyModelInterpreterService implements IModelInterpreter
 
 		ModelWrapper wrapper = new ModelWrapper(UUID.randomUUID().toString());
 		wrapper.setInstancePath(instancePath);
-		TEST_NO test = getTestName(url.toString());
+		TEST_NO test = Utilities.getTestName(url.toString());
 
 		logger.warn("Wrap Model " + test);
 
 		wrapper.wrapModel(TEST, test);
 
 		return wrapper;
-	}
-
-	/**
-	 * Number of test to perform is included in the url value.
-	 * 
-	 * @param url
-	 *            - Dummy URL used to fullfill format requirements for file. Number of test included in URL at the end as in ; https://dummy.url/TEST_ONE
-	 * @return
-	 */
-	private TEST_NO getTestName(String url)
-	{
-		return TEST_NO.valueOf(url.substring(url.lastIndexOf("/") + 1));
 	}
 
 	@Override
