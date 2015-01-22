@@ -85,7 +85,7 @@ public class Utilities {
         } else {
 
             if (Utilities.isWindowsBasedPlatform()) {
-                Collections.addAll(options, "C://nrn73", "C://nrn72", "C://nrn71", "C://nrn70", "C://nrn62", "C://nrn61", "C://nrn60");
+                Collections.addAll(options, "C://nrn73/bin/nrniv.exe", "C://nrn72/bin/nrniv.exe", "C://nrn71/bin/nrniv.exe", "C://nrn70/bin/nrniv.exe", "C://nrn62/bin/nrniv.exe", "C://nrn61/bin/nrniv.exe", "C://nrn60/bin/nrniv.exe");
 
             } else if (Utilities.isMacBasedPlatform()) {
                 String[] vers = new String[]{"7.3", "7.2", "7.1", "6.2", "6.1", "6.0"};
@@ -96,12 +96,12 @@ public class Utilities {
                 }
 
             } else if (Utilities.isLinuxBasedPlatform()) {
-                options.add("/usr/local");
+                options.add("/usr/local/nrn/x86_84/bin");
             }
         }
 
         for (String option : options) {
-            File f = new File(option, "bin/nrniv.exe");
+            File f = new File(option);
             if (f.exists()) {
                 return f;
             }
