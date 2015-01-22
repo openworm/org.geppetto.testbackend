@@ -27,4 +27,20 @@
 	<bean id="dummySimulatorService" scope="thread" class="org.geppetto.testbackend.services.DummySimulatorService">
 	<aop:scoped-proxy proxy-target-class="false"/>
 	</bean>
+	<osgi:service id="NeuronModelExporter" ref="neuronModelInterpreterService" interface="org.geppetto.core.model.IModelInterpreter">
+		<osgi:service-properties>
+			<entry key="discoverableID" value="neuronModelInterpreter" />
+		</osgi:service-properties>
+	</osgi:service>
+	<bean id="neuronModelInterpreterService" scope="thread" class="org.geppetto.testbackend.services.NeuronModelInterpreterService">
+	<aop:scoped-proxy proxy-target-class="false"/>
+	</bean>
+	<osgi:service id="NeuronSimulatorExporter" ref="neuronSimulatorService" interface="org.geppetto.core.simulator.ISimulator">
+		<osgi:service-properties>
+			<entry key="discoverableID" value="neuronSimulator" />
+		</osgi:service-properties>
+	</osgi:service>
+	<bean id="neuronSimulatorService" scope="thread" class="org.geppetto.testbackend.services.NeuronSimulatorService">
+	<aop:scoped-proxy proxy-target-class="false"/>
+	</bean>
 </beans>
