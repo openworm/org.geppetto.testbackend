@@ -103,7 +103,7 @@ public class Utilities {
         for (String option : options) {
             File f = new File(option, "bin/nrniv.exe");
             if (f.exists()) {
-                return new File(option);
+                return f;
             }
         }
 

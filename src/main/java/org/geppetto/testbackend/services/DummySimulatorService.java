@@ -2,6 +2,8 @@ package org.geppetto.testbackend.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -391,7 +393,13 @@ public class DummySimulatorService extends ASimulator
 				createTestTwoEntities(aspect, 20000);
 				break;
 			case TEST_SEVEN:
-				File f = new File("../src/main/resources/purk2.nml");
+				URL url = this.getClass().getClassLoader().getResource("/purkinje");
+			    File f = null;
+			    try {
+			        f = new File(url.toURI());
+			    } catch (URISyntaxException e) {
+			        f = new File(url.getPath());
+			    }
 
 		        try {
 		           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
@@ -532,30 +540,16 @@ public class DummySimulatorService extends ASimulator
 
                 _logger.info("Automatic compilation of NEURON mod files on Windows not yet implemented...");
 
-                /*
-                 File modCompileScript = ProjectStructure.getNeuronUtilsWinModCompileFile();
-                 if (showDialog)
-                 {
                  commandToExecute = neuronHome
                  + "\\bin\\rxvt.exe -e "
                  + neuronHome
                  + "/bin/sh \""
-                 + modCompileScript.getAbsolutePath()
+                 + modDirectory.getAbsolutePath()
                  + "\" "
                  + neuronHome
                  + " ";
-                 }
-                 else
-                 {
-                 commandToExecute = neuronHome
-                 + "/bin/sh \""
-                 + modCompileScript.getAbsolutePath()
-                 + "\" "
-                 + neuronHome
-                 + " "+" -q"; //quiet mode, no "press any key to continue"...
-                 }
-                
-                 E.info("commandToExecute: " + commandToExecute);*/
+                 
+                 _logger.info("commandToExecute: " + commandToExecute);
             } else {
                 _logger.info("Assuming *nix environment...");
 
