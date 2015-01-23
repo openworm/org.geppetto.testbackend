@@ -96,7 +96,7 @@ public class Utilities {
                 }
 
             } else if (Utilities.isLinuxBasedPlatform()) {
-                options.add("/usr/local/nrn/x86_64/bin");
+                options.add("/usr/local/nrn/x86_64");
             }
         }
 
