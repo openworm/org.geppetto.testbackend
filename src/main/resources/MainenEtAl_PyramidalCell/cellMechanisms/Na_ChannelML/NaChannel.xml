@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<channelml xmlns="http://morphml.org/channelml/schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://morphml.org/channelml/schema http://www.neuroml.org/NeuroMLValidator/NeuroMLFiles/Schemata/v1.8.0/Level2/ChannelML_v1.8.0.xsd"
+    xmlns:meta="http://morphml.org/metadata/schema"
+    units="Physiological Units">
+    
+	<meta:notes>ChannelML file containing a single Channel description, based on the model described in: Mainen et al. 1995</meta:notes>
+
+	<channel_type name="Na_ChannelML" density="yes">
+
+		<status value="stable">
+			<meta:contributor>
+				<meta:name>Padraig Gleeson</meta:name>
+			</meta:contributor>
+		</status>
+
+		<meta:notes>Fast Na channel as used in Mainen ZF, Joerges J, Huguenard JR, Sejnowski TJ (1995)</meta:notes>
+
+		<meta:authorList>
+			<meta:modelAuthor>
+				<meta:name>Zach Mainen</meta:name>
+			</meta:modelAuthor>
+			<meta:modelTranslator>
+				<meta:name>Padraig Gleeson</meta:name>
+				<meta:institution>UCL</meta:institution>    
+				<meta:email>p.gleeson - at - ucl.ac.uk</meta:email>
+			</meta:modelTranslator>
+		</meta:authorList>
+        
+		<meta:publication>
+			<meta:fullTitle>Mainen ZF, Joerges J, Huguenard JR, Sejnowski TJ (1995) A model of spike initiation in
+			neocortical pyramidal neurons. Neuron 15:1427-39</meta:fullTitle>
+			<meta:pubmedRef>http://www.ncbi.nlm.nih.gov/pubmed/8845165?dopt=Abstract</meta:pubmedRef>
+		</meta:publication>
+
+		<current_voltage_relation cond_law="ohmic" ion="na" default_gmax="3" default_erev="60">
+		
+			<q10_settings q10_factor="2.3" experimental_temp="23"/>
+
+			<gate name="m" instances="3">
+				<closed_state id="m0"/>
+				<open_state id="m" fraction="1"/>
+
+				<transition name="alpha" from="m0" to="m" expr_form="exp_linear" rate="1.638" scale="9" midpoint="-35" />
+
+				<transition name="beta" from="m" to="m0" expr_form="exp_linear" rate="1.116" scale="-9" midpoint="-35" />
+
+			</gate>
+
+			<gate name="h" instances="1">
+				<closed_state id="h0"/>
+				<open_state id="h" fraction="1"/>
+
+				<transition name="alpha" from="h0" to="h" expr_form="exp_linear" rate="0.12" scale="5" midpoint="-50" />
+
+				<transition name="beta" from="h" to="h0" expr_form="exp_linear" rate="0.0455" scale="-5" midpoint="-75" />
+
+				<steady_state name="inf" from="h0" to="h" expr_form="sigmoid" rate="1" scale="6.2" midpoint="-65" />
+
+			</gate>
+			
+		</current_voltage_relation>
+		
+		<impl_prefs>
+			<comment>Setting recommended table size to match more closely the original mod file implementation</comment>
+			<table_settings max_v="100" min_v="-120" table_divisions="199"/>
+		</impl_prefs>
+
+	</channel_type>
+	
+</channelml>

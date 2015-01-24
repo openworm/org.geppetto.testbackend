@@ -67,7 +67,7 @@ public class DummySimulatorService extends ASimulator
 
 	public enum TEST_NO
 	{
-		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX, TEST_SEVEN, TEST_EIGHT
+		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX, TEST_SEVEN, TEST_EIGHT, TEST_NINE,TEST_TEN, TEST_ELEVEN
 	}
 	
 	@Autowired
@@ -412,17 +412,74 @@ public class DummySimulatorService extends ASimulator
 				}
 				break;
 			case TEST_EIGHT:
-				URL url2 = this.getClass().getClassLoader().getResource("/neuron_python_test.py");
-			    File f2 = null;
+				url = this.getClass().getClassLoader().getResource("/neuron_python_test.py");
+			    f = null;
 			    try {
-			        f2 = new File(url2.toURI());
+			        f = new File(url.toURI());
 			    } catch (URISyntaxException e) {
-			        f2 = new File(url2.getPath());
+			        f = new File(url.getPath());
 			    }
 
 		        try {
-		           _logger.info("Trying to compile mods in: " + f2.getCanonicalPath());
-		            compileFileWithNeuron(f2, false);
+		           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
+		            compileFileWithNeuron(f, false);
+		            _logger.info("Done!");
+		        } catch (GeppettoExecutionException ex) {
+		        	throw new GeppettoExecutionException(ex);
+		        } catch (IOException e) {
+					throw new GeppettoExecutionException(e);
+				}
+				break;
+			case TEST_NINE:
+				url = this.getClass().getClassLoader().getResource("/CA1PyramidalCell");
+			    f = null;
+			    try {
+			        f = new File(url.toURI());
+			    } catch (URISyntaxException e) {
+			        f = new File(url.getPath());
+			    }
+
+		        try {
+		           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
+		            compileFileWithNeuron(f, false);
+		            _logger.info("Done!");
+		        } catch (GeppettoExecutionException ex) {
+		        	throw new GeppettoExecutionException(ex);
+		        } catch (IOException e) {
+					throw new GeppettoExecutionException(e);
+				}
+				break;
+			case TEST_TEN:
+				url = this.getClass().getClassLoader().getResource("/MainenEtAl_PyramidalCell");
+			    f = null;
+			    try {
+			        f = new File(url.toURI());
+			    } catch (URISyntaxException e) {
+			        f = new File(url.getPath());
+			    }
+
+		        try {
+		           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
+		            compileFileWithNeuron(f, false);
+		            _logger.info("Done!");
+		        } catch (GeppettoExecutionException ex) {
+		        	throw new GeppettoExecutionException(ex);
+		        } catch (IOException e) {
+					throw new GeppettoExecutionException(e);
+				}
+				break;
+			case TEST_ELEVEN:
+				url = this.getClass().getClassLoader().getResource("/PurkinjeCell");
+			    f = null;
+			    try {
+			        f = new File(url.toURI());
+			    } catch (URISyntaxException e) {
+			        f = new File(url.getPath());
+			    }
+
+		        try {
+		           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
+		            compileFileWithNeuron(f, false);
 		            _logger.info("Done!");
 		        } catch (GeppettoExecutionException ex) {
 		        	throw new GeppettoExecutionException(ex);

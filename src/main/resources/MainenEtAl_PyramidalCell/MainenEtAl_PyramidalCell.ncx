@@ -1,0 +1,1544 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_24" class="java.beans.XMLDecoder"> 
+
+<!-- This is a neuroConstruct project file. It's best to open this
+file with neuroConstruct, as opposed to editing it directly. 
+
+Note that this file is neuroConstruct specific and isn't any 
+part of NeuroML or any standardised XML specification. -->
+
+ <object class="ucl.physiol.neuroconstruct.project.BasicProjectInfo"> 
+  <void property="projectDescription"> 
+   <string>Implementation of the Mainen et al. pyramidal cell model from: Mainen ZF, Joerges J, Huguenard JR, Sejnowski TJ (1995) A model of spike initiation in neocortical pyramidal neurons. Neuron 15:1427-39. This project is based on scripts obtained from: http://senselab.med.yale.edu/senselab/modeldb/ShowModel.asp?model=8210.  
+
+The first two Simulation Configurations (Default Simulation Configuration and DendriticStimulation, which can be clicked below) use the morphology and channels imported from the original scripts, and so are only available for NEURON. See tab Export -&gt; NEURON -&gt; Extra hoc code for the extra hoc needed to make the model run. 
+ 
+The SomaStimNeuroML and DendStimNeuroML Sim Configs use cells fully specified in neuroConstruct&apos;s NeuroML based internal model and do not require any extra code to run on either NEURON or GENESIS.
+
+</string> 
+  </void> 
+  <void property="projectFileVersion"> 
+   <string>neuroConstruct v1.5.1</string> 
+  </void> 
+  <void property="projectName"> 
+   <string>MainenEtAl_PyramidalCell</string> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.project.RegionsInfo"> 
+  <void property="internalData"> 
+   <void method="get"> 
+    <string>Name</string> 
+    <void method="add"> 
+     <string>Regions_1</string> 
+    </void> 
+   </void> 
+   <void method="get"> 
+    <string>Colour</string> 
+    <void method="add"> 
+     <object class="java.awt.Color"> 
+      <int>255</int> 
+      <int>255</int> 
+      <int>255</int> 
+      <int>255</int> 
+     </object> 
+    </void> 
+   </void> 
+   <void method="get"> 
+    <string>Description</string> 
+    <void method="add"> 
+     <object class="ucl.physiol.neuroconstruct.project.RectangularBox"> 
+      <void property="parameterList"> 
+       <void index="4"> 
+        <void property="value"> 
+         <float>100.0</float> 
+        </void> 
+       </void> 
+      </void> 
+     </object> 
+    </void> 
+   </void> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.project.CellGroupsInfo"> 
+  <void property="internalData"> 
+   <void method="get"> 
+    <string>Cell Packing Adapter</string> 
+    <void method="add"> 
+     <object class="ucl.physiol.neuroconstruct.project.packing.SinglePositionedCellPackingAdapter"/> 
+    </void> 
+    <void method="add"> 
+     <object class="ucl.physiol.neuroconstruct.project.packing.RandomCellPackingAdapter"/> 
+    </void> 
+    <void method="add"> 
+     <object class="ucl.physiol.neuroconstruct.project.packing.RandomCellPackingAdapter"/> 
+    </void> 
+    <void method="add"> 
+     <object class="ucl.physiol.neuroconstruct.project.packing.RandomCellPackingAdapter"/> 
+    </void> 
+    <void method="add"> 
+     <object class="ucl.physiol.neuroconstruct.project.packing.SinglePositionedCellPackingAdapter"/> 
+    </void> 
+   </void> 
+   <void method="get"> 
+    <string>Cell Type</string> 
+    <void method="add"> 
+     <string>MainenCellMod</string> 
+    </void> 
+    <void method="add"> 
+     <string>OneComp_pas</string> 
+    </void> 
+    <void method="add"> 
+     <string>OneComp_orig</string> 
+    </void> 
+    <void method="add"> 
+     <string>OneComp_ChannelML</string> 
+    </void> 
+    <void method="add"> 
+     <string>MainenNeuroML</string> 
+    </void> 
+   </void> 
+   <void method="get"> 
+    <string>Priority</string> 
+    <void method="add"> 
+     <int>10</int> 
+    </void> 
+    <void method="add"> 
+     <int>9</int> 
+    </void> 
+    <void method="add"> 
+     <int>8</int> 
+    </void> 
+    <void method="add"> 
+     <int>7</int> 
+    </void> 
+    <void method="add"> 
+     <int>6</int> 
+    </void> 
+   </void> 
+   <void method="get"> 
+    <string>Colour</string> 
+    <void method="add"> 
+     <object class="java.awt.Color"> 
+      <int>51</int> 
+      <int>51</int> 
+      <int>51</int> 
+      <int>255</int> 
+     </object> 
+    </void> 
+    <void method="add"> 
+     <object class="java.awt.Color"> 
+      <int>218</int> 
+      <int>172</int> 
+      <int>195</int> 
+      <int>255</int> 
+     </object> 
+    </void> 
+    <void method="add"> 
+     <object class="java.awt.Color"> 
+      <int>149</int> 
+      <int>190</int> 
+      <int>159</int> 
+      <int>255</int> 
+     </object> 
+    </void> 
+    <void method="add"> 
+     <object class="java.awt.Color"> 
+      <int>185</int> 
+      <int>86</int> 
+      <int>79</int> 
+      <int>255</int> 
+     </object> 
+    </void> 
+    <void method="add"> 
+     <object class="java.awt.Color"> 
+      <int>42</int> 
+      <int>171</int> 
+      <int>240</int> 
+      <int>255</int> 
+     </object> 
+    </void> 
+   </void> 
+   <void method="get"> 
+    <string>Region Name</string> 
+    <void method="add"> 
+     <string>Regions_1</string> 
+    </void> 
+    <void method="add"> 
+     <string>Regions_1</string> 
+    </void> 
+    <void method="add"> 
+     <string>Regions_1</string> 
+    </void> 
+    <void method="add"> 
+     <string>Regions_1</string> 
+    </void> 
+    <void method="add"> 
+     <string>Regions_1</string> 
+    </void> 
+   </void> 
+   <void method="get"> 
+    <string>Cell Group Name</string> 
+    <void method="add"> 
+     <string>OriginalCell</string> 
+    </void> 
+    <void method="add"> 
+     <string>One_pas</string> 
+    </void> 
+    <void method="add"> 
+     <string>One_orig</string> 
+    </void> 
+    <void method="add"> 
+     <string>One_ChannelML</string> 
+    </void> 
+    <void method="add"> 
+     <string>NeuroMLBased</string> 
+    </void> 
+   </void> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.project.SimPlotInfo"> 
+  <void property="allSimPlots"> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>OriginalCell</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>GraphWin_0</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>40.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>-80.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>SomaPlot</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>0</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>OriginalCell</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>GraphWin_0</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>40.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>-80.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>DendSite</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>4200</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>One_pas</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>GraphWin_2</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>50.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>-90.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>Plot_0</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>0</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>One_orig</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>GraphWin_2</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>50.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>-90.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>Plot_1</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>0</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>One_ChannelML</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>GraphWin_2</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>50.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>-90.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>Plot_2</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>0</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>NeuroMLBased</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>*</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>NeuroMLBased_v</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>60.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>-90.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>NeuroMLBased_v</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>0</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>NeuroMLBased</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>*</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>NeuroMLBased_v</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>60.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>-90.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>DendXML</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>4197</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>NeuroMLBased</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>NeuroMLBased_v</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>60.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>-90.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>IsegXML</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>5649</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>One_orig</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>GraphWin_1</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>50.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>0.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>Var_0</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>0</string> 
+     </void> 
+     <void property="valuePlotted"> 
+      <string>na3:m</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>One_orig</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>GraphWin_1</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>1.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>0.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>Var_1</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>0</string> 
+     </void> 
+     <void property="valuePlotted"> 
+      <string>na3:h</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>One_ChannelML</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>GraphWin_1</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>1.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>0.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>Var_2</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>0</string> 
+     </void> 
+     <void property="valuePlotted"> 
+      <string>Na_ChannelML:m</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>One_ChannelML</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>GraphWin_1</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>1.0</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>0.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>Var_3</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>0</string> 
+     </void> 
+     <void property="valuePlotted"> 
+      <string>Na_ChannelML:h</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>One_orig</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>GraphWin_4</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>0.1</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>0.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>Var_4</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>0</string> 
+     </void> 
+     <void property="valuePlotted"> 
+      <string>kd3:n</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimPlot"> 
+     <void property="cellGroup"> 
+      <string>One_ChannelML</string> 
+     </void> 
+     <void property="cellNumber"> 
+      <string>0</string> 
+     </void> 
+     <void property="graphWindow"> 
+      <string>GraphWin_4</string> 
+     </void> 
+     <void property="maxValue"> 
+      <float>0.1</float> 
+     </void> 
+     <void property="minValue"> 
+      <float>0.0</float> 
+     </void> 
+     <void property="plotAndOrSave"> 
+      <string>Plot and save</string> 
+     </void> 
+     <void property="plotReference"> 
+      <string>Var_5</string> 
+     </void> 
+     <void property="segmentId"> 
+      <string>0</string> 
+     </void> 
+     <void property="valuePlotted"> 
+      <string>K_ChannelML:n</string> 
+     </void> 
+    </object> 
+   </void> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.project.ProjectProperties"> 
+  <void property="preferredSaveFormat"> 
+   <string>Java Serialized Object Format</string> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.utils.Display3DProperties"> 
+  <void property="backgroundColour3D"> 
+   <object class="java.awt.Color"> 
+    <int>185</int> 
+    <int>185</int> 
+    <int>249</int> 
+    <int>255</int> 
+   </object> 
+  </void> 
+  <void property="cellColour3D"> 
+   <object class="java.awt.Color"> 
+    <int>102</int> 
+    <int>102</int> 
+    <int>102</int> 
+    <int>255</int> 
+   </object> 
+  </void> 
+  <void property="displayOption"> 
+   <string>Soma solid, neurite lines</string> 
+  </void> 
+  <void property="resolution3DElements"> 
+   <int>12</int> 
+  </void> 
+  <void property="showRegions"> 
+   <boolean>false</boolean> 
+  </void> 
+  <void property="showSynapseConns"> 
+   <boolean>false</boolean> 
+  </void> 
+  <void property="showSynapseEndpoints"> 
+   <boolean>false</boolean> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.neuron.NeuronSettings"> 
+  <void property="copySimFiles"> 
+   <boolean>true</boolean> 
+  </void> 
+  <void property="nativeBlocks"> 
+   <void method="put"> 
+    <float>10.0</float> 
+    <string>print &quot;Simulation finished&quot;
+</string> 
+   </void> 
+   <void method="put"> 
+    <float>3.0</float> 
+    <string></string> 
+   </void> 
+   <void method="put"> 
+    <float>1.0</float> 
+    <string>
+#SIM_CONFIG_INCLUDE Default Simulation Configuration
+#SIM_CONFIG_INCLUDE DendriticStimulation
+
+//print &quot;Manually adding graph for iseg.&quot;
+
+{
+
+        GraphWin_0.addexpr(&quot;a_OriginalCell[0].iseg.v&quot;, &quot;a_OriginalCell[0].iseg.v(0.5)&quot;, 7,1)
+
+}
+
+#END_SIM_CONFIG_INCLUDE Default Simulation Configuration
+#END_SIM_CONFIG_INCLUDE DendriticStimulation</string> 
+   </void> 
+   <void method="put"> 
+    <float>-1.0</float> 
+    <string>
+#SIM_CONFIG_INCLUDE Default Simulation Configuration
+#SIM_CONFIG_INCLUDE DendriticStimulation
+
+// Note code between
+//       #SIM_CONFIG_INCLUDE SimConfigName 
+// 	and
+//      #END_SIM_CONFIG_INCLUDE SimConfigName
+// in a block of NEURON code to be included in a neuroConstruct generated network is only included for the specified simulation configurations
+
+
+// This code is taken from dks577.append.hoc and demo.hoc in the original scripts
+
+objref dsite
+
+double x[199],y[199],z[199],d[199]
+
+n_axon_seg = 5
+
+create myelin[n_axon_seg], node[n_axon_seg]
+
+
+
+
+proc shrink() {  local factor
+
+  factor = $1
+
+  n = n3d()		        
+  for i=0,n-1 {
+    x[i]=x3d(i)  y[i]=y3d(i)  z[i]=z3d(i)  d[i]=diam3d(i)
+  }
+
+  pt3dclear()
+  for i=0,n-1 {
+    pt3dadd(x[i]*factor,y[i]*factor,z[i]*factor,d[i]*factor)
+  }
+}
+
+
+proc add_spines() { local a
+
+print &quot;Adding spines for: &quot;, $o1
+
+  spine_dens = $2
+  forsec $o1 {
+    a =0
+    for(x) a=a+area(x)
+
+    if (fold_spines) {
+      // Folding factor
+      // Jack et al (1989), Marjor et al (1994)
+      F = (L*spine_area*spine_dens + a)/a
+
+      L = L * F^(2/3)
+      for(x) diam(x) = diam(x) * F^(1/3)
+    } else {
+      F = 1 + L*spine_area*spine_dens/a
+      cm = c_m * F
+      g_pas = F/rm
+
+      //print &quot;Altering cm and g_pas for: &quot;, secname(), &quot;, cm: &quot;, cm
+    }
+  }
+}
+
+
+
+proc diam_interp() {  local d0,d1
+
+  d0 = $1
+  d1 = $2
+  
+  for i=0,n3d()-1 {
+    x[i]=x3d(i)  y[i]=y3d(i)  z[i]=z3d(i)  
+  }
+  if (numarg() &gt; 2) {
+    n = $3
+  } else {
+    n = n3d()
+  }
+  max = n3d()		      
+  pt3dclear()
+  for i=0,n-1 {
+    pt3dadd(x[i],y[i],z[i],i/n*d1+(1-i/n)*d0)
+  }
+  for i=n,max-1 {
+    pt3dadd(x[i],y[i],z[i],i/n*d1+(1-i/n)*d0)
+  }
+}
+
+
+
+
+proc add_spines() { local a
+
+print &quot;Adding spines for: &quot;, $o1
+
+  spine_dens = $2
+  forsec $o1 {
+    a =0
+    for(x) a=a+area(x)
+
+    if (fold_spines) {
+      // Folding factor
+      // Jack et al (1989), Marjor et al (1994)
+      F = (L*spine_area*spine_dens + a)/a
+
+      L = L * F^(2/3)
+      for(x) diam(x) = diam(x) * F^(1/3)
+    } else {
+      F = 1 + L*spine_area*spine_dens/a
+      cm = c_m * F
+      /////////////////////g_pas = F/rm
+
+gmax_LeakCond = F/rm
+
+      print &quot;Altering cm and g_pas for: &quot;, secname(), &quot;, cm: &quot;, cm
+    }
+  }
+}
+
+#END_SIM_CONFIG_INCLUDE Default Simulation Configuration
+#END_SIM_CONFIG_INCLUDE DendriticStimulation
+
+
+
+
+
+</string> 
+   </void> 
+   <void method="put"> 
+    <float>2.0</float> 
+    <string></string> 
+   </void> 
+   <void method="put"> 
+    <float>0.0</float> 
+    <string>
+#SIM_CONFIG_INCLUDE Default Simulation Configuration
+#SIM_CONFIG_INCLUDE DendriticStimulation
+
+
+// Note code between
+//       #SIM_CONFIG_INCLUDE SimConfigName 
+// 	and
+//      #END_SIM_CONFIG_INCLUDE SimConfigName
+// in a block of NEURON code to be included in a neuroConstruct generated network is only included for the specified simulation configurations
+
+
+// This code is taken from dks577.append.hoc and demo.hoc in the original scripts
+
+
+
+forsec &quot;myelin&quot; a_OriginalCell[0].axon.append()
+forsec &quot;node&quot; a_OriginalCell[0].axon.append()
+
+forall a_OriginalCell[0].active.append()
+forsec &quot;myelin&quot; a_OriginalCell[0].active.remove()
+
+
+
+// --------------------------------------------------------------
+// Other geometry-specific locations
+// --------------------------------------------------------------
+
+
+a_OriginalCell[0].dend9_76_ dsite = new SectionRef()
+site_loc = 0.5  // distance = 416 um
+
+
+
+
+// --------------------------------------------------------------
+// discretization
+// --------------------------------------------------------------
+
+max_len_dend = 50
+
+forsec a_OriginalCell[0].dend {
+    n = L / max_len_dend
+    if (n &lt; 1) n = 1
+    nseg = n+1
+}
+
+// give more segments to path
+
+max_len_path = 10
+forsec a_OriginalCell[0].path {
+    n = L / max_len_path
+    if (n &lt; 1) n = 1
+    nseg = n+1
+}
+
+
+      
+// --------------------------------------------------------------
+// Axon geometry
+// --------------------------------------------------------------
+
+  // hillock
+  // hillock is only a few microns long (2-4) and tapered diam from 4 to 1-2 um
+  // then initial segment follows, can be 100-150 um long with diam of ~ 1 um
+  // myelin starts after initial segment
+
+  // initial segment
+  // Farinas &amp; DeFelipe J Comp Neurol 1991: 
+  //                L                 diam
+  // cocallosal     21.6 +- 4.10      1.06 +- 0.18
+  // ispsilateral   22.24 +- 1.58     1.06 +- 0.12
+
+
+
+  a_OriginalCell[0].hill { 		
+    L = 10
+    nseg = 10
+    diam(0:1) = 4:1     // taper
+  }
+
+  a_OriginalCell[0].iseg {		// initial segment between hillock + myelin
+     L = 15
+     nseg = 10
+//     for(x) diam(x) = 3.5*exp(-(x*L+hill.L)/5)+.5
+     diam = 1
+  }
+
+  // construct myelinated axon with nodes of ranvier
+  for i=0,n_axon_seg-1 {
+    myelin[i] {		// myelin element
+      nseg = 25
+      L = 100
+      diam = 1.5	  
+    }
+    node[i] {		// nodes of Ranvier
+      nseg = 1
+      L = 1.0		
+      diam = 1.0	// nodes are thinner than axon
+    }
+  }
+
+
+  a_OriginalCell[0].iseg connect myelin[0](0), 1
+  myelin[0] connect node[0](0), 1
+
+  for i=0,n_axon_seg-2  { 
+      node[i] connect myelin[i+1](0), 1 
+      myelin[i+1] connect node[i+1](0), 1
+  }
+
+access a_OriginalCell[0].soma
+
+
+      
+// --------------------------------------------------------------
+// Spines
+// --------------------------------------------------------------
+
+
+fold_spines = 0
+spine_area = 0.83 // um^2  -- Harris
+
+// spines per linear um
+// Larkman (1991) JCN
+sd_apical = 6.3
+sd_oblique = 1.5
+sd_basal = 1.43
+sd_distal = 0.91
+
+
+
+
+
+
+print &quot;Inserting code from demo.hoc...&quot;
+
+// --------------------------------------------------------------
+// passive &amp; active membrane 
+// --------------------------------------------------------------
+
+
+ra        = 200
+global_ra = ra
+rm        = 40000
+c_m       = 0.75
+v_init    = -70
+celsius = 23
+
+            
+
+gna_dend = 30
+gna_node = 30000
+gk = 100
+frac_gk_apical = 0
+gk_node = 0
+
+
+
+
+
+//install_channels()
+
+print &quot;pretending to call install_channels()&quot;
+
+  // passive
+  forall {
+  ///////////////////////////  insert pas
+insert LeakCond
+    Ra = ra
+    cm = c_m 
+    gmax_LeakCond = 1/rm
+  ///////////////////////  e_pas = v_init
+  }
+  // exceptions along the axon
+  forsec &quot;myelin&quot; cm = 0.04
+  forsec &quot;node&quot; gmax_LeakCond = 0.02
+
+
+
+
+  add_spines(a_OriginalCell[0].apical,sd_apical)
+  add_spines(a_OriginalCell[0].oblique,sd_oblique)
+  add_spines(a_OriginalCell[0].distal,sd_distal)
+  add_spines(a_OriginalCell[0].basal,sd_basal)
+
+
+  // Na+ channels
+
+  forall insert na3
+  forsec a_OriginalCell[0].dend gmax_na3 = gna_dend
+  forsec &quot;myelin&quot; gmax_na3 = gna_dend
+  a_OriginalCell[0].soma.gmax_na3 = gna_dend
+  a_OriginalCell[0].hill.gmax_na3 = gna_node
+  a_OriginalCell[0].iseg.gmax_na3 = gna_node
+  forsec &quot;node&quot; gmax_na3 = gna_node
+
+
+
+  // K+ channels
+
+  forsec a_OriginalCell[0].basal {
+    insert kd3
+    gmax_kd3 = gk
+  }
+  a_OriginalCell[0].soma insert kd3
+  a_OriginalCell[0].soma.gmax_kd3 = gk
+
+    // no K+ in apical dend or axon
+
+
+#END_SIM_CONFIG_INCLUDE Default Simulation Configuration
+#END_SIM_CONFIG_INCLUDE DendriticStimulation
+
+
+
+#SIM_CONFIG_INCLUDE Default Simulation Configuration
+#SIM_CONFIG_INCLUDE DendriticStimulation
+#SIM_CONFIG_INCLUDE SimpleCells-ChannelMLVsMod
+#SIM_CONFIG_INCLUDE SimpleCells-AllSims
+  
+Ek = -90
+Ena = 60
+	
+forall if (ismembrane(&quot;na3&quot;)) ena = Ena     
+
+forall if (ismembrane(&quot;kd3&quot;)) ek = Ek
+
+
+#END_SIM_CONFIG_INCLUDE Default Simulation Configuration
+#END_SIM_CONFIG_INCLUDE DendriticStimulation
+#END_SIM_CONFIG_INCLUDE SimpleCells-ChannelMLVsMod
+#END_SIM_CONFIG_INCLUDE SimpleCells-AllSims
+
+
+</string> 
+   </void> 
+  </void> 
+  <void property="showShapePlot"> 
+   <boolean>true</boolean> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.genesis.GenesisSettings"> 
+  <void property="generateComments"> 
+   <boolean>false</boolean> 
+  </void> 
+  <void property="nativeBlocks"> 
+   <void method="put"> 
+    <int>10</int> 
+    <string></string> 
+   </void> 
+   <void method="put"> 
+    <int>5</int> 
+    <string></string> 
+   </void> 
+   <void method="put"> 
+    <int>-1</int> 
+    <string></string> 
+   </void> 
+  </void> 
+  <void property="showShapePlot"> 
+   <boolean>true</boolean> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.psics.PsicsSettings"> 
+  <void property="singleChannelCond"> 
+   <float>1.0E-8</float> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.simulation.SimulationParameters"> 
+  <void property="dt"> 
+   <float>0.01</float> 
+  </void> 
+  <void property="duration"> 
+   <float>100.0</float> 
+  </void> 
+  <void property="globalCm"> 
+   <float>2.0</float> 
+  </void> 
+  <void property="globalRa"> 
+   <float>1.0</float> 
+  </void> 
+  <void property="globalRm"> 
+   <float>50.0</float> 
+  </void> 
+  <void property="globalVLeak"> 
+   <float>-54.6</float> 
+  </void> 
+  <void property="reference"> 
+   <string>Sim_120</string> 
+  </void> 
+  <void property="temperature"> 
+   <float>23.0</float> 
+  </void> 
+  <void property="whatToRecord"> 
+   <int>2</int> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.project.ElecInputInfo"> 
+  <void property="allStims"> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.simulation.IClampSettings"> 
+     <void property="amp"> 
+      <void property="fixedNum"> 
+       <float>0.16</float> 
+      </void> 
+     </void> 
+     <void property="cellGroup"> 
+      <string>OriginalCell</string> 
+     </void> 
+     <void property="del"> 
+      <void property="fixedNum"> 
+       <float>3.0</float> 
+      </void> 
+     </void> 
+     <void property="dur"> 
+      <void property="fixedNum"> 
+       <float>40.0</float> 
+      </void> 
+      <void property="numberType"> 
+       <int>11</int> 
+      </void> 
+     </void> 
+     <void property="reference"> 
+      <string>SomaStim</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.simulation.IClampSettings"> 
+     <void property="amp"> 
+      <void property="fixedNum"> 
+       <float>0.21</float> 
+      </void> 
+     </void> 
+     <void property="cellGroup"> 
+      <string>OriginalCell</string> 
+     </void> 
+     <void property="del"> 
+      <void property="fixedNum"> 
+       <float>3.0</float> 
+      </void> 
+     </void> 
+     <void property="dur"> 
+      <void property="fixedNum"> 
+       <float>40.0</float> 
+      </void> 
+      <void property="numberType"> 
+       <int>11</int> 
+      </void> 
+     </void> 
+     <void property="reference"> 
+      <string>DendStim</string> 
+     </void> 
+     <void property="segChooser"> 
+      <void property="listOfSegmentIds"> 
+       <void index="0"> 
+        <int>4200</int> 
+       </void> 
+      </void> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.simulation.IClampSettings"> 
+     <void property="amp"> 
+      <void property="fixedNum"> 
+       <float>0.02</float> 
+      </void> 
+     </void> 
+     <void property="cellGroup"> 
+      <string>One_pas</string> 
+     </void> 
+     <void property="dur"> 
+      <void property="numberType"> 
+       <int>11</int> 
+      </void> 
+     </void> 
+     <void property="reference"> 
+      <string>Input_0</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.simulation.IClampSettings"> 
+     <void property="amp"> 
+      <void property="fixedNum"> 
+       <float>0.02</float> 
+      </void> 
+     </void> 
+     <void property="cellGroup"> 
+      <string>One_orig</string> 
+     </void> 
+     <void property="dur"> 
+      <void property="numberType"> 
+       <int>11</int> 
+      </void> 
+     </void> 
+     <void property="reference"> 
+      <string>Input_1</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.simulation.IClampSettings"> 
+     <void property="amp"> 
+      <void property="fixedNum"> 
+       <float>0.02</float> 
+      </void> 
+     </void> 
+     <void property="cellGroup"> 
+      <string>One_ChannelML</string> 
+     </void> 
+     <void property="dur"> 
+      <void property="numberType"> 
+       <int>11</int> 
+      </void> 
+     </void> 
+     <void property="reference"> 
+      <string>Input_2</string> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.simulation.IClampSettings"> 
+     <void property="amp"> 
+      <void property="fixedNum"> 
+       <float>0.16</float> 
+      </void> 
+     </void> 
+     <void property="cellGroup"> 
+      <string>NeuroMLBased</string> 
+     </void> 
+     <void property="del"> 
+      <void property="fixedNum"> 
+       <float>3.0</float> 
+      </void> 
+     </void> 
+     <void property="dur"> 
+      <void property="fixedNum"> 
+       <float>40.0</float> 
+      </void> 
+      <void property="numberType"> 
+       <int>11</int> 
+      </void> 
+     </void> 
+     <void property="reference"> 
+      <string>Input_3</string> 
+     </void> 
+     <void property="segChooser"> 
+      <void property="listOfSegmentIds"> 
+       <void index="0"> 
+        <int>8</int> 
+       </void> 
+      </void> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.simulation.IClampSettings"> 
+     <void property="amp"> 
+      <void property="fixedNum"> 
+       <float>0.21</float> 
+      </void> 
+     </void> 
+     <void property="cellGroup"> 
+      <string>NeuroMLBased</string> 
+     </void> 
+     <void property="del"> 
+      <void property="fixedNum"> 
+       <float>3.0</float> 
+      </void> 
+     </void> 
+     <void property="dur"> 
+      <void property="fixedNum"> 
+       <float>40.0</float> 
+      </void> 
+      <void property="numberType"> 
+       <int>11</int> 
+      </void> 
+     </void> 
+     <void property="reference"> 
+      <string>Input_4</string> 
+     </void> 
+     <void property="segChooser"> 
+      <void property="listOfSegmentIds"> 
+       <void index="0"> 
+        <int>4197</int> 
+       </void> 
+      </void> 
+     </void> 
+    </object> 
+   </void> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.project.SimConfigInfo"> 
+  <void property="allSimConfigs"> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimConfig"> 
+     <void property="cellGroups"> 
+      <void method="add"> 
+       <string>OriginalCell</string> 
+      </void> 
+     </void> 
+     <void property="description"> 
+      <string>This shows the response of the cell based on the original scripts to stimulation at the soma. See Figure 3A (left) in Mainen et al. 1995. This Sim Config only runs on NEURON.</string> 
+     </void> 
+     <void property="inputs"> 
+      <void method="add"> 
+       <string>SomaStim</string> 
+      </void> 
+     </void> 
+     <void property="name"> 
+      <string>Default Simulation Configuration</string> 
+     </void> 
+     <void property="plots"> 
+      <void method="add"> 
+       <string>SomaPlot</string> 
+      </void> 
+      <void method="add"> 
+       <string>DendSite</string> 
+      </void> 
+     </void> 
+     <void property="simDuration"> 
+      <float>60.0</float> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimConfig"> 
+     <void property="cellGroups"> 
+      <void method="add"> 
+       <string>OriginalCell</string> 
+      </void> 
+     </void> 
+     <void property="description"> 
+      <string>Stimulation at dendrite of cell based on original scripts. See Figure 3A (right) in Mainen et al. 1995. This Sim Config only runs on NEURON</string> 
+     </void> 
+     <void property="inputs"> 
+      <void method="add"> 
+       <string>DendStim</string> 
+      </void> 
+     </void> 
+     <void property="name"> 
+      <string>DendriticStimulation</string> 
+     </void> 
+     <void property="plots"> 
+      <void method="add"> 
+       <string>SomaPlot</string> 
+      </void> 
+      <void method="add"> 
+       <string>DendSite</string> 
+      </void> 
+     </void> 
+     <void property="simDuration"> 
+      <float>60.0</float> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimConfig"> 
+     <void property="cellGroups"> 
+      <void method="add"> 
+       <string>One_orig</string> 
+      </void> 
+      <void method="add"> 
+       <string>One_ChannelML</string> 
+      </void> 
+     </void> 
+     <void property="description"> 
+      <string>This Sim Config shows how the channels based on ChannelML produce the same behaviour in a simple cell as the original mod files.  This Sim Config only runs on NEURON.</string> 
+     </void> 
+     <void property="inputs"> 
+      <void method="add"> 
+       <string>Input_2</string> 
+      </void> 
+      <void method="add"> 
+       <string>Input_1</string> 
+      </void> 
+     </void> 
+     <void property="name"> 
+      <string>SimpleCells-ChannelMLVsMod</string> 
+     </void> 
+     <void property="plots"> 
+      <void method="add"> 
+       <string>Plot_2</string> 
+      </void> 
+      <void method="add"> 
+       <string>Plot_1</string> 
+      </void> 
+      <void method="add"> 
+       <string>Var_5</string> 
+      </void> 
+      <void method="add"> 
+       <string>Var_4</string> 
+      </void> 
+      <void method="add"> 
+       <string>Var_3</string> 
+      </void> 
+      <void method="add"> 
+       <string>Var_2</string> 
+      </void> 
+      <void method="add"> 
+       <string>Var_1</string> 
+      </void> 
+      <void method="add"> 
+       <string>Var_0</string> 
+      </void> 
+     </void> 
+     <void property="simDuration"> 
+      <float>100.0</float> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimConfig"> 
+     <void property="cellGroups"> 
+      <void method="add"> 
+       <string>One_ChannelML</string> 
+      </void> 
+     </void> 
+     <void property="description"> 
+      <string>This Sim Config shows how a simple cell with channels based on ChannelML can produce the same behaviour on NEURON, GENESIS and PSICS.</string> 
+     </void> 
+     <void property="inputs"> 
+      <void method="add"> 
+       <string>Input_2</string> 
+      </void> 
+     </void> 
+     <void property="name"> 
+      <string>SimpleCells-AllSims</string> 
+     </void> 
+     <void property="plots"> 
+      <void method="add"> 
+       <string>Plot_2</string> 
+      </void> 
+      <void method="add"> 
+       <string>Var_5</string> 
+      </void> 
+      <void method="add"> 
+       <string>Var_3</string> 
+      </void> 
+      <void method="add"> 
+       <string>Var_2</string> 
+      </void> 
+     </void> 
+     <void property="simDuration"> 
+      <float>100.0</float> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimConfig"> 
+     <void property="cellGroups"> 
+      <void method="add"> 
+       <string>NeuroMLBased</string> 
+      </void> 
+     </void> 
+     <void property="description"> 
+      <string>Stimulation at the soma for a cell specified fully in NeuroML. See Figure 3A (left) in Mainen et al. 1995.</string> 
+     </void> 
+     <void property="inputs"> 
+      <void method="add"> 
+       <string>Input_3</string> 
+      </void> 
+     </void> 
+     <void property="name"> 
+      <string>SomaStimNeuroML</string> 
+     </void> 
+     <void property="plots"> 
+      <void method="add"> 
+       <string>NeuroMLBased_v</string> 
+      </void> 
+      <void method="add"> 
+       <string>DendXML</string> 
+      </void> 
+      <void method="add"> 
+       <string>IsegXML</string> 
+      </void> 
+     </void> 
+     <void property="simDuration"> 
+      <float>60.0</float> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object class="ucl.physiol.neuroconstruct.project.SimConfig"> 
+     <void property="cellGroups"> 
+      <void method="add"> 
+       <string>NeuroMLBased</string> 
+      </void> 
+     </void> 
+     <void property="description"> 
+      <string>Dendritic stimulation of the cell based on NeuroML. See Figure 3A (right) in Mainen et al. 1995.</string> 
+     </void> 
+     <void property="inputs"> 
+      <void method="add"> 
+       <string>Input_4</string> 
+      </void> 
+     </void> 
+     <void property="name"> 
+      <string>DendStimNeuroML</string> 
+     </void> 
+     <void property="plots"> 
+      <void method="add"> 
+       <string>NeuroMLBased_v</string> 
+      </void> 
+      <void method="add"> 
+       <string>DendXML</string> 
+      </void> 
+      <void method="add"> 
+       <string>IsegXML</string> 
+      </void> 
+     </void> 
+     <void property="simDuration"> 
+      <float>60.0</float> 
+     </void> 
+    </object> 
+   </void> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.project.SimpleNetworkConnectionsInfo"/> 
+ <object class="ucl.physiol.neuroconstruct.project.ArbourConnectionsInfo"/> 
+</java> 

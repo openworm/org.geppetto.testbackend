@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.5.0_06" class="java.beans.XMLDecoder"> 
+ <object class="ucl.physiol.neuroconstruct.project.InternalPhysicalParameter"> 
+  <void property="defaultValue"> 
+   <float>1.0</float> 
+  </void> 
+  <void property="parameterDescription"> 
+   <string>Time course of exponential rise of conductance</string> 
+  </void> 
+  <void property="parameterName"> 
+   <string>Tau Rise</string> 
+  </void> 
+  <void property="units"> 
+   <object id="Units0" class="ucl.physiol.neuroconstruct.utils.units.Units"> 
+    <void property="name"> 
+     <string>neuroConstruct_time</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void property="value"> 
+   <float>1.0</float> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.project.InternalPhysicalParameter"> 
+  <void property="defaultValue"> 
+   <float>2.0</float> 
+  </void> 
+  <void property="parameterDescription"> 
+   <string>Time course of exponential decay of conductance</string> 
+  </void> 
+  <void property="parameterName"> 
+   <string>Tau Decay</string> 
+  </void> 
+  <void property="units"> 
+   <object idref="Units0"/> 
+  </void> 
+  <void property="value"> 
+   <float>2.0</float> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.project.InternalPhysicalParameter"> 
+  <void property="parameterDescription"> 
+   <string>Reversal Potential</string> 
+  </void> 
+  <void property="parameterName"> 
+   <string>Reversal Potential</string> 
+  </void> 
+  <void property="units"> 
+   <object class="ucl.physiol.neuroconstruct.utils.units.Units"> 
+    <void property="name"> 
+     <string>neuroConstruct_voltage</string> 
+    </void> 
+   </object> 
+  </void> 
+ </object> 
+ <object class="ucl.physiol.neuroconstruct.project.InternalPhysicalParameter"> 
+  <void property="defaultValue"> 
+   <float>1.0E-5</float> 
+  </void> 
+  <void property="parameterDescription"> 
+   <string>Maximum conductance of the synapse</string> 
+  </void> 
+  <void property="parameterName"> 
+   <string>Max Conductance</string> 
+  </void> 
+  <void property="units"> 
+   <object class="ucl.physiol.neuroconstruct.utils.units.Units"> 
+    <void property="name"> 
+     <string>neuroConstruct_conductance</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void property="value"> 
+   <float>1.0E-5</float> 
+  </void> 
+ </object> 
+</java> 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>
+Properties associated with the Cell Mechanism which allow it to be loaded into neuroConstruct.
+
+Note the following: 
+   The Cell Mechanism name should not contain spaces and should match the name of the directory it's in
+   The name and description here will be replaced by the corresponding values in a ChannelML file if found
+   The filenames for the mappings are relative to the cellMechanism/(cellMechInstanceName) directory
+   Mechanism Type should only have values: Channel mechanism, Synaptic mechanism, Ion concentration, Point process, Gap junction
+
+</comment>
+<entry key="Description">A synapse with a doubly exponential rising and decaying time course</entry>
+<entry key="Implementation method">Abstracted Cell Mechanism</entry>
+<entry key="Mechanism Type">Synaptic mechanism</entry>
+<entry key="GENESIS implementation">DoubleExpSyn.g</entry>
+<entry key="Default Instance Name">DoubExpSyn</entry>
+<entry key="Plot Info File">templates\xmlTemplates\DoubExpSynPlots.xml</entry>
+<entry key="NEURON implementation">DoubleExpSyn.mod</entry>
+<entry key="Mechanism Name">SynForRndSpike</entry>
+<entry key="Mechanism Model">Double Exponential Synapse</entry>
+</properties>

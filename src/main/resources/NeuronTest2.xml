@@ -1,0 +1,19 @@
+<tns:simulation xmlns:tns="http://www.openworm.org/simulationSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.openworm.org/simulationSchema ../../src/main/resources/schema/simulationSchema.xsd ">
+	<tns:entity>
+		<tns:id>Neuron</tns:id>
+		<tns:aspect>
+			<tns:id>NeuronServices</tns:id>
+			<tns:simulator>
+				<tns:simulatorId>dummySimulator</tns:simulatorId>
+			</tns:simulator>
+			<tns:model>
+				<tns:modelInterpreterId>dummyModelInterpreter</tns:modelInterpreterId>
+				<tns:modelURL>https://dummyurl.com/TEST_TEN</tns:modelURL>
+			</tns:model>		
+		</tns:aspect>
+	</tns:entity>
+	<tns:script>https://raw.github.com/openworm/org.geppetto.testbackend/development/src/main/resources/NeuronScript.js</tns:script>
+
+</tns:simulation>
