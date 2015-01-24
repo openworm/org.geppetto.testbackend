@@ -67,7 +67,7 @@ public class DummySimulatorService extends ASimulator
 
 	public enum TEST_NO
 	{
-		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX, TEST_SEVEN
+		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX, TEST_SEVEN, TEST_EIGHT
 	}
 	
 	@Autowired
@@ -404,6 +404,25 @@ public class DummySimulatorService extends ASimulator
 		        try {
 		           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
 		            compileFileWithNeuron(f, false);
+		            _logger.info("Done!");
+		        } catch (GeppettoExecutionException ex) {
+		        	throw new GeppettoExecutionException(ex);
+		        } catch (IOException e) {
+					throw new GeppettoExecutionException(e);
+				}
+				break;
+			case TEST_EIGHT:
+				URL url2 = this.getClass().getClassLoader().getResource("/neuron_python_test.py");
+			    File f2 = null;
+			    try {
+			        f2 = new File(url2.toURI());
+			    } catch (URISyntaxException e) {
+			        f2 = new File(url2.getPath());
+			    }
+
+		        try {
+		           _logger.info("Trying to compile mods in: " + f2.getCanonicalPath());
+		            compileFileWithNeuron(f2, false);
 		            _logger.info("Done!");
 		        } catch (GeppettoExecutionException ex) {
 		        	throw new GeppettoExecutionException(ex);
