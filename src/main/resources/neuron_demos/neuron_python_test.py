@@ -19,7 +19,6 @@ syn = h.ExpSyn(0.5, sec=post)
 # connect the pre-synaptic section to the 
 # synapse object
 nc = h.NetCon(pre(0.5)._ref_v, syn, sec=pre)
-nc-weight[0] = 2.0
 
 vec={}
 for var in 'v_pre', 'v_post', 'i_syn', 't':

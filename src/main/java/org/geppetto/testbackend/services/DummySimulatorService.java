@@ -552,12 +552,20 @@ public class DummySimulatorService extends ASimulator
 
 			String commandToExecute = null;
 
+			String directoryToExecuteIn = modDirectory.getCanonicalPath();
+			
+			Process currentProcess = null;
+			
 			if(modDirectory.isDirectory()){
 				commandToExecute = neuronHome.getCanonicalPath()
 						+ System.getProperty("file.separator")
 						+ "bin"
 						+ System.getProperty("file.separator")
 						+ "nrnivmodl";
+				
+				_logger.info("commandToExecute: " + commandToExecute);
+
+				currentProcess = rt.exec(commandToExecute, null, new File(directoryToExecuteIn));
 			}else{
 				String extension = "";
 
@@ -579,13 +587,13 @@ public class DummySimulatorService extends ASimulator
 					commandToExecute = "python " + modDirectory.getAbsolutePath();
 
 				}
+				
+				_logger.info("commandToExecute: " + commandToExecute);
+
+				currentProcess = rt.exec(commandToExecute, null, null);
 			}
 			
-			_logger.info("commandToExecute: " + commandToExecute);
 
-			String directoryToExecuteIn = modDirectory.getCanonicalPath();
-
-			Process currentProcess = rt.exec(commandToExecute, null, new File(directoryToExecuteIn));
 			ProcessOutputWatcher procOutputMain = new ProcessOutputWatcher(currentProcess.getInputStream(),  "NMODL Compile >> ");
 			procOutputMain.start();
 
