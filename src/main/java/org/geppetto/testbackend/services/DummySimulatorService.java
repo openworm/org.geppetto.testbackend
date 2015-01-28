@@ -393,62 +393,40 @@ public class DummySimulatorService extends ASimulator
 				createTestTwoEntities(aspect, 20000);
 				break;
 			case TEST_SEVEN:
-				URL url = this.getClass().getClassLoader().getResource("/neuron_demos/neuron_python_test.py");
-			    File f = null;
-			    try {
-			        f = new File(url.toURI());
-			    } catch (URISyntaxException e) {
-			        f = new File(url.getPath());
-			    }
-
-		        try {
-		           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
-		            compileFileWithNeuron(f, false);
-		            _logger.info("Done!");
-		        } catch (GeppettoExecutionException ex) {
-		        	throw new GeppettoExecutionException(ex);
-		        } catch (IOException e) {
-					throw new GeppettoExecutionException(e);
-				}
+				createFile("/neuron_demos/nmodl");
 				break;
 			case TEST_EIGHT:
-				url = this.getClass().getClassLoader().getResource("/neuron_demos/nmodl");
-			    f = null;
-			    try {
-			        f = new File(url.toURI());
-			    } catch (URISyntaxException e) {
-			        f = new File(url.getPath());
-			    }
-
-		        try {
-		           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
-		            compileFileWithNeuron(f, false);
-		            _logger.info("Done!");
-		        } catch (GeppettoExecutionException ex) {
-		        	throw new GeppettoExecutionException(ex);
-		        } catch (IOException e) {
-					throw new GeppettoExecutionException(e);
-				}
+				createFile("/neuron_demos/demo_hoc/demo.hoc");
 				break;
 			case TEST_NINE:
-				url = this.getClass().getClassLoader().getResource("/neuron_demos/demo_hoc/demo.hoc");
-			    f = null;
-			    try {
-			        f = new File(url.toURI());
-			    } catch (URISyntaxException e) {
-			        f = new File(url.getPath());
-			    }
-
-		        try {
-		           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
-		            compileFileWithNeuron(f, false);
-		            _logger.info("Done!");
-		        } catch (GeppettoExecutionException ex) {
-		        	throw new GeppettoExecutionException(ex);
-		        } catch (IOException e) {
-					throw new GeppettoExecutionException(e);
-				}
+				createFile("/neuron_demos/demo_hoc/demo.hoc");
+				createFile("/neuron_demos/dynclamp/dynclamp.hoc");
+				createFile("/neuron_demos/clamp.hoc");
+				createFile("/neuron_demos/motor.hoc");
 				break;
+			case TEST_TEN:
+				createFile("/neuron_demos/dynclamp");
+				break;
+		}
+	}
+	
+	public void createFile(String path) throws GeppettoExecutionException{
+		URL url = this.getClass().getClassLoader().getResource(path);
+	    File f = null;
+	    try {
+	        f = new File(url.toURI());
+	    } catch (URISyntaxException e) {
+	        f = new File(url.getPath());
+	    }
+
+        try {
+           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
+            compileFileWithNeuron(f, false);
+            _logger.info("Done!");
+        } catch (GeppettoExecutionException ex) {
+        	throw new GeppettoExecutionException(ex);
+        } catch (IOException e) {
+			throw new GeppettoExecutionException(e);
 		}
 	}
 
@@ -594,6 +572,7 @@ public class DummySimulatorService extends ASimulator
 			procOutputError.start();
 
 			_logger.info("Have successfully executed command: " + commandToExecute);
+			
 			currentProcess.waitFor();
 		} catch (InterruptedException e) {
 			_logger.error("Interrupted Exception " + e.getMessage());
