@@ -566,14 +566,16 @@ public class DummySimulatorService extends ASimulator
 				    extension = modDirectory.getAbsolutePath().substring(i+1);
 				}
 				
-				if(extension.equals(".hoc")){
+				_logger.info("File with extension " + extension + " detected");
+				
+				if(extension.equals("hoc")){
 					commandToExecute = neuronHome.getCanonicalPath()
 							+ System.getProperty("file.separator")
 							+ "bin"
 							+ System.getProperty("file.separator")
 							+ "nrngui " + modDirectory.getAbsolutePath();
 				}
-				else if(extension.equals(".py")){
+				else if(extension.equals("py")){
 					commandToExecute = "python " + modDirectory.getAbsolutePath();
 
 				}
