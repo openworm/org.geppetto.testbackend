@@ -1,4 +1,0 @@
-This is the directory for the morphology files associated with the project
-The following types of files are found here: 
-   *.java.xml: morphologies saved in Java XML serialized form (note: not part of NeuroML) 
-   *.java.ser: morphologies saved in Java binary serialized object form (smaller files & quicker to load)

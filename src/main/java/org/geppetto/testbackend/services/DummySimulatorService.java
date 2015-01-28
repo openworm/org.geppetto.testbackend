@@ -393,7 +393,7 @@ public class DummySimulatorService extends ASimulator
 				createTestTwoEntities(aspect, 20000);
 				break;
 			case TEST_SEVEN:
-				URL url = this.getClass().getClassLoader().getResource("/purkinje");
+				URL url = this.getClass().getClassLoader().getResource("/neuron_demos/neuron_python_test.py");
 			    File f = null;
 			    try {
 			        f = new File(url.toURI());
@@ -412,7 +412,7 @@ public class DummySimulatorService extends ASimulator
 				}
 				break;
 			case TEST_EIGHT:
-				url = this.getClass().getClassLoader().getResource("/neuron_python_test.py");
+				url = this.getClass().getClassLoader().getResource("/neuron_demos/nmodl");
 			    f = null;
 			    try {
 			        f = new File(url.toURI());
@@ -431,45 +431,7 @@ public class DummySimulatorService extends ASimulator
 				}
 				break;
 			case TEST_NINE:
-				url = this.getClass().getClassLoader().getResource("/CA1PyramidalCell");
-			    f = null;
-			    try {
-			        f = new File(url.toURI());
-			    } catch (URISyntaxException e) {
-			        f = new File(url.getPath());
-			    }
-
-		        try {
-		           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
-		            compileFileWithNeuron(f, false);
-		            _logger.info("Done!");
-		        } catch (GeppettoExecutionException ex) {
-		        	throw new GeppettoExecutionException(ex);
-		        } catch (IOException e) {
-					throw new GeppettoExecutionException(e);
-				}
-				break;
-			case TEST_TEN:
-				url = this.getClass().getClassLoader().getResource("/MainenEtAl_PyramidalCell");
-			    f = null;
-			    try {
-			        f = new File(url.toURI());
-			    } catch (URISyntaxException e) {
-			        f = new File(url.getPath());
-			    }
-
-		        try {
-		           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
-		            compileFileWithNeuron(f, false);
-		            _logger.info("Done!");
-		        } catch (GeppettoExecutionException ex) {
-		        	throw new GeppettoExecutionException(ex);
-		        } catch (IOException e) {
-					throw new GeppettoExecutionException(e);
-				}
-				break;
-			case TEST_ELEVEN:
-				url = this.getClass().getClassLoader().getResource("/PurkinjeCell");
+				url = this.getClass().getClassLoader().getResource("/neuron_demos/demo.hoc");
 			    f = null;
 			    try {
 			        f = new File(url.toURI());
@@ -488,10 +450,6 @@ public class DummySimulatorService extends ASimulator
 				}
 				break;
 		}
-	}
-
-	private void runNeuronDemo() {
-		
 	}
 
 	/**
@@ -582,211 +540,66 @@ public class DummySimulatorService extends ASimulator
 	/*
      * Compliles all of the mod files at the specified location using NEURON's nrnivmodl/mknrndll.sh
      */
-    public static boolean compileFileWithNeuron(File modDirectory, boolean forceRecompile) throws GeppettoExecutionException {
-        _logger.info("Going to compile the mod files in: " + modDirectory.getAbsolutePath() + ", forcing recompile: " + forceRecompile);
+	public static boolean compileFileWithNeuron(File modDirectory, boolean forceRecompile) throws GeppettoExecutionException {
+		_logger.info("Going to compile the mod files in: " + modDirectory.getAbsolutePath() + ", forcing recompile: " + forceRecompile);
 
-        Runtime rt = Runtime.getRuntime();
+		Runtime rt = Runtime.getRuntime();
 
-        File neuronHome = null;
+		File neuronHome = null;
 		try {
+
 			neuronHome = Utilities.findNeuronHome();
+
+			String commandToExecute = null;
+
+			if(modDirectory.isDirectory()){
+				commandToExecute = neuronHome.getCanonicalPath()
+						+ System.getProperty("file.separator")
+						+ "bin"
+						+ System.getProperty("file.separator")
+						+ "nrnivmodl";
+			}else{
+				String extension = "";
+
+				int i = modDirectory.getAbsolutePath().lastIndexOf('.');
+				if (i > 0) {
+				    extension = modDirectory.getAbsolutePath().substring(i+1);
+				}
+				
+				if(extension.equals(".hoc")){
+					commandToExecute = neuronHome.getCanonicalPath()
+							+ System.getProperty("file.separator")
+							+ "bin"
+							+ System.getProperty("file.separator")
+							+ "nrngui " + modDirectory.getAbsolutePath();
+				}
+				else if(extension.equals(".py")){
+					commandToExecute = "python " + modDirectory.getAbsolutePath();
+
+				}
+			}
+			
+			_logger.info("commandToExecute: " + commandToExecute);
+
+			String directoryToExecuteIn = modDirectory.getCanonicalPath();
+
+			Process currentProcess = rt.exec(commandToExecute, null, new File(directoryToExecuteIn));
+			ProcessOutputWatcher procOutputMain = new ProcessOutputWatcher(currentProcess.getInputStream(),  "NMODL Compile >> ");
+			procOutputMain.start();
+
+			ProcessOutputWatcher procOutputError = new ProcessOutputWatcher(currentProcess.getErrorStream(), "NMODL Error   >> ");
+			procOutputError.start();
+
+			_logger.info("Have successfully executed command: " + commandToExecute);
+			currentProcess.waitFor();
+		} catch (InterruptedException e) {
+			_logger.error("Interrupted Exception " + e.getMessage());
 		} catch (GeppettoInitializationException e) {
-			throw new GeppettoExecutionException(e);
+			_logger.error("Initialization error" + e.getMessage());
+		} catch (IOException e) {
+			_logger.error("Initialization error " + e.getMessage());
 		}
-        
-        String commandToExecute = null;
 
-        try {
-            String directoryToExecuteIn = modDirectory.getCanonicalPath();
-            File fileToBeCreated = null;
-            File otherCheckFileToBeCreated = null; // for now...
-
-            _logger.info("Parent dir: " + directoryToExecuteIn);
-
-            if (Utilities.isWindowsBasedPlatform()) {
-                _logger.info("Assuming Windows environment...");
-
-                String filename = directoryToExecuteIn
-                        + System.getProperty("file.separator")
-                        + "nrnmech.dll";
-
-                fileToBeCreated = new File(filename);
-
-                _logger.info("Name of file to be created: " + fileToBeCreated.getAbsolutePath());
-
-                _logger.info("Automatic compilation of NEURON mod files on Windows not yet implemented...");
-
-                 commandToExecute = neuronHome
-                 + "\\bin\\rxvt.exe -e "
-                 + neuronHome
-                 + "/bin/sh \""
-                 + modDirectory.getAbsolutePath()
-                 + "\" "
-                 + neuronHome
-                 + " ";
-                 
-                 _logger.info("commandToExecute: " + commandToExecute);
-            } else {
-                _logger.info("Assuming *nix environment...");
-
-                String myArch = Utilities.getArchSpecificDir();
-
-                String backupArchDir = Utilities.DIR_64BIT;
-
-                if (myArch.equals(Utilities.ARCH_64BIT)) {
-                    backupArchDir = Utilities.DIR_I686;
-                }
-
-                String filename = directoryToExecuteIn
-                        + System.getProperty("file.separator")
-                        + myArch
-                        + System.getProperty("file.separator")
-                        + "libnrnmech.la";
-
-                // In case, e.g. a 32 bit JDK is used on a 64 bit system
-                String backupFilename = directoryToExecuteIn
-                        + System.getProperty("file.separator")
-                        + backupArchDir
-                        + System.getProperty("file.separator")
-                        + "libnrnmech.la";
-
-                /**
-                 * @todo Needs checking on Mac/powerpc/i686
-                 */
-                if (Utilities.isMacBasedPlatform()) {
-                    filename = directoryToExecuteIn
-                            + System.getProperty("file.separator")
-                            + Utilities.getArchSpecificDir()
-                            + System.getProperty("file.separator")
-                            + "libnrnmech.la";
-
-                    backupFilename = directoryToExecuteIn
-                            + System.getProperty("file.separator")
-                            + "umac"
-                            + System.getProperty("file.separator")
-                            + "libnrnmech.la";
-
-                }
-
-                _logger.info("Name of file to be created: " + filename);
-                _logger.info("Backup file to check for success: " + backupFilename);
-
-                fileToBeCreated = new File(filename);
-                otherCheckFileToBeCreated = new File(backupFilename);
-
-                commandToExecute = neuronHome.getCanonicalPath()
-                        + System.getProperty("file.separator")
-                        + "bin"
-                        + System.getProperty("file.separator")
-                        + "nrnivmodl";
-
-                _logger.info("commandToExecute: " + commandToExecute);
-
-            }
-
-            if (!forceRecompile) {
-                File fileToCheck = null;
-
-                if (fileToBeCreated.exists()) {
-                    fileToCheck = fileToBeCreated;
-                }
-
-                if (otherCheckFileToBeCreated != null && otherCheckFileToBeCreated.exists()) {
-                    fileToCheck = otherCheckFileToBeCreated;
-                }
-
-                _logger.info("Going to check if mods in " + modDirectory + ""
-                        + " are newer than " + fileToCheck);
-
-                if (fileToCheck != null) {
-                    DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
-
-                    boolean newerModExists = false;
-                    File[] allMods = modDirectory.listFiles();
-                    for (File f : allMods) {
-                        if (f.getName().endsWith(".mod") && f.lastModified() > fileToCheck.lastModified()) {
-                            newerModExists = true;
-                            _logger.info("File " + f + " (" + df.format(new Date(f.lastModified())) + ") was modified later than " + fileToCheck + " (" + df.format(new Date(fileToCheck.lastModified())) + ")");
-                        }
-                    }
-                    if (!newerModExists) {
-                        _logger.info("Not being asked to recompile, and no mod files exist in " + modDirectory + ""
-                                + " which are newer than " + fileToCheck);
-                        return true;
-                    } else {
-                        _logger.info("Newer mod files exist!");
-                    }
-                }
-
-            } else {
-                _logger.info("Forcing recompile...");
-            }
-
-            _logger.info("Trying to delete any previous: " + fileToBeCreated.getAbsolutePath());
-
-            if (fileToBeCreated.exists()) {
-                fileToBeCreated.delete();
-
-                _logger.info("Deleted.");
-            }
-
-            _logger.info("directoryToExecuteIn: " + directoryToExecuteIn);
-
-            Process currentProcess = rt.exec(commandToExecute, null, new File(directoryToExecuteIn));
-            ProcessOutputWatcher procOutputMain = new ProcessOutputWatcher(currentProcess.getInputStream(),  "NMODL Compile >> ");
-            procOutputMain.start();
-
-            ProcessOutputWatcher procOutputError = new ProcessOutputWatcher(currentProcess.getErrorStream(), "NMODL Error   >> ");
-            procOutputError.start();
-
-            _logger.info("Have successfully executed command: " + commandToExecute);
-
-            currentProcess.waitFor();
-
-            if (fileToBeCreated.exists() || otherCheckFileToBeCreated.exists()) {
-                // In case, e.g. a 32 bit JDK is used on a 64 bit system
-                File createdFile = fileToBeCreated;
-                if (!createdFile.exists()) {
-                    createdFile = otherCheckFileToBeCreated;
-                }
-
-                _logger.info("Successful compilation");
-
-                return true;
-            } else if (Utilities.isMacBasedPlatform()) {
-                return true;
-            } else {
-                _logger.info("Unsuccessful compilation. File doesn't exist: " + fileToBeCreated.getAbsolutePath()
-                        + " (and neither does " + otherCheckFileToBeCreated.getAbsolutePath() + ")");
-
-                String linMacWarn = "   NOTE: make sure you can compile NEURON mod files on your system!\n\n"
-                        + "Often, extra packages (e.g. dev packages of ncurses & readline) need to be installed to successfully run nrnivmodl, which compiles mod files\n"
-                        + "Go to " + modDirectory + " and try running nrnivmodl";
-                if (Utilities.isWindowsBasedPlatform()) {
-                    linMacWarn = "";
-                }
-
-                _logger.error("Problem with mod file compilation. File doesn't exist: " + fileToBeCreated.getAbsolutePath() + "\n"
-                        + "(and neither does " + otherCheckFileToBeCreated.getAbsolutePath() + ")\n"
-                        + "Please note that Neuron checks every *.mod file in this file's home directory\n"
-                        + "(" + modDirectory + ").\n"
-                        + "For more information when this error occurs, enable logging at Settings -> General Properties & Project Defaults -> Logging\n\n"
-                        + linMacWarn);
-                return false;
-            }
-
-        } catch (Exception ex) {
-            _logger.error("Error running the command: " + commandToExecute + "\n" + ex.getMessage());
-            String dirContents = "bin/nrniv";
-            if (Utilities.isWindowsBasedPlatform()) {
-                dirContents = "bin\\neuron.exe";
-            }
-            throw new GeppettoExecutionException("Error testing: "
-                    + modDirectory.getAbsolutePath() + ".\nIs NEURON correctly installed?\n"
-                    + "NEURON home dir being used: " + "???"
-                    + "\nThis should be set to the correct location (the folder containing " + dirContents + ") at Settings -> General Properties & Project Defaults\n\n"
-                    + "Note: leave that field blank in that options window and restart and neuroConstruct will search for a possible location of NEURON\n\n");
-        }
-
+        return true;
     }
 }
