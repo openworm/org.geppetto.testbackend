@@ -45,6 +45,7 @@ import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
 import org.geppetto.core.visualisation.model.Point;
+import org.geppetto.testbackend.utilities.ProcessCaller;
 import org.geppetto.testbackend.utilities.ProcessOutputWatcher;
 import org.geppetto.testbackend.utilities.Utilities;
 import org.jscience.physics.amount.Amount;
@@ -421,11 +422,10 @@ public class DummySimulatorService extends ASimulator
 
         try {
            _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
-            compileFileWithNeuron(f, false);
+            ProcessCaller p = new ProcessCaller(f, false);
+            p.start();
             _logger.info("Done!");
-        } catch (GeppettoExecutionException ex) {
-        	throw new GeppettoExecutionException(ex);
-        } catch (IOException e) {
+        }catch (IOException e) {
 			throw new GeppettoExecutionException(e);
 		}
 	}
@@ -514,74 +514,4 @@ public class DummySimulatorService extends ASimulator
 	{
 		return "Dummy Simulator";
 	}
-	
-	/*
-     * Compliles all of the mod files at the specified location using NEURON's nrnivmodl/mknrndll.sh
-     */
-	public static boolean compileFileWithNeuron(File modDirectory, boolean forceRecompile) throws GeppettoExecutionException {
-		_logger.info("Going to compile the mod files in: " + modDirectory.getAbsolutePath() + ", forcing recompile: " + forceRecompile);
-
-		Runtime rt = Runtime.getRuntime();
-
-		File neuronHome = null;
-		try {
-
-			neuronHome = Utilities.findNeuronHome();
-
-			String commandToExecute = null;
-
-			String directoryToExecuteIn = modDirectory.getCanonicalPath();
-
-			if(modDirectory.isDirectory()){
-				commandToExecute = neuronHome.getCanonicalPath()
-						+ System.getProperty("file.separator")
-						+ "bin"
-						+ System.getProperty("file.separator")
-						+ "nrnivmodl";
-			}else{
-				String extension = "";
-
-				int i = modDirectory.getAbsolutePath().lastIndexOf('.');
-				if (i > 0) {
-				    extension = modDirectory.getAbsolutePath().substring(i+1);
-				}
-				
-				_logger.info("File with extension " + extension + " detected");
-				
-				directoryToExecuteIn = modDirectory.getParentFile().getAbsolutePath();
-				if(extension.equals("hoc")){
-					commandToExecute = neuronHome.getCanonicalPath()
-							+ System.getProperty("file.separator")
-							+ "bin"
-							+ System.getProperty("file.separator")
-							+ "nrngui " + modDirectory.getAbsolutePath();
-				}
-				else if(extension.equals("py")){
-					commandToExecute = "python " + modDirectory.getAbsolutePath();
-				}
-			}
-			
-			_logger.info("commandToExecute: " + commandToExecute);
-			_logger.info("from directory : " + directoryToExecuteIn);
-			
-			Process currentProcess = rt.exec(commandToExecute, null, new File(directoryToExecuteIn));
-			ProcessOutputWatcher procOutputMain = new ProcessOutputWatcher(currentProcess.getInputStream(),  "NMODL Compile >> ");
-			procOutputMain.start();
-
-			ProcessOutputWatcher procOutputError = new ProcessOutputWatcher(currentProcess.getErrorStream(), "NMODL Error   >> ");
-			procOutputError.start();
-
-			_logger.info("Have successfully executed command: " + commandToExecute);
-			
-			currentProcess.waitFor();
-		} catch (InterruptedException e) {
-			_logger.error("Interrupted Exception " + e.getMessage());
-		} catch (GeppettoInitializationException e) {
-			_logger.error("Initialization error" + e.getMessage());
-		} catch (IOException e) {
-			_logger.error("Initialization error " + e.getMessage());
-		}
-
-        return true;
-    }
 }
