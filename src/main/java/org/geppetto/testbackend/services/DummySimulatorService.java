@@ -431,7 +431,7 @@ public class DummySimulatorService extends ASimulator
 				}
 				break;
 			case TEST_NINE:
-				url = this.getClass().getClassLoader().getResource("/neuron_demos/demo.hoc");
+				url = this.getClass().getClassLoader().getResource("/neuron_demos/demo_hoc/demo.hoc");
 			    f = null;
 			    try {
 			        f = new File(url.toURI());
@@ -553,19 +553,13 @@ public class DummySimulatorService extends ASimulator
 			String commandToExecute = null;
 
 			String directoryToExecuteIn = modDirectory.getCanonicalPath();
-			
-			Process currentProcess = null;
-			
+
 			if(modDirectory.isDirectory()){
 				commandToExecute = neuronHome.getCanonicalPath()
 						+ System.getProperty("file.separator")
 						+ "bin"
 						+ System.getProperty("file.separator")
 						+ "nrnivmodl";
-				
-				_logger.info("commandToExecute: " + commandToExecute);
-
-				currentProcess = rt.exec(commandToExecute, null, new File(directoryToExecuteIn));
 			}else{
 				String extension = "";
 
@@ -576,6 +570,7 @@ public class DummySimulatorService extends ASimulator
 				
 				_logger.info("File with extension " + extension + " detected");
 				
+				directoryToExecuteIn = modDirectory.getParentFile().getAbsolutePath();
 				if(extension.equals("hoc")){
 					commandToExecute = neuronHome.getCanonicalPath()
 							+ System.getProperty("file.separator")
@@ -585,15 +580,13 @@ public class DummySimulatorService extends ASimulator
 				}
 				else if(extension.equals("py")){
 					commandToExecute = "python " + modDirectory.getAbsolutePath();
-
 				}
-				
-				_logger.info("commandToExecute: " + commandToExecute);
-
-				currentProcess = rt.exec(commandToExecute, null, null);
 			}
 			
-
+			_logger.info("commandToExecute: " + commandToExecute);
+			_logger.info("from directory : " + directoryToExecuteIn);
+			
+			Process currentProcess = rt.exec(commandToExecute, null, new File(directoryToExecuteIn));
 			ProcessOutputWatcher procOutputMain = new ProcessOutputWatcher(currentProcess.getInputStream(),  "NMODL Compile >> ");
 			procOutputMain.start();
 
