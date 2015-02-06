@@ -1,7 +1,13 @@
 package org.geppetto.testbackend.services;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -31,7 +37,6 @@ import org.geppetto.core.model.runtime.CylinderNode;
 import org.geppetto.core.model.runtime.ParticleNode;
 import org.geppetto.core.model.runtime.SphereNode;
 import org.geppetto.core.model.runtime.VariableNode;
-import org.geppetto.core.model.runtime.CompositeNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.model.values.AValue;
@@ -40,6 +45,9 @@ import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
 import org.geppetto.core.visualisation.model.Point;
+import org.geppetto.testbackend.utilities.ProcessCaller;
+import org.geppetto.testbackend.utilities.ProcessOutputWatcher;
+import org.geppetto.testbackend.utilities.Utilities;
 import org.jscience.physics.amount.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,7 +68,7 @@ public class DummySimulatorService extends ASimulator
 
 	public enum TEST_NO
 	{
-		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX
+		TEST_ONE, TEST_TWO, TEST_THREE, TEST_FOUR, TEST_FIVE, TEST_SIX, TEST_SEVEN, TEST_EIGHT, TEST_NINE,TEST_TEN, TEST_ELEVEN
 	}
 	
 	@Autowired
@@ -347,7 +355,11 @@ public class DummySimulatorService extends ASimulator
 		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
 		aspectNode.getSubTree(AspectTreeType.VISUALIZATION_TREE).apply(removeVisitor);
 
-		populateEntityForTest(aspectNode,(TEST_NO)modelWrapper.getModel(TEST));
+		try {
+			populateEntityForTest(aspectNode,(TEST_NO)modelWrapper.getModel(TEST));
+		} catch (GeppettoExecutionException e) {
+			throw new ModelInterpreterException(e);
+		}
 		return true;
 	}
 	
@@ -357,8 +369,9 @@ public class DummySimulatorService extends ASimulator
 	 * @param testNumber
 	 *            - Test Number to be perform
 	 * @return
+	 * @throws GeppettoExecutionException 
 	 */
-	private void populateEntityForTest(AspectNode aspect, TEST_NO test)
+	private void populateEntityForTest(AspectNode aspect, TEST_NO test) throws GeppettoExecutionException
 	{
 		switch(test)
 		{
@@ -380,6 +393,40 @@ public class DummySimulatorService extends ASimulator
 			case TEST_SIX:
 				createTestTwoEntities(aspect, 20000);
 				break;
+			case TEST_SEVEN:
+				createFile("/neuron_demos/nmodl");
+				break;
+			case TEST_EIGHT:
+				createFile("/neuron_demos/demo_hoc/demo.hoc");
+				break;
+			case TEST_NINE:
+				createFile("/neuron_demos/demo_hoc/demo.hoc");
+				createFile("/neuron_demos/dynclamp/dynclamp.hoc");
+				createFile("/neuron_demos/clamp.hoc");
+				createFile("/neuron_demos/motor.hoc");
+				break;
+			case TEST_TEN:
+				createFile("/neuron_demos/dynclamp");
+				break;
+		}
+	}
+	
+	public void createFile(String path) throws GeppettoExecutionException{
+		URL url = this.getClass().getClassLoader().getResource(path);
+	    File f = null;
+	    try {
+	        f = new File(url.toURI());
+	    } catch (URISyntaxException e) {
+	        f = new File(url.getPath());
+	    }
+
+        try {
+           _logger.info("Trying to compile mods in: " + f.getCanonicalPath());
+            ProcessCaller p = new ProcessCaller(f, false);
+            p.start();
+            _logger.info("Done!");
+        }catch (IOException e) {
+			throw new GeppettoExecutionException(e);
 		}
 	}
 
@@ -465,7 +512,6 @@ public class DummySimulatorService extends ASimulator
 	@Override
 	public String getId()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return "Dummy Simulator";
 	}
 }
