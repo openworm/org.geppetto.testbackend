@@ -113,4 +113,10 @@ public class DummyModelInterpreterService implements IModelInterpreter
 		return "Dummy Model Interpreter";
 	}
 
+	@Override
+	public void registerGeppettoService() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

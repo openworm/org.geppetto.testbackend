@@ -514,4 +514,11 @@ public class DummySimulatorService extends ASimulator
 	{
 		return "Dummy Simulator";
 	}
+
+	@Override
+	public void registerGeppettoService()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }
