@@ -401,19 +401,7 @@ public class DummySimulatorService extends ASimulator
 			case TEST_SEVEN:
 				createFile("/neuron_demos/nmodl");
 				break;
-			case TEST_EIGHT:
-				createFile("/neuron_demos/demo_hoc/demo.hoc");
-				break;
 			case TEST_NINE:
-				createFile("/neuron_demos/demo_hoc/demo.hoc");
-				createFile("/neuron_demos/dynclamp/dynclamp.hoc");
-				createFile("/neuron_demos/clamp.hoc");
-				createFile("/neuron_demos/motor.hoc");
-				break;
-			case TEST_TEN:
-				createFile("/neuron_demos/dynclamp");
-				break;
-			case TEST_ELEVEN:
 			try {
 				writeHDF5File();
 				readHDF5File();

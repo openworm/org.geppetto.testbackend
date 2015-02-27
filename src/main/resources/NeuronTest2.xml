@@ -10,10 +10,8 @@
 			</tns:simulator>
 			<tns:model>
 				<tns:modelInterpreterId>dummyModelInterpreter</tns:modelInterpreterId>
-				<tns:modelURL>https://dummyurl.com/TEST_TEN</tns:modelURL>
+				<tns:modelURL>https://dummyurl.com/TEST_NINE</tns:modelURL>
 			</tns:model>		
 		</tns:aspect>
 	</tns:entity>
-	<tns:script>https://raw.github.com/openworm/org.geppetto.testbackend/development/src/main/resources/NeuronScript.js</tns:script>
-
 </tns:simulation>
