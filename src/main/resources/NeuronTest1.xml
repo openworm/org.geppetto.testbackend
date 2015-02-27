@@ -10,7 +10,7 @@
 			</tns:simulator>
 			<tns:model>
 				<tns:modelInterpreterId>dummyModelInterpreter</tns:modelInterpreterId>
-				<tns:modelURL>https://dummyurl.com/neuron</tns:modelURL>
+				<tns:modelURL>https://dummyurl.com/TEST_EIGHT</tns:modelURL>
 			</tns:model>		
 		</tns:aspect>
 	</tns:entity>
