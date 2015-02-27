@@ -54,7 +54,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 		//sets model in wrapper, if it detects the model URL is 
 		//neuron (hardcoded in simulation test file), then it adds 
 		//python script as part of process
-		if(test.toString().equals("neuron")){
+		if(test.toString().contains("neuron")){
 			wrapper.wrapModel("process", "/neuron_demos/neuron_python_test.py");
 		}else{
 			wrapper.wrapModel(TEST, test);
