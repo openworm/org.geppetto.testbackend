@@ -14,6 +14,4 @@
 			</tns:model>		
 		</tns:aspect>
 	</tns:entity>
-	<tns:script>https://raw.github.com/openworm/org.geppetto.testbackend/development/src/main/resources/NeuronScript.js</tns:script>
-
 </tns:simulation>

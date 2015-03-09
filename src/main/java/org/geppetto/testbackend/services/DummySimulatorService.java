@@ -4,16 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import javax.measure.converter.RationalConverter;
 import javax.measure.converter.UnitConverter;
 import javax.measure.unit.Unit;
+
+import ncsa.hdf.object.Dataset;
+import ncsa.hdf.object.Datatype;
+import ncsa.hdf.object.FileFormat;
+import ncsa.hdf.object.Group;
+import ncsa.hdf.object.h5.H5File;
+import ncsa.hdf.utils.SetNatives;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,8 +53,6 @@ import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
 import org.geppetto.core.visualisation.model.Point;
 import org.geppetto.testbackend.utilities.ProcessCaller;
-import org.geppetto.testbackend.utilities.ProcessOutputWatcher;
-import org.geppetto.testbackend.utilities.Utilities;
 import org.jscience.physics.amount.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,6 +90,8 @@ public class DummySimulatorService extends ASimulator
 	  
 	// TODO: all this stuff should come from configuration
 	private final String _aspectID = "dummy";
+
+	private String hdf5FileName = "H5DatasetRead.h5";
 
 	public DummySimulatorService()
 	{
@@ -398,21 +403,125 @@ public class DummySimulatorService extends ASimulator
 			case TEST_SEVEN:
 				createFile("/neuron_demos/nmodl");
 				break;
-			case TEST_EIGHT:
-				createFile("/neuron_demos/demo_hoc/demo.hoc");
-				break;
 			case TEST_NINE:
-				createFile("/neuron_demos/demo_hoc/demo.hoc");
-				createFile("/neuron_demos/dynclamp/dynclamp.hoc");
-				createFile("/neuron_demos/clamp.hoc");
-				createFile("/neuron_demos/motor.hoc");
-				break;
-			case TEST_TEN:
-				createFile("/neuron_demos/dynclamp");
+			try {
+				writeHDF5File();
+				readHDF5File();
+			} catch (Exception e) {
+				_logger.error("Unable to write and/or read hdf5 files " + e);
+			}
 				break;
 		}
 	}
 	
+	private void readHDF5File() throws Exception {
+		// retrieve an instance of H5File
+        FileFormat fileFormat = FileFormat.getFileFormat(FileFormat.FILE_TYPE_HDF5);
+
+        if (fileFormat == null) {
+            System.err.println("Cannot find HDF5 FileFormat.");
+            return;
+        }
+
+        // open the file with read and write access
+        FileFormat testFile = fileFormat.createInstance(hdf5FileName, FileFormat.WRITE);
+
+        if (testFile == null) {
+            System.err.println("Failed to open file: " + hdf5FileName);
+            return;
+        }
+
+        // open the file and retrieve the file structure
+        testFile.open();
+        Group root = (Group) ((javax.swing.tree.DefaultMutableTreeNode) testFile.getRootNode()).getUserObject();
+
+        // retrieve the dataset "2D 32-bit integer 20x10"
+        Dataset dataset = (Dataset) root.getMemberList().get(0);
+        int[] dataRead = (int[]) dataset.read();
+
+        // print out the data values
+        System.out.println("\n\nOriginal Data Values");
+        for (int i = 0; i < 20; i++) {
+            System.out.print("\n" + dataRead[i * 10]);
+            for (int j = 1; j < 10; j++) {
+                System.out.print(", " + dataRead[i * 10 + j]);
+            }
+        }
+
+        // change data value and write it to file.
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 10; j++) {
+                dataRead[i * 10 + j]++;
+            }
+        }
+        dataset.write(dataRead);
+
+        // clean and reload the data value
+        int[] dataModified = (int[]) dataset.read();
+
+        // print out the modified data values
+        System.out.println("\n\nModified Data Values");
+        for (int i = 0; i < 20; i++) {
+            System.out.print("\n" + dataModified[i * 10]);
+            for (int j = 1; j < 10; j++) {
+                System.out.print(", " + dataModified[i * 10 + j]);
+            }
+        }
+
+        // close file resource
+        testFile.close();
+	}
+
+	/**
+     * create the file and add groups and dataset into the file, which is the
+     * same as javaExample.H5DatasetCreate
+     * 
+     * @see javaExample.HDF5DatasetCreate
+     * @throws Exception
+     */
+    public void writeHDF5File() throws Exception {
+		SetNatives.getInstance().setHDF5Native(System.getProperty("user.dir"));
+		
+        long[] dims2D = { 20, 10 };
+        
+        // retrieve an instance of H5File
+        FileFormat fileFormat = FileFormat.getFileFormat(FileFormat.FILE_TYPE_HDF5);
+
+        if (fileFormat == null) {
+            System.err.println("Cannot find HDF5 FileFormat.");
+            return;
+        }
+
+        // create a new file with a given file name.
+        H5File testFile = (H5File) fileFormat.createFile(hdf5FileName, FileFormat.FILE_CREATE_DELETE);
+
+        if (testFile == null) {
+            System.err.println("Failed to create file:" + hdf5FileName);
+            return;
+        }
+
+        // open the file and retrieve the root group
+        testFile.open();
+        Group root = (Group) ((javax.swing.tree.DefaultMutableTreeNode) testFile.getRootNode()).getUserObject();
+
+        // set the data values
+        int[] dataIn = new int[20 * 10];
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 10; j++) {
+                dataIn[i * 10 + j] = 1000 + i * 100 + j;
+            }
+        }
+
+        // create 2D 32-bit (4 bytes) integer dataset of 20 by 10
+        Datatype dtype = testFile.createDatatype(Datatype.CLASS_INTEGER, 4, Datatype.NATIVE, Datatype.NATIVE);
+        Dataset dataset = testFile
+                .createScalarDS("2D 32-bit integer 20x10", root, dtype, dims2D, null, null, 0, dataIn);
+
+        // close file resource
+        testFile.close();
+    }
+
+
 	public void createFile(String path) throws GeppettoExecutionException{
 		URL url = this.getClass().getClassLoader().getResource(path);
 	    File f = null;

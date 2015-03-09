@@ -41,10 +41,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	private static Log logger = LogFactory.getLog(DummyModelInterpreterService.class);
 
 	private static final String TEST = "TEST";
-
-
-	private Random randomGenerator;
-
+	
 	public IModel readModel(URL url, List<URL> recordings, String instancePath) throws ModelInterpreterException
 	{
 
@@ -56,8 +53,15 @@ public class DummyModelInterpreterService implements IModelInterpreter
 
 		logger.warn("Wrap Model " + test);
 
-		wrapper.wrapModel(TEST, test);
-
+		//sets model in wrapper, if it detects the model URL is 
+		//neuron (hardcoded in simulation test file), then it adds 
+		//python script as part of process
+		if(test.equals(TEST_NO.TEST_EIGHT)){
+			wrapper.wrapModel("process", "/neuron_demos/neuron_python_test.py");
+		}else{
+			wrapper.wrapModel(TEST, test);
+		}
+		
 		return wrapper;
 	}
 
