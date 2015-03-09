@@ -41,6 +41,8 @@ import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.model.values.AValue;
 import org.geppetto.core.model.values.ValuesFactory;
+import org.geppetto.core.services.IModelFormat;
+import org.geppetto.core.services.registry.ServicesRegistry;
 import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
@@ -518,7 +520,9 @@ public class DummySimulatorService extends ASimulator
 	@Override
 	public void registerGeppettoService()
 	{
-		// TODO Auto-generated method stub
+		List<IModelFormat> modelFormatList = new ArrayList<IModelFormat>();
+		modelFormatList.add(ModelFormat.TEST);
+		ServicesRegistry.registerSimulatorService(this, modelFormatList);
 		
 	}
 }
