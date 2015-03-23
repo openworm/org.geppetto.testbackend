@@ -20,6 +20,8 @@ import org.geppetto.core.model.runtime.FunctionNode;
 import org.geppetto.core.model.runtime.ParameterSpecificationNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
 import org.geppetto.core.model.values.DoubleValue;
+import org.geppetto.core.services.IModelFormat;
+import org.geppetto.core.services.registry.ServicesRegistry;
 import org.geppetto.testbackend.services.DummySimulatorService.TEST_NO;
 import org.geppetto.testbackend.utilities.Utilities;
 import org.springframework.stereotype.Service;
@@ -115,6 +117,13 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	public String getName()
 	{
 		return "Dummy Model Interpreter";
+	}
+
+	@Override
+	public void registerGeppettoService() {
+		List<IModelFormat> modelFormatList = new ArrayList<IModelFormat>();
+		modelFormatList.add(ModelFormat.TEST);
+		ServicesRegistry.registerModelInterpreterService(this, modelFormatList);
 	}
 
 }
