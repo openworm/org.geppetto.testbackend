@@ -29,6 +29,7 @@ import org.geppetto.core.data.model.AVariable;
 import org.geppetto.core.data.model.SimpleType;
 import org.geppetto.core.data.model.SimpleType.Type;
 import org.geppetto.core.data.model.SimpleVariable;
+import org.geppetto.core.features.IVariableWatchFeature;
 import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.ModelWrapper;
@@ -46,6 +47,7 @@ import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
 import org.geppetto.core.model.state.visitors.RemoveTimeStepsVisitor;
 import org.geppetto.core.model.values.AValue;
 import org.geppetto.core.model.values.ValuesFactory;
+import org.geppetto.core.services.GeppettoFeature;
 import org.geppetto.core.services.IModelFormat;
 import org.geppetto.core.services.registry.ServicesRegistry;
 import org.geppetto.core.simulation.IRunConfiguration;
@@ -127,7 +129,7 @@ public class DummySimulatorService extends ASimulator
 
 		updateVisualTree(aspect);
 		
-		if(isWatching())
+		if(((IVariableWatchFeature)this.getFeature(GeppettoFeature.VARIALE_WATCH_FEATURE)).isWatching())
 		{
 			// add values of variables being watched to state tree
 			updateStateTreeForWatch(aspect);
@@ -169,59 +171,61 @@ public class DummySimulatorService extends ASimulator
 	{
 		ACompositeNode watchTree = aspect.getSubTree(AspectTreeType.WATCH_TREE);
 		updateTimeNode();
-		
+
+		IVariableWatchFeature watchFeature =
+				((IVariableWatchFeature)this.getFeature(GeppettoFeature.VARIALE_WATCH_FEATURE));
+
 		// check which watchable variables are being watched
-		for(AVariable var : getWatchableVariables().getVariables())
+		for(AVariable var : watchFeature.getWatcheableVariables().getVariables())
 		{
-			for(String varName : getWatchList())
+			String varName = var.getName();
+			// if they are being watched add to state tree
+			if(varName.toLowerCase().equals(var.getName().toLowerCase()))
 			{
-				// if they are being watched add to state tree
-				if(varName.toLowerCase().equals(var.getName().toLowerCase()))
+				VariableNode dummyNode = null;
+
+				for(ANode child : watchTree.getChildren())
 				{
-					VariableNode dummyNode = null;
-
-					for(ANode child : watchTree.getChildren())
+					if(child.getName().equals(var.getName()))
 					{
-						if(child.getName().equals(var.getName()))
-						{
-							// assign if it already exists
-							dummyNode = (VariableNode) child;
-						}
+						// assign if it already exists
+						dummyNode = (VariableNode) child;
 					}
-
-					// only add if it's not already there
-					if(dummyNode == null)
-					{
-						dummyNode = new VariableNode(var.getName());
-						watchTree.addChild(dummyNode);
-					}
-
-					PhysicalQuantity p = new PhysicalQuantity();
-					AValue val = null;
-
-					// NOTE: this is a dummy simulator so we're making values up - we wouldn't need to do this in a real one
-					if(varName.toLowerCase().contains("double"))
-					{
-						val = ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble());
-					}
-					else if(varName.toLowerCase().contains("float"))
-					{
-						val = ValuesFactory.getFloatValue(getRandomGenerator().nextFloat());
-					}
-					
-					p.setUnit("mV");
-					
-					if(scaleFactor == null){
-						calculateScaleFactor(val);
-					}
-
-					p.setScalingFactor(scaleFactor);
-
-					p.setValue(val);
-					
-					updateTimeNode();
 				}
+
+				// only add if it's not already there
+				if(dummyNode == null)
+				{
+					dummyNode = new VariableNode(var.getName());
+					watchTree.addChild(dummyNode);
+				}
+
+				PhysicalQuantity p = new PhysicalQuantity();
+				AValue val = null;
+
+				// NOTE: this is a dummy simulator so we're making values up - we wouldn't need to do this in a real one
+				if(varName.toLowerCase().contains("double"))
+				{
+					val = ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble());
+				}
+				else if(varName.toLowerCase().contains("float"))
+				{
+					val = ValuesFactory.getFloatValue(getRandomGenerator().nextFloat());
+				}
+
+				p.setUnit("mV");
+
+				if(scaleFactor == null){
+					calculateScaleFactor(val);
+				}
+
+				p.setScalingFactor(scaleFactor);
+
+				p.setValue(val);
+
+				updateTimeNode();
 			}
+
 		}
 	}
 
@@ -269,7 +273,7 @@ public class DummySimulatorService extends ASimulator
 		vars.add(dummyDouble);
 		vars.add(dummyFloat);
 
-		getWatchableVariables().setVariables(vars);
+		((IVariableWatchFeature)this.getFeature(GeppettoFeature.VARIALE_WATCH_FEATURE)).getWatcheableVariables().setVariables(vars);
 	}
 
 	/**
@@ -354,22 +358,6 @@ public class DummySimulatorService extends ASimulator
 		timeTracker = Double.valueOf(df2.format(timeTracker));
 	}
 
-	@Override
-	public boolean populateVisualTree(AspectNode aspectNode) throws ModelInterpreterException
-	{
-		ModelWrapper modelWrapper = (ModelWrapper) aspectNode.getModel();
-
-		RemoveTimeStepsVisitor removeVisitor = new RemoveTimeStepsVisitor(1);
-		aspectNode.getSubTree(AspectTreeType.VISUALIZATION_TREE).apply(removeVisitor);
-
-		try {
-			populateEntityForTest(aspectNode,(TEST_NO)modelWrapper.getModel(TEST));
-		} catch (GeppettoExecutionException e) {
-			throw new ModelInterpreterException(e);
-		}
-		return true;
-	}
-	
 	/**
 	 * Creates a Scene with random geometries added. A different scene is created for each different test
 	 * 
