@@ -53,6 +53,7 @@ import org.geppetto.core.services.registry.ServicesRegistry;
 import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
+import org.geppetto.core.simulator.AVariableWatchFeature;
 import org.geppetto.core.visualisation.model.Point;
 import org.geppetto.testbackend.utilities.ProcessCaller;
 import org.jscience.physics.amount.Amount;
@@ -110,11 +111,13 @@ public class DummySimulatorService extends ASimulator
 		PhysicalQuantity q = new PhysicalQuantity();
 		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 				
+		this.addFeature(new AVariableWatchFeature());
+
 		// populate watch / force variables
 		setWatchableVariables();
 		setForceableVariables();
 		
-		getListener().stateTreeUpdated();	
+		getListener().stateTreeUpdated();		
 	}
 
 	@Override

@@ -54,6 +54,7 @@ public class DummyModelInterpreterService extends AModelInterpreter
 
 		logger.warn("Wrap Model " + test);
 
+		this.addFeature(new DummyVisualTreeFeature());
 		//sets model in wrapper, if it detects the model URL is 
 		//neuron (hardcoded in simulation test file), then it adds 
 		//python script as part of process
