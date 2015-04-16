@@ -132,7 +132,7 @@ public class DummySimulatorService extends ASimulator
 
 		updateVisualTree(aspect);
 		
-		if(((IVariableWatchFeature)this.getFeature(GeppettoFeature.VARIALE_WATCH_FEATURE)).isWatching())
+		if(((IVariableWatchFeature)this.getFeature(GeppettoFeature.VARIABLE_WATCH_FEATURE)).isWatching())
 		{
 			// add values of variables being watched to state tree
 			updateStateTreeForWatch(aspect);
@@ -176,7 +176,7 @@ public class DummySimulatorService extends ASimulator
 		updateTimeNode();
 
 		IVariableWatchFeature watchFeature =
-				((IVariableWatchFeature)this.getFeature(GeppettoFeature.VARIALE_WATCH_FEATURE));
+				((IVariableWatchFeature)this.getFeature(GeppettoFeature.VARIABLE_WATCH_FEATURE));
 
 		// check which watchable variables are being watched
 		for(AVariable var : watchFeature.getWatcheableVariables().getVariables())
@@ -276,7 +276,7 @@ public class DummySimulatorService extends ASimulator
 		vars.add(dummyDouble);
 		vars.add(dummyFloat);
 
-		((IVariableWatchFeature)this.getFeature(GeppettoFeature.VARIALE_WATCH_FEATURE)).getWatcheableVariables().setVariables(vars);
+		((IVariableWatchFeature)this.getFeature(GeppettoFeature.VARIABLE_WATCH_FEATURE)).getWatcheableVariables().setVariables(vars);
 	}
 
 	/**
