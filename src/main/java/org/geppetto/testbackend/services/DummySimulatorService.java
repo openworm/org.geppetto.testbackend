@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.measure.converter.RationalConverter;
-import javax.measure.converter.UnitConverter;
-import javax.measure.unit.Unit;
-
 import ncsa.hdf.object.Dataset;
 import ncsa.hdf.object.Datatype;
 import ncsa.hdf.object.FileFormat;
@@ -37,7 +33,6 @@ import org.geppetto.core.model.runtime.CylinderNode;
 import org.geppetto.core.model.runtime.ParticleNode;
 import org.geppetto.core.model.runtime.SphereNode;
 import org.geppetto.core.model.runtime.VariableNode;
-import org.geppetto.core.model.state.visitors.SerializeUpdateSimulationTreeVisitor;
 import org.geppetto.core.model.values.AValue;
 import org.geppetto.core.model.values.ValuesFactory;
 import org.geppetto.core.services.IModelFormat;
@@ -48,7 +43,6 @@ import org.geppetto.core.simulator.ASimulator;
 import org.geppetto.core.simulator.AVariableWatchFeature;
 import org.geppetto.core.visualisation.model.Point;
 import org.geppetto.testbackend.utilities.ProcessCaller;
-import org.jscience.physics.amount.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,15 +68,7 @@ public class DummySimulatorService extends ASimulator
 	@Autowired
 	private SimulatorConfig dummySimulatorConfig;
 
-	DecimalFormat df = new DecimalFormat("0.E0");
-
 	private Random randomGenerator;
-	private double timeTracker = 0;
-	private double step = 0.05;
-	private String scaleFactor = null;
-
-	DecimalFormat df2 = new DecimalFormat("###.##");
-
 	// TODO: all this stuff should come from configuration
 	private final String _aspectID = "dummy";
 
@@ -164,79 +150,12 @@ public class DummySimulatorService extends ASimulator
 	@SuppressWarnings("unchecked")
 	private void updateStateTreeForWatch(AspectNode aspect)
 	{
-		updateTimeNode();
-
-		ACompositeNode simulationTree = aspect.getSubTree(AspectTreeType.SIMULATION_TREE);
-
+		AspectSubTreeNode simulationTree = aspect.getSubTree(AspectTreeType.SIMULATION_TREE);
+		
 		// check which watchable variables are being watched
-		SerializeUpdateSimulationTreeVisitor readWatchableVariableListVisitor = new SerializeUpdateSimulationTreeVisitor();
-		simulationTree.apply(readWatchableVariableListVisitor);
+		CreateDummySimulationTreeVisitor createDummySimulationTreeVisitor = new CreateDummySimulationTreeVisitor(simulationTree, this.getName());
+		simulationTree.apply(createDummySimulationTreeVisitor);
 
-		for(String watchedVariable : readWatchableVariableListVisitor.getWatchableVariableList())
-		{
-			VariableNode dummyNode = null;
-
-			for(ANode child : simulationTree.getChildren())
-			{
-				if(child.getName().equals(watchedVariable))
-				{
-					// assign if it already exists
-					dummyNode = (VariableNode) child;
-				}
-			}
-
-			// only add if it's not already there
-			if(dummyNode == null)
-			{
-				dummyNode = new VariableNode(watchedVariable);
-				simulationTree.addChild(dummyNode);
-			}
-
-			PhysicalQuantity p = new PhysicalQuantity();
-			AValue val = null;
-
-			// NOTE: this is a dummy simulator so we're making values up - we wouldn't need to do this in a real one
-			if(watchedVariable.toLowerCase().contains("double"))
-			{
-				val = ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble());
-			}
-			else if(watchedVariable.toLowerCase().contains("float"))
-			{
-				val = ValuesFactory.getFloatValue(getRandomGenerator().nextFloat());
-			}
-
-			p.setUnit("mV");
-
-			if(scaleFactor == null)
-			{
-				calculateScaleFactor(val);
-			}
-
-			p.setScalingFactor(scaleFactor);
-
-			p.setValue(val);
-
-			updateTimeNode();
-		}
-	}
-
-	private void calculateScaleFactor(AValue val)
-	{
-		String unit = val.getStringValue() + " " + "mV";
-		Amount<?> m2 = Amount.valueOf(unit);
-
-		Unit<?> sUnit = m2.getUnit().getStandardUnit();
-
-		UnitConverter r = m2.getUnit().getConverterTo(sUnit);
-
-		long factor = 0;
-		if(r instanceof RationalConverter)
-		{
-			factor = ((RationalConverter) r).getDivisor();
-		}
-
-		scaleFactor = df.format(factor);
-		;
 	}
 
 	private Random getRandomGenerator()
@@ -248,63 +167,6 @@ public class DummySimulatorService extends ASimulator
 		return randomGenerator;
 	}
 
-	/**
-	 * Create Time Tree
-	 */
-	private void updateTimeNode()
-	{
-		ACompositeNode time = new CompositeNode("dummyID");
-
-		if(time.getChildren().size() == 0)
-		{
-			PhysicalQuantity stepQ = new PhysicalQuantity();
-			AValue stepVal = ValuesFactory.getDoubleValue(step);
-			stepQ.setValue(stepVal);
-
-			PhysicalQuantity timeQ = new PhysicalQuantity();
-			AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
-			timeQ.setValue(timeVal);
-
-			// Add the name of the simulator to tree time node, to distinguis it from other
-			// times from other simulators
-			VariableNode name = new VariableNode("simulator");
-			PhysicalQuantity q = new PhysicalQuantity();
-			q.setValue(ValuesFactory.getStringValue(this.getName()));
-			name.addPhysicalQuantity(q);
-
-			VariableNode stepNode = new VariableNode("step");
-			stepNode.addPhysicalQuantity(stepQ);
-
-			VariableNode timeNode = new VariableNode("time");
-			timeNode.addPhysicalQuantity(timeQ);
-
-			time.addChild(stepNode);
-			time.addChild(timeNode);
-		}
-		else
-		{
-			for(ANode child : time.getChildren())
-			{
-				if(child.getName().equals("time"))
-				{
-					PhysicalQuantity q = new PhysicalQuantity();
-					AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
-					q.setValue(timeVal);
-					((VariableNode) child).addPhysicalQuantity(q);
-				}
-				else if(child.getName().equals("step"))
-				{
-					PhysicalQuantity q = new PhysicalQuantity();
-					AValue timeVal = ValuesFactory.getDoubleValue(step);
-					q.setValue(timeVal);
-					((VariableNode) child).addPhysicalQuantity(q);
-				}
-			}
-		}
-		timeTracker += step;
-
-		timeTracker = Double.valueOf(df2.format(timeTracker));
-	}
 
 	/**
 	 * Creates a Scene with random geometries added. A different scene is created for each different test
