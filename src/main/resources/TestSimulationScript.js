@@ -1,8 +1,8 @@
-Simulation.addWatchLists([{name:"test_dummy", variablePaths:["dummyServices.dummyDouble", "dummyServices.dummyFloat"]}]);
+dummyServices.dummyServices.getSimulationTree();
+
+Simulation.setWatchedVariables([dummyServices.dummyServices.dummyDouble, dummyServices.dummyServices.dummyFloat]);
 
 Simulation.start();
-
-Simulation.startWatch();
 
 G.addWidget(Widgets.PLOT);
 

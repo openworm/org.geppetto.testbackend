@@ -3,23 +3,24 @@ package org.geppetto.testbackend.services;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geppetto.core.model.AModelInterpreter;
 import org.geppetto.core.model.IModel;
-import org.geppetto.core.model.IModelInterpreter;
 import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.ModelWrapper;
 import org.geppetto.core.model.quantities.PhysicalQuantity;
 import org.geppetto.core.model.runtime.AspectNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode;
+import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
 import org.geppetto.core.model.runtime.DynamicsSpecificationNode;
 import org.geppetto.core.model.runtime.FunctionNode;
 import org.geppetto.core.model.runtime.ParameterSpecificationNode;
-import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
 import org.geppetto.core.model.values.DoubleValue;
+import org.geppetto.core.services.IModelFormat;
+import org.geppetto.core.services.registry.ServicesRegistry;
 import org.geppetto.testbackend.services.DummySimulatorService.TEST_NO;
 import org.geppetto.testbackend.utilities.Utilities;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ import org.springframework.stereotype.Service;
  * 
  */
 @Service
-public class DummyModelInterpreterService implements IModelInterpreter
+public class DummyModelInterpreterService extends AModelInterpreter
 {
 
 	private static Log logger = LogFactory.getLog(DummyModelInterpreterService.class);
@@ -51,6 +52,10 @@ public class DummyModelInterpreterService implements IModelInterpreter
 
 		logger.warn("Wrap Model " + test);
 
+		this.addFeature(new DummyVisualTreeFeature());
+		
+		this.addFeature(new DummySimulationTreeFeature());
+		
 		//sets model in wrapper, if it detects the model URL is 
 		//neuron (hardcoded in simulation test file), then it adds 
 		//python script as part of process
@@ -106,7 +111,7 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	public boolean populateRuntimeTree(AspectNode aspectNode) {
 		AspectSubTreeNode modelTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.MODEL_TREE);
 		AspectSubTreeNode visualizationTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.VISUALIZATION_TREE);
-		AspectSubTreeNode simulationTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.WATCH_TREE);
+		AspectSubTreeNode simulationTree = (AspectSubTreeNode) aspectNode.getSubTree(AspectTreeType.SIMULATION_TREE);
 		
 		return true;
 	}
@@ -115,6 +120,13 @@ public class DummyModelInterpreterService implements IModelInterpreter
 	public String getName()
 	{
 		return "Dummy Model Interpreter";
+	}
+
+	@Override
+	public void registerGeppettoService() {
+		List<IModelFormat> modelFormatList = new ArrayList<IModelFormat>();
+		modelFormatList.add(ModelFormat.TEST);
+		ServicesRegistry.registerModelInterpreterService(this, modelFormatList);
 	}
 
 }
