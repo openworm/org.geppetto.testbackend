@@ -21,7 +21,6 @@ import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.beans.SimulatorConfig;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
-import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.quantities.PhysicalQuantity;
 import org.geppetto.core.model.runtime.ACompositeNode;
@@ -101,7 +100,7 @@ public class DummySimulatorService extends ASimulator
 		return this.dummySimulatorConfig.getSimulatorName();
 	}
 
-	public void simulate(IAspectConfiguration aspectConfiguration, AspectNode aspect) throws GeppettoExecutionException
+	public void simulate(IRunConfiguration runConfiguration, AspectNode aspect) throws GeppettoExecutionException
 	{
 		PhysicalQuantity q = new PhysicalQuantity();
 		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
