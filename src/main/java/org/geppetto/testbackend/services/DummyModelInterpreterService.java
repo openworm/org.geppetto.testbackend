@@ -15,6 +15,7 @@ import org.geppetto.core.model.IModel;
 import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.ModelWrapper;
 import org.geppetto.core.model.quantities.PhysicalQuantity;
+import org.geppetto.core.model.quantities.Unit;
 import org.geppetto.core.model.runtime.AspectNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode.AspectTreeType;
@@ -83,7 +84,7 @@ public class DummyModelInterpreterService extends AModelInterpreter
 
 		PhysicalQuantity value = new PhysicalQuantity();
 		value.setScalingFactor("10");
-		value.setUnit("ms");
+		value.setUnit(new Unit("ms"));
 		value.setValue(new DoubleValue(10));
 		dynamics.setInitialConditions(value);
 
@@ -96,7 +97,7 @@ public class DummyModelInterpreterService extends AModelInterpreter
 
 		PhysicalQuantity value1 = new PhysicalQuantity();
 		value1.setScalingFactor("10");
-		value1.setUnit("ms");
+		value1.setUnit(new Unit("ms"));
 		value1.setValue(new DoubleValue(10));
 
 		parameter.setValue(value1);

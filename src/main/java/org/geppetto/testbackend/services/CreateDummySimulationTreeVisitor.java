@@ -40,6 +40,7 @@ import javax.measure.converter.UnitConverter;
 import javax.measure.unit.Unit;
 
 import org.geppetto.core.model.quantities.PhysicalQuantity;
+import org.geppetto.core.model.quantities.Quantity;
 import org.geppetto.core.model.runtime.ACompositeNode;
 import org.geppetto.core.model.runtime.ANode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode;
@@ -137,7 +138,7 @@ public class CreateDummySimulationTreeVisitor extends DefaultStateVisitor
 			val = ValuesFactory.getFloatValue(this._randomGenerator.nextFloat());
 		}
 
-		p.setUnit("mV");
+		p.setUnit(new org.geppetto.core.model.quantities.Unit("mV"));
 
 		if(scaleFactor == null)
 		{
@@ -180,26 +181,26 @@ public class CreateDummySimulationTreeVisitor extends DefaultStateVisitor
 
 		if(time.getChildren().size() == 0)
 		{
-			PhysicalQuantity stepQ = new PhysicalQuantity();
+			Quantity stepQ = new Quantity();
 			AValue stepVal = ValuesFactory.getDoubleValue(step);
 			stepQ.setValue(stepVal);
 
-			PhysicalQuantity timeQ = new PhysicalQuantity();
+			Quantity timeQ = new Quantity();
 			AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
 			timeQ.setValue(timeVal);
 
 			// Add the name of the simulator to tree time node, to distinguis it from other
 			// times from other simulators
 			VariableNode name = new VariableNode("simulator");
-			PhysicalQuantity q = new PhysicalQuantity();
+			Quantity q = new Quantity();
 			q.setValue(ValuesFactory.getStringValue(this._simulatorName));
-			name.addPhysicalQuantity(q);
+			name.addQuantity(q);
 
 			VariableNode stepNode = new VariableNode("step");
-			stepNode.addPhysicalQuantity(stepQ);
+			stepNode.addQuantity(stepQ);
 
 			VariableNode timeNode = new VariableNode("time");
-			timeNode.addPhysicalQuantity(timeQ);
+			timeNode.addQuantity(timeQ);
 
 			time.addChild(stepNode);
 			time.addChild(timeNode);
@@ -210,17 +211,17 @@ public class CreateDummySimulationTreeVisitor extends DefaultStateVisitor
 			{
 				if(child.getName().equals("time"))
 				{
-					PhysicalQuantity q = new PhysicalQuantity();
+					Quantity q = new Quantity();
 					AValue timeVal = ValuesFactory.getDoubleValue(timeTracker);
 					q.setValue(timeVal);
-					((VariableNode) child).addPhysicalQuantity(q);
+					((VariableNode) child).addQuantity(q);
 				}
 				else if(child.getName().equals("step"))
 				{
-					PhysicalQuantity q = new PhysicalQuantity();
+					Quantity q = new Quantity();
 					AValue timeVal = ValuesFactory.getDoubleValue(step);
 					q.setValue(timeVal);
-					((VariableNode) child).addPhysicalQuantity(q);
+					((VariableNode) child).addQuantity(q);
 				}
 			}
 		}
