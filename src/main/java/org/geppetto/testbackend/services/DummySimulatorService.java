@@ -23,7 +23,7 @@ import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
 import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.model.IModel;
-import org.geppetto.core.model.quantities.PhysicalQuantity;
+import org.geppetto.core.model.quantities.Quantity;
 import org.geppetto.core.model.runtime.ANode;
 import org.geppetto.core.model.runtime.AspectNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode;
@@ -84,7 +84,7 @@ public class DummySimulatorService extends ASimulator
 		VariableNode child = new VariableNode("dummyChild");
 		// init statetree
 
-		PhysicalQuantity q = new PhysicalQuantity();
+		Quantity q = new Quantity();
 		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
 		this.addFeature(new AVariableWatchFeature());
@@ -99,7 +99,7 @@ public class DummySimulatorService extends ASimulator
 
 	public void simulate(IAspectConfiguration aspectConfiguration, AspectNode aspect) throws GeppettoExecutionException
 	{
-		PhysicalQuantity q = new PhysicalQuantity();
+		Quantity q = new Quantity();
 		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
 		updateVisualTree(aspect);

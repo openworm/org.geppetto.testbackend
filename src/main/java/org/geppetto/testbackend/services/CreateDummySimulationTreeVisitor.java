@@ -39,7 +39,6 @@ import javax.measure.converter.RationalConverter;
 import javax.measure.converter.UnitConverter;
 import javax.measure.unit.Unit;
 
-import org.geppetto.core.model.quantities.PhysicalQuantity;
 import org.geppetto.core.model.quantities.Quantity;
 import org.geppetto.core.model.runtime.ACompositeNode;
 import org.geppetto.core.model.runtime.ANode;
@@ -64,10 +63,10 @@ public class CreateDummySimulationTreeVisitor extends DefaultStateVisitor
 	private Random _randomGenerator = new Random();
 	private String scaleFactor = null;
 	private String _simulatorName = "";
-	
+
 	private DecimalFormat df = new DecimalFormat("0.E0");
 	DecimalFormat df2 = new DecimalFormat("###.##");
-	
+
 	private double timeTracker = 0;
 	private double step = 0.05;
 
@@ -81,7 +80,7 @@ public class CreateDummySimulationTreeVisitor extends DefaultStateVisitor
 		super();
 		this._simulationTree = simulationTree;
 		this._simulatorName = simulatorName;
-		
+
 		updateTimeNode();
 	}
 
@@ -122,10 +121,11 @@ public class CreateDummySimulationTreeVisitor extends DefaultStateVisitor
 		if(dummyNode == null)
 		{
 			dummyNode = new VariableNode(watchedVariable);
+			dummyNode.setUnit(new org.geppetto.core.model.quantities.Unit("mV"));
 			this._simulationTree.addChild(dummyNode);
 		}
 
-		PhysicalQuantity p = new PhysicalQuantity();
+		Quantity p = new Quantity();
 		AValue val = null;
 
 		// NOTE: this is a dummy simulator so we're making values up - we wouldn't need to do this in a real one
@@ -137,8 +137,6 @@ public class CreateDummySimulationTreeVisitor extends DefaultStateVisitor
 		{
 			val = ValuesFactory.getFloatValue(this._randomGenerator.nextFloat());
 		}
-
-		p.setUnit(new org.geppetto.core.model.quantities.Unit("mV"));
 
 		if(scaleFactor == null)
 		{
@@ -171,7 +169,7 @@ public class CreateDummySimulationTreeVisitor extends DefaultStateVisitor
 		scaleFactor = df.format(factor);
 		;
 	}
-	
+
 	/**
 	 * Create Time Tree
 	 */
