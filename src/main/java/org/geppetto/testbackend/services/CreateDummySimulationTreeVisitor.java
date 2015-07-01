@@ -45,7 +45,7 @@ import org.geppetto.core.model.runtime.ANode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode;
 import org.geppetto.core.model.runtime.CompositeNode;
 import org.geppetto.core.model.runtime.VariableNode;
-import org.geppetto.core.model.state.visitors.DefaultStateVisitor;
+import org.geppetto.core.model.state.visitors.RuntimeTreeVisitor;
 import org.geppetto.core.model.values.AValue;
 import org.geppetto.core.model.values.ValuesFactory;
 import org.jscience.physics.amount.Amount;
@@ -57,7 +57,7 @@ import org.jscience.physics.amount.Amount;
  * 
  * 
  */
-public class CreateDummySimulationTreeVisitor extends DefaultStateVisitor
+public class CreateDummySimulationTreeVisitor extends RuntimeTreeVisitor
 {
 	private AspectSubTreeNode _simulationTree;
 	private Random _randomGenerator = new Random();
