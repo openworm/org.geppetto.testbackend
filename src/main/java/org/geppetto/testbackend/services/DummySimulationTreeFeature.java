@@ -1,5 +1,6 @@
 package org.geppetto.testbackend.services;
 
+import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.features.IWatchableVariableListFeature;
 import org.geppetto.core.model.ModelInterpreterException;
 import org.geppetto.core.model.runtime.AspectNode;
@@ -21,7 +22,7 @@ public class DummySimulationTreeFeature implements IWatchableVariableListFeature
 	}
 
 	@Override
-	public boolean listWatchableVariables(AspectNode aspectNode) throws ModelInterpreterException
+	public boolean listWatchableVariables(AspectNode aspectNode, IAspectConfiguration aspectConfiguration) throws ModelInterpreterException
 	{
 		boolean modified = true;
 

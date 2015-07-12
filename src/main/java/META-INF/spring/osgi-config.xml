@@ -11,20 +11,14 @@
        						http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
 	<!-- Exports the service implementation to other bundles by its service interface -->
-	<osgi:service id="DummyModelExporter" ref="dummyModelInterpreterService" interface="org.geppetto.core.model.IModelInterpreter">
-		<osgi:service-properties>
-			<entry key="discoverableID" value="dummyModelInterpreter" />
-		</osgi:service-properties>
+	<osgi:service id="DummyModelExporter" ref="dummyModelInterpreter" interface="org.geppetto.core.model.IModelInterpreter">
 	</osgi:service>
-	<bean id="dummyModelInterpreterService" scope="thread" class="org.geppetto.testbackend.services.DummyModelInterpreterService">
+	<bean id="dummyModelInterpreter" scope="thread" class="org.geppetto.testbackend.services.DummyModelInterpreterService">
 	<aop:scoped-proxy proxy-target-class="false"/>
 	</bean>
-	<osgi:service id="DummySimulatorExporter" ref="dummySimulatorService" interface="org.geppetto.core.simulator.ISimulator">
-		<osgi:service-properties>
-			<entry key="discoverableID" value="dummySimulator" />
-		</osgi:service-properties>
+	<osgi:service id="DummySimulatorExporter" ref="dummySimulator" interface="org.geppetto.core.simulator.ISimulator">
 	</osgi:service>
-	<bean id="dummySimulatorService" scope="thread" class="org.geppetto.testbackend.services.DummySimulatorService">
+	<bean id="dummySimulator" scope="thread" class="org.geppetto.testbackend.services.DummySimulatorService">
 	<aop:scoped-proxy proxy-target-class="false"/>
 	</bean>
 </beans>
