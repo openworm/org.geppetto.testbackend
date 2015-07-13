@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -21,9 +21,9 @@ import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.beans.SimulatorConfig;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
+import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.model.IModel;
-import org.geppetto.core.model.quantities.PhysicalQuantity;
-import org.geppetto.core.model.runtime.ACompositeNode;
+import org.geppetto.core.model.quantities.Quantity;
 import org.geppetto.core.model.runtime.ANode;
 import org.geppetto.core.model.runtime.AspectNode;
 import org.geppetto.core.model.runtime.AspectSubTreeNode;
@@ -33,11 +33,9 @@ import org.geppetto.core.model.runtime.CylinderNode;
 import org.geppetto.core.model.runtime.ParticleNode;
 import org.geppetto.core.model.runtime.SphereNode;
 import org.geppetto.core.model.runtime.VariableNode;
-import org.geppetto.core.model.values.AValue;
 import org.geppetto.core.model.values.ValuesFactory;
-import org.geppetto.core.services.IModelFormat;
+import org.geppetto.core.services.ModelFormat;
 import org.geppetto.core.services.registry.ServicesRegistry;
-import org.geppetto.core.simulation.IRunConfiguration;
 import org.geppetto.core.simulation.ISimulatorCallbackListener;
 import org.geppetto.core.simulator.ASimulator;
 import org.geppetto.core.simulator.AVariableWatchFeature;
@@ -86,12 +84,11 @@ public class DummySimulatorService extends ASimulator
 		VariableNode child = new VariableNode("dummyChild");
 		// init statetree
 
-		PhysicalQuantity q = new PhysicalQuantity();
+		Quantity q = new Quantity();
 		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
 		this.addFeature(new AVariableWatchFeature());
 
-		getListener().stateTreeUpdated();
 	}
 
 	@Override
@@ -100,9 +97,9 @@ public class DummySimulatorService extends ASimulator
 		return this.dummySimulatorConfig.getSimulatorName();
 	}
 
-	public void simulate(IRunConfiguration runConfiguration, AspectNode aspect) throws GeppettoExecutionException
+	public void simulate(IAspectConfiguration aspectConfiguration, AspectNode aspect) throws GeppettoExecutionException
 	{
-		PhysicalQuantity q = new PhysicalQuantity();
+		Quantity q = new Quantity();
 		q.setValue(ValuesFactory.getDoubleValue(getRandomGenerator().nextDouble()));
 
 		updateVisualTree(aspect);
@@ -110,7 +107,7 @@ public class DummySimulatorService extends ASimulator
 		// add values of variables being watched to state tree
 		updateStateTreeForWatch(aspect);
 
-		getListener().stateTreeUpdated();
+		getListener().stepped(aspect);
 	}
 
 	private void updateVisualTree(AspectNode aspect)
@@ -151,7 +148,7 @@ public class DummySimulatorService extends ASimulator
 	private void updateStateTreeForWatch(AspectNode aspect)
 	{
 		AspectSubTreeNode simulationTree = aspect.getSubTree(AspectTreeType.SIMULATION_TREE);
-		
+
 		// check which watchable variables are being watched
 		CreateDummySimulationTreeVisitor createDummySimulationTreeVisitor = new CreateDummySimulationTreeVisitor(simulationTree, this.getName());
 		simulationTree.apply(createDummySimulationTreeVisitor);
@@ -166,7 +163,6 @@ public class DummySimulatorService extends ASimulator
 		}
 		return randomGenerator;
 	}
-
 
 	/**
 	 * Creates a Scene with random geometries added. A different scene is created for each different test
@@ -447,9 +443,7 @@ public class DummySimulatorService extends ASimulator
 	@Override
 	public void registerGeppettoService()
 	{
-		List<IModelFormat> modelFormatList = new ArrayList<IModelFormat>();
-		modelFormatList.add(ModelFormat.TEST);
-		ServicesRegistry.registerSimulatorService(this, modelFormatList);
-
+		List<ModelFormat> modelFormats = new ArrayList<ModelFormat>(Arrays.asList(ServicesRegistry.registerModelFormat("TEST")));
+		ServicesRegistry.registerSimulatorService(this, modelFormats);
 	}
 }
