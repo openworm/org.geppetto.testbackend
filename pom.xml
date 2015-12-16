@@ -25,59 +25,42 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>org.springframework.core</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>org.springframework.beans</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>org.springframework.context</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>org.springframework.spring-library</artifactId>
-			<type>libd</type>
-			<version>${spring.version}</version>
+			<groupId>org.geppetto</groupId>
+			<artifactId>core</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.geppetto</groupId>
-			<artifactId>core</artifactId>
-			<version>${version}</version>
+			<artifactId>simulation</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geppetto</groupId>
+			<artifactId>frontend</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.geppetto</groupId>
+			<artifactId>model.neuroml</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geppetto</groupId>
+			<artifactId>model.swc</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geppetto</groupId>
+			<artifactId>simulator.external</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geppetto</groupId>
+			<artifactId>persistence</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
-	<repositories>
-		<repository>
-			<id>com.springsource.repository.bundles.release</id>
-			<name>SpringSource Enterprise Bundle Repository - SpringSource Releases</name>
-			<url>http://repository.springsource.com/maven/bundles/release</url>
-		</repository>
-		<repository>
-			<id>com.springsource.repository.bundles.external</id>
-			<name>SpringSource Enterprise Bundle Repository - External Releases</name>
-			<url>http://repository.springsource.com/maven/bundles/external</url>
-		</repository>
-		<repository>
-			<id>com.springsource.repository.libraries.release</id>
-			<name>SpringSource Enterprise Bundle Repository - SpringSource Library Releases</name>
-			<url>http://repository.springsource.com/maven/libraries/release</url>
-		</repository>
-		<repository>
-			<id>com.springsource.repository.libraries.external</id>
-			<name>SpringSource Enterprise Bundle Repository - External Library Releases</name>
-			<url>http://repository.springsource.com/maven/libraries/external</url>
-		</repository>
-		<repository>
-			<id>springbyexample.org</id>
-			<name>Spring by Example</name>
-			<url>http://www.springbyexample.org/maven/repo</url>
-		</repository>
-	</repositories>
 	<build>
 		<plugins>
 			<plugin>
@@ -126,7 +109,7 @@
 							{maven-resources},META-INF/spring=src/main/java/META-INF/spring
 						</Include-Resource>
 						<Import-Package>
-							org.springframework.context.support,org.springframework.web.context.request,org.aopalliance.aop,org.springframework.aop,,org.springframework.aop.scope,org.springframework.aop.framework,*
+							*
 						</Import-Package>
 					</instructions>
 				</configuration>
@@ -161,5 +144,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<description>This bundle is used to test the frontend without having to depend on any specific backend module</description>
+	<description>This bundle contains backend integration tests for Geppetto</description>
 </project>
