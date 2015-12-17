@@ -15,7 +15,7 @@
 		  		id:1,
 		  		aspect: {
 		            id: 1,
-		            instancePath: "testVar(testType)"
+		            instancePath: "mediumNet(network_ACnet2)"
 		        },
 		        simulatorConfiguration: {
 		          id: 1,
@@ -28,11 +28,11 @@
 		        watchedVariables:[
 			        {
 			            id: 1,
-			            instancePath: "testVar(testType).a(StateVariable)"
+			            instancePath: "mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys.membraneProperties.iCa(StateVariable)"
 			        },
 					{
 			            id: 1,
-			            instancePath: "testVar(testType).b(StateVariable)"
+			            instancePath: "mediumNet(network_ACnet2).baskets_12(baskets_12)[0].v(StateVariable)"
 			        }
 		        ],
 		        modelParameters:[
@@ -41,7 +41,7 @@
 			        	variable:
 				        {
 				            id: 1,
-				            instancePath: "testVar(testType).p1(Parameter)"
+				            instancePath: "mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys.intracellularProperties.resistivity"
 				        },
 				        value: 0.2
 			        },
@@ -50,7 +50,7 @@
 			        	variable:
 				        {
 				            id: 2,
-				            instancePath: "testVar(testType).p2(Parameter)"
+				            instancePath: "mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[6].biophys.membraneProperties.initMembPotential"
 				        },
 				        value: 0.4
 			        }
