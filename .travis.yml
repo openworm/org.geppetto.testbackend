@@ -1,11 +1,34 @@
 language: java
 
 install:
+    - git clone https://github.com/openworm/org.geppetto.model.git -b development
+    - cd org.geppetto.model
+    - mvn install
+    - cd ..
     - git clone https://github.com/openworm/org.geppetto.core.git -b $TRAVIS_BRANCH
     - cd org.geppetto.core
     - mvn install
     - cd ..
-    
+    - git clone https://github.com/openworm/org.geppetto.simulation.git -b $TRAVIS_BRANCH
+    - cd org.geppetto.simulation
+    - mvn install
+    - cd ..
+    - git clone https://github.com/openworm/org.geppetto.model.neuroml.git -b $TRAVIS_BRANCH
+    - cd org.geppetto.model.neuroml
+    - mvn install
+    - cd ..
+    - git clone https://github.com/openworm/org.geppetto.simulator.external.git -b $TRAVIS_BRANCH
+    - cd org.geppetto.simulator.external
+    - mvn install
+    - cd ..
+    - git clone https://github.com/openworm/org.geppetto.model.swc.git -b $TRAVIS_BRANCH
+    - cd org.geppetto.model.swc
+    - mvn install
+    - cd ..
+    - git clone https://github.com/openworm/org.geppetto.persistence.git -b $TRAVIS_BRANCH
+    - cd org.geppetto.persistence
+    - mvn install
+    - cd ..
     
     
  
