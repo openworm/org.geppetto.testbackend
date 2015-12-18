@@ -69,13 +69,17 @@ import org.geppetto.model.values.TimeSeries;
 import org.geppetto.simulation.manager.ExperimentRunManager;
 import org.geppetto.simulation.manager.GeppettoManager;
 import org.geppetto.simulation.manager.RuntimeProject;
+import org.geppetto.simulation.test.GeppettoManagerTest;
+import org.geppetto.simulation.test.TestUtilities;
 import org.geppetto.simulator.external.services.NeuronSimulatorService;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -89,6 +93,7 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
  * @author matteocantarelli
  *
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class GeppettoManagerNeuroMLTest
 {
 
@@ -142,7 +147,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testSetUser() throws GeppettoExecutionException
+	public void test01SetUser() throws GeppettoExecutionException
 	{
 		manager.setUser(DataManagerHelper.getDataManager().newUser("nonna", "passauord", true));
 	}
@@ -151,7 +156,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#getUser()}.
 	 */
 	@Test
-	public void testGetUser()
+	public void test02GetUser()
 	{
 		Assert.assertEquals("nonna", manager.getUser().getName());
 		Assert.assertEquals("passauord", manager.getUser().getPassword());
@@ -165,11 +170,10 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoInitializationException
 	 */
 	@Test
-	public void testLoadProject() throws IOException, GeppettoInitializationException, GeppettoExecutionException
+	public void test03LoadProject() throws IOException, GeppettoInitializationException, GeppettoExecutionException
 	{
-		URL url = new File("./src/test/resources/test/test.json").toURI().toURL();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-		geppettoProject = DataManagerHelper.getDataManager().getProjectFromJson(TestUtilities.getGson(), reader);
+		InputStreamReader inputStreamReader=new InputStreamReader(GeppettoManagerTest.class.getResourceAsStream("/test/acnetTest.json"));
+		geppettoProject = DataManagerHelper.getDataManager().getProjectFromJson(TestUtilities.getGson(), inputStreamReader);
 		manager.loadProject("1", geppettoProject);
 
 	}
@@ -180,7 +184,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testRuntimeProject() throws GeppettoExecutionException
+	public void test04RuntimeProject() throws GeppettoExecutionException
 	{
 		runtimeProject = manager.getRuntimeProject(geppettoProject);
 		Assert.assertNotNull(runtimeProject);
@@ -209,7 +213,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testLoadExperiment() throws GeppettoExecutionException
+	public void test05LoadExperiment() throws GeppettoExecutionException
 	{
 		ExperimentState experimentState = manager.loadExperiment("1", geppettoProject.getExperiments().get(0));
 		Assert.assertNotNull(experimentState);
@@ -230,7 +234,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#checkExperimentsStatus(java.lang.String, org.geppetto.core.data.model.IGeppettoProject)}.
 	 */
 	@Test
-	public void testCheckExperimentsStatus()
+	public void test06CheckExperimentsStatus()
 	{
 		List<? extends IExperiment> status = manager.checkExperimentsStatus("1", geppettoProject);
 		Assert.assertEquals(1, status.size());
@@ -244,7 +248,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testSetModelParametersNegativeNoDesign() throws GeppettoExecutionException
+	public void test07SetModelParametersNegativeNoDesign() throws GeppettoExecutionException
 	{
 		Map<String, String> parametersMap = new HashMap<String, String>();
 		parametersMap.put("testVar(testType).p2(Parameter)", "0.234");
@@ -260,7 +264,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testSetWatchedVariablesNegativeNoDesign() throws GeppettoExecutionException
+	public void test08SetWatchedVariablesNegativeNoDesign() throws GeppettoExecutionException
 	{
 		List<String> watchedVariables = new ArrayList<String>();
 		// the following line stops recording a
@@ -275,7 +279,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testNewExperiment() throws GeppettoExecutionException
+	public void test09NewExperiment() throws GeppettoExecutionException
 	{
 		Assert.assertEquals(1, geppettoProject.getExperiments().size());
 		addedExperiment = manager.newExperiment("2", geppettoProject);
@@ -292,7 +296,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testLoadNewExperiment() throws GeppettoExecutionException
+	public void test10LoadNewExperiment() throws GeppettoExecutionException
 	{
 		ExperimentState experimentState = manager.loadExperiment("1", geppettoProject.getExperiments().get(1));
 		Assert.assertNotNull(experimentState);
@@ -309,7 +313,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testSetModelParameters() throws GeppettoExecutionException
+	public void test11SetModelParameters() throws GeppettoExecutionException
 	{
 		Map<String, String> parametersMap = new HashMap<String, String>();
 		parametersMap.put("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[3].biophys.membraneProperties.Na_pyr_soma_group.Na_pyr.conductance", "0.234");
@@ -329,7 +333,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testSetModelParametersNegativeWrongParameter() throws GeppettoExecutionException
+	public void test12SetModelParametersNegativeWrongParameter() throws GeppettoExecutionException
 	{
 		Map<String, String> parametersMap = new HashMap<String, String>();
 		parametersMap.put("testVar(testType).p3(Parameter)", "0.234");
@@ -345,7 +349,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testSetWatchedVariables() throws GeppettoExecutionException
+	public void test13SetWatchedVariables() throws GeppettoExecutionException
 	{
 		List<String> watchedVariables = new ArrayList<String>();
 		watchedVariables.add("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].v(StateVariable)");
@@ -391,7 +395,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testSetWatchedVariablesNegativeWrongVariable() throws GeppettoExecutionException
+	public void test14SetWatchedVariablesNegativeWrongVariable() throws GeppettoExecutionException
 	{
 		List<String> watchedVariables = new ArrayList<String>();
 		watchedVariables.add("testVar(testType).d(Parameter)");
@@ -404,7 +408,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#checkExperimentsStatus(java.lang.String, org.geppetto.core.data.model.IGeppettoProject)}.
 	 */
 	@Test
-	public void testCheckExperimentsStatusAgain()
+	public void test15CheckExperimentsStatusAgain()
 	{
 		List<? extends IExperiment> status = manager.checkExperimentsStatus("1", geppettoProject);
 		Assert.assertEquals(2, status.size());
@@ -419,7 +423,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void testRunExperiment() throws GeppettoExecutionException, InterruptedException
+	public void test16RunExperiment() throws GeppettoExecutionException, InterruptedException
 	{
 		Assert.assertNotNull(ExperimentRunManager.getInstance());
 		Assert.assertEquals(1, addedExperiment.getAspectConfigurations().size());
@@ -434,7 +438,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#checkExperimentsStatus(java.lang.String, org.geppetto.core.data.model.IGeppettoProject)}.
 	 */
 	@Test
-	public void testCheckExperimentsStatusAgain2()
+	public void test17CheckExperimentsStatusAgain2()
 	{
 		List<? extends IExperiment> status = manager.checkExperimentsStatus("1", geppettoProject);
 		Assert.assertEquals(2, status.size());
@@ -448,7 +452,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testCancelExperimentRun() throws GeppettoExecutionException
+	public void test18CancelExperimentRun() throws GeppettoExecutionException
 	{
 		manager.cancelExperimentRun("1", addedExperiment);
 	}
@@ -457,7 +461,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#checkExperimentsStatus(java.lang.String, org.geppetto.core.data.model.IGeppettoProject)}.
 	 */
 	@Test
-	public void testCheckExperimentsStatusAgain3()
+	public void test19CheckExperimentsStatusAgain3()
 	{
 		List<? extends IExperiment> status = manager.checkExperimentsStatus("1", geppettoProject);
 		Assert.assertEquals(2, status.size());
@@ -472,7 +476,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void testRunExperimentAgain() throws GeppettoExecutionException, InterruptedException
+	public void test20RunExperimentAgain() throws GeppettoExecutionException, InterruptedException
 	{
 		Assert.assertNotNull(ExperimentRunManager.getInstance());
 		Assert.assertEquals(1, addedExperiment.getAspectConfigurations().size());
@@ -488,7 +492,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#checkExperimentsStatus(java.lang.String, org.geppetto.core.data.model.IGeppettoProject)}.
 	 */
 	@Test
-	public void testCheckExperimentsStatusAgain4()
+	public void test21CheckExperimentsStatusAgain4()
 	{
 		List<? extends IExperiment> status = manager.checkExperimentsStatus("1", geppettoProject);
 		Assert.assertEquals(2, status.size());
@@ -504,7 +508,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws NumberFormatException
 	 */
 	@Test
-	public void testPlayExperiment() throws GeppettoExecutionException, NumberFormatException, IOException
+	public void test22PlayExperiment() throws GeppettoExecutionException, NumberFormatException, IOException
 	{
 		ExperimentState experimentState = manager.playExperiment("1", addedExperiment, null);
 		List<VariableValue> recorded = experimentState.getRecordedVariables();
@@ -626,7 +630,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testDownloadModel() throws GeppettoExecutionException
+	public void test23DownloadModel() throws GeppettoExecutionException
 	{
 		File model=manager.downloadModel("testVar(testType)", ServicesRegistry.getModelFormat("TEST_FORMAT"), addedExperiment, geppettoProject);
 		Assert.assertNotNull(model);
@@ -642,7 +646,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws IOException 
 	 */
 	@Test
-	public void testDownloadResults() throws GeppettoExecutionException, IOException
+	public void test24DownloadResults() throws GeppettoExecutionException, IOException
 	{
 		URL geppettoRecording=manager.downloadResults("testVar(testType)", ResultsFormat.GEPPETTO_RECORDING, addedExperiment, geppettoProject);
 		Assert.assertTrue(geppettoRecording.getPath().endsWith("./src/test/resources/test/testResults.h5"));
@@ -658,7 +662,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException 
 	 */
 	@Test
-	public void testGetSupportedOuputs() throws GeppettoExecutionException
+	public void test25GetSupportedOuputs() throws GeppettoExecutionException
 	{
 		List<ModelFormat> formats=manager.getSupportedOuputs("testVar(testType)",  addedExperiment, geppettoProject);
 		Assert.assertEquals(1, formats.size());
@@ -669,7 +673,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#getScope()}.
 	 */
 	@Test
-	public void testGetScope()
+	public void test26GetScope()
 	{
 		Assert.assertEquals(Scope.CONNECTION, manager.getScope());
 	}
@@ -680,7 +684,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testDeleteExperiment() throws GeppettoExecutionException
+	public void test27DeleteExperiment() throws GeppettoExecutionException
 	{
 		manager.deleteExperiment("1", addedExperiment);
 		Assert.assertEquals(1, geppettoProject.getExperiments().size());
@@ -690,7 +694,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#checkExperimentsStatus(java.lang.String, org.geppetto.core.data.model.IGeppettoProject)}.
 	 */
 	@Test
-	public void testCheckExperimentsStatusAgain5()
+	public void test28CheckExperimentsStatusAgain5()
 	{
 		List<? extends IExperiment> status = manager.checkExperimentsStatus("1", geppettoProject);
 		Assert.assertEquals(1, status.size());
@@ -703,7 +707,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testCloseProject() throws GeppettoExecutionException
+	public void test29CloseProject() throws GeppettoExecutionException
 	{
 		manager.closeProject("1", geppettoProject);
 		Assert.assertNull(runtimeProject.getActiveExperiment());
@@ -717,7 +721,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 */
 	@Test
-	public void testDeleteProject() throws GeppettoExecutionException
+	public void test30DeleteProject() throws GeppettoExecutionException
 	{
 		manager.deleteProject("1", geppettoProject);
 	}
