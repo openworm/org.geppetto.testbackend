@@ -55,6 +55,7 @@ import org.geppetto.core.data.model.ResultsFormat;
 import org.geppetto.core.manager.Scope;
 import org.geppetto.core.services.registry.ApplicationListenerBean;
 import org.geppetto.core.services.registry.ServicesRegistry;
+import org.geppetto.core.simulator.ExternalSimulatorConfig;
 import org.geppetto.model.ExperimentState;
 import org.geppetto.model.GeppettoLibrary;
 import org.geppetto.model.GeppettoModel;
@@ -69,8 +70,6 @@ import org.geppetto.model.values.TimeSeries;
 import org.geppetto.simulation.manager.ExperimentRunManager;
 import org.geppetto.simulation.manager.GeppettoManager;
 import org.geppetto.simulation.manager.RuntimeProject;
-import org.geppetto.simulation.test.GeppettoManagerTest;
-import org.geppetto.simulation.test.TestUtilities;
 import org.geppetto.simulator.external.services.NeuronSimulatorService;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -125,7 +124,10 @@ public class GeppettoManagerNeuroMLTest
 		context.registerBeanDefinition("scopedTarget.lemsConversion", conversionServiceBeanDefinition);
 		context.registerBeanDefinition("neuronSimulator", neuronSimulatorServiceBeanDefinition);
 		context.registerBeanDefinition("scopedTarget.neuronSimulator", neuronSimulatorServiceBeanDefinition);
-		
+
+		// ExternalSimulatorConfig externalConfig = new ExternalSimulatorConfig();
+		// externalConfig.setSimulatorPath(System.getenv("NEURON_HOME"));
+
 		ContextRefreshedEvent event = new ContextRefreshedEvent(context);
 		ApplicationListenerBean listener = new ApplicationListenerBean();
 		listener.onApplicationEvent(event);
@@ -172,7 +174,7 @@ public class GeppettoManagerNeuroMLTest
 	@Test
 	public void test03LoadProject() throws IOException, GeppettoInitializationException, GeppettoExecutionException
 	{
-		InputStreamReader inputStreamReader=new InputStreamReader(GeppettoManagerTest.class.getResourceAsStream("/test/acnetTest.json"));
+		InputStreamReader inputStreamReader = new InputStreamReader(GeppettoManagerNeuroMLTest.class.getResourceAsStream("/test/acnetTest.json"));
 		geppettoProject = DataManagerHelper.getDataManager().getProjectFromJson(TestUtilities.getGson(), inputStreamReader);
 		manager.loadProject("1", geppettoProject);
 
@@ -224,7 +226,8 @@ public class GeppettoManagerNeuroMLTest
 		VariableValue b = recordedVariables.get(0);
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", b.getPointer().getInstancePath());
 		VariableValue p1 = parameters.get(1);
-		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys(biophys).intracellularProperties(intracellularProperties).resistivity(resistivity)", p1.getPointer().getInstancePath());
+		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys(biophys).membraneProperties(membraneProperties).Kdr_bask_soma_group(Kdr_bask_soma_group).erev(Parameter)", p1
+				.getPointer().getInstancePath());
 		Quantity q = (Quantity) p1.getValue();
 		Assert.assertEquals(0.2, q.getValue(), 0);
 
@@ -243,7 +246,8 @@ public class GeppettoManagerNeuroMLTest
 
 	/**
 	 * Test method for
-	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setModelParameters(java.util.Map, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}.
+	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setModelParameters(java.util.Map, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}
+	 * .
 	 * 
 	 * @throws GeppettoExecutionException
 	 */
@@ -259,7 +263,8 @@ public class GeppettoManagerNeuroMLTest
 
 	/**
 	 * Test method for
-	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setWatchedVariables(java.util.List, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}.
+	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setWatchedVariables(java.util.List, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}
+	 * .
 	 * 
 	 * @throws GeppettoExecutionException
 	 */
@@ -287,6 +292,9 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertEquals(1, addedExperiment.getAspectConfigurations().size());
 		IAspectConfiguration ac = addedExperiment.getAspectConfigurations().get(0);
 		ac.getSimulatorConfiguration().setSimulatorId("neuronSimulator");
+		ac.getSimulatorConfiguration().setTimestep(0.00001f);
+		ac.getSimulatorConfiguration().setLength(0.3f);
+		ac.getSimulatorConfiguration().getParameters().put("target", "network_ACnet2");
 
 	}
 
@@ -308,7 +316,8 @@ public class GeppettoManagerNeuroMLTest
 
 	/**
 	 * Test method for
-	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setModelParameters(java.util.Map, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}.
+	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setModelParameters(java.util.Map, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}
+	 * .
 	 * 
 	 * @throws GeppettoExecutionException
 	 */
@@ -321,14 +330,17 @@ public class GeppettoManagerNeuroMLTest
 		List<VariableValue> parameters = experimentState.getSetParameters();
 		Assert.assertEquals(1, parameters.size());
 		VariableValue p2 = parameters.get(0);
-		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[3].biophys(biophys).membraneProperties(membraneProperties).Na_pyr_soma_group(Na_pyr_soma_group).Na_pyr(Na_pyr).conductance(Parameter)", p2.getPointer().getInstancePath());
+		Assert.assertEquals(
+				"mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[3].biophys(biophys).membraneProperties(membraneProperties).Na_pyr_soma_group(Na_pyr_soma_group).Na_pyr(Na_pyr).conductance(Parameter)",
+				p2.getPointer().getInstancePath());
 		Quantity q = (Quantity) p2.getValue();
 		Assert.assertEquals(0.234, q.getValue(), 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setModelParameters(java.util.Map, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}.
+	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setModelParameters(java.util.Map, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}
+	 * .
 	 * 
 	 * @throws GeppettoExecutionException
 	 */
@@ -344,7 +356,8 @@ public class GeppettoManagerNeuroMLTest
 
 	/**
 	 * Test method for
-	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setWatchedVariables(java.util.List, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}.
+	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setWatchedVariables(java.util.List, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}
+	 * .
 	 * 
 	 * @throws GeppettoExecutionException
 	 */
@@ -384,13 +397,15 @@ public class GeppettoManagerNeuroMLTest
 		VariableValue b = recordedVariables3.get(3);
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
 		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].v(StateVariable)", a.getPointer().getInstancePath());
-		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys(biophys).intracellularProperties(intracellularProperties).caConc(StateVariable)", b.getPointer().getInstancePath());
+		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys(biophys).intracellularProperties(intracellularProperties).caConc(StateVariable)", b.getPointer()
+				.getInstancePath());
 
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setWatchedVariables(java.util.List, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}.
+	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#setWatchedVariables(java.util.List, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}
+	 * .
 	 * 
 	 * @throws GeppettoExecutionException
 	 */
@@ -485,7 +500,7 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertNotNull(ac.getSimulatorConfiguration());
 		manager.runExperiment("1", addedExperiment);
 		Assert.assertEquals(3, addedExperiment.getAspectConfigurations().get(0).getWatchedVariables().size());
-		Thread.sleep(160000);
+		Thread.sleep(30000);
 	}
 
 	/**
@@ -518,9 +533,10 @@ public class GeppettoManagerNeuroMLTest
 		VariableValue a = recorded.get(2);
 		VariableValue b = recorded.get(3);
 		Assert.assertEquals("time(StateVariable)", time.getPointer().getInstancePath());
-		Assert.assertEquals("testVar(testType).c(StateVariable)", c.getPointer().getInstancePath());
-		Assert.assertEquals("testVar(testType).a(StateVariable)", a.getPointer().getInstancePath());
-		Assert.assertEquals("testVar(testType).b(StateVariable)", b.getPointer().getInstancePath());
+		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
+		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].v(StateVariable)", a.getPointer().getInstancePath());
+		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys(biophys).intracellularProperties(intracellularProperties).caConc(StateVariable)", b.getPointer()
+				.getInstancePath());
 		Assert.assertNotNull(time.getValue());
 		Assert.assertNotNull(c.getValue());
 		Assert.assertNotNull(a.getValue());
@@ -532,13 +548,14 @@ public class GeppettoManagerNeuroMLTest
 		checkValues(c, 1);
 
 		List<String> filter = new ArrayList<String>();
-		filter.add("testVar(testType).a(StateVariable)");
+		filter.add("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].v(StateVariable)");
 		experimentState = manager.playExperiment("1", addedExperiment, filter);
 		Assert.assertEquals("time(StateVariable)", time.getPointer().getInstancePath());
-		Assert.assertEquals("testVar(testType).c(StateVariable)", c.getPointer().getInstancePath());
-		Assert.assertEquals("testVar(testType).a(StateVariable)", a.getPointer().getInstancePath());
-		Assert.assertEquals("testVar(testType).b(StateVariable)", b.getPointer().getInstancePath());
-		
+		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
+		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].v(StateVariable)", a.getPointer().getInstancePath());
+		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys(biophys).intracellularProperties(intracellularProperties).caConc(StateVariable)", b.getPointer()
+				.getInstancePath());
+
 		Assert.assertNotNull(time.getValue());
 		checkValues(time, 0);
 		Assert.assertNull(c.getValue());
@@ -582,8 +599,8 @@ public class GeppettoManagerNeuroMLTest
 	 */
 	public void testLinkDropBoxAccount() throws Exception
 	{
-		//Dropbox tests are commented out as they require the API token to work which should not go in the code
-		//Until someone finds a strategy...
+		// Dropbox tests are commented out as they require the API token to work which should not go in the code
+		// Until someone finds a strategy...
 		manager.linkDropBoxAccount("");
 	}
 
@@ -632,9 +649,9 @@ public class GeppettoManagerNeuroMLTest
 	@Test
 	public void test23DownloadModel() throws GeppettoExecutionException
 	{
-		File model=manager.downloadModel("testVar(testType)", ServicesRegistry.getModelFormat("TEST_FORMAT"), addedExperiment, geppettoProject);
+		File model = manager.downloadModel("mediumNet(network_ACnet2)", ServicesRegistry.getModelFormat("LEMS"), addedExperiment, geppettoProject);
 		Assert.assertNotNull(model);
-		Assert.assertEquals("ModelFile",model.getName());
+		Assert.assertEquals("LEMSModel", model.getName().split("_")[0]);
 	}
 
 	/**
@@ -643,30 +660,32 @@ public class GeppettoManagerNeuroMLTest
 	 * .
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@Test
 	public void test24DownloadResults() throws GeppettoExecutionException, IOException
 	{
-		URL geppettoRecording=manager.downloadResults("testVar(testType)", ResultsFormat.GEPPETTO_RECORDING, addedExperiment, geppettoProject);
-		Assert.assertTrue(geppettoRecording.getPath().endsWith("./src/test/resources/test/testResults.h5"));
+		URL geppettoRecording = manager.downloadResults("mediumNet(network_ACnet2)", ResultsFormat.GEPPETTO_RECORDING, addedExperiment, geppettoProject);
+		Assert.assertTrue(geppettoRecording.getPath().endsWith(".h5"));
 		geppettoRecording.openConnection().connect();
-		URL rawRecording=manager.downloadResults("testVar(testType)", ResultsFormat.RAW, addedExperiment, geppettoProject);
+		URL rawRecording = manager.downloadResults("mediumNet(network_ACnet2)", ResultsFormat.RAW, addedExperiment, geppettoProject);
 		rawRecording.openConnection().connect();
-		Assert.assertTrue(rawRecording.getPath().endsWith("testVar(testType)/rawRecording.zip"));
+		Assert.assertTrue(rawRecording.getPath().endsWith("mediumNet(network_ACnet2)/rawRecording.zip"));
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#getSupportedOuputs(java.lang.String, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}.
-	 * @throws GeppettoExecutionException 
+	 * {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#getSupportedOuputs(java.lang.String, org.geppetto.core.data.model.IExperiment, org.geppetto.core.data.model.IGeppettoProject)}
+	 * .
+	 * 
+	 * @throws GeppettoExecutionException
 	 */
 	@Test
 	public void test25GetSupportedOuputs() throws GeppettoExecutionException
 	{
-		List<ModelFormat> formats=manager.getSupportedOuputs("testVar(testType)",  addedExperiment, geppettoProject);
-		Assert.assertEquals(1, formats.size());
-		Assert.assertEquals(ServicesRegistry.getModelFormat("TEST_FORMAT"), formats.get(0));
+		List<ModelFormat> formats = manager.getSupportedOuputs("mediumNet(network_ACnet2)", addedExperiment, geppettoProject);
+		Assert.assertEquals(6, formats.size());
+		Assert.assertEquals(ServicesRegistry.getModelFormat("NEUROML"), formats.get(0));
 	}
 
 	/**
