@@ -41,7 +41,7 @@
 			        	variable:
 				        {
 				            id: 1,
-				            instancePath: "mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys.intracellularProperties.resistivity"
+				            instancePath: "mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys.membraneProperties.Kdr_bask_soma_group.erev"
 				        },
 				        value: 0.2
 			        },
@@ -50,7 +50,7 @@
 			        	variable:
 				        {
 				            id: 2,
-				            instancePath: "mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[6].biophys.membraneProperties.initMembPotential"
+				            instancePath: "mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[6].biophys.membraneProperties.initMembPotential.value"
 				        },
 				        value: 0.4
 			        }
