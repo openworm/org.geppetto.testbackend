@@ -125,8 +125,10 @@ public class GeppettoManagerNeuroMLTest
 		context.registerBeanDefinition("neuronSimulator", neuronSimulatorServiceBeanDefinition);
 		context.registerBeanDefinition("scopedTarget.neuronSimulator", neuronSimulatorServiceBeanDefinition);
 
-		// ExternalSimulatorConfig externalConfig = new ExternalSimulatorConfig();
-		// externalConfig.setSimulatorPath(System.getenv("NEURON_HOME"));
+		ExternalSimulatorConfig externalConfig = new ExternalSimulatorConfig();
+		externalConfig.setSimulatorPath(System.getenv("NEURON_HOME"));
+		
+		
 
 		ContextRefreshedEvent event = new ContextRefreshedEvent(context);
 		ApplicationListenerBean listener = new ApplicationListenerBean();
@@ -140,6 +142,9 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertTrue(retrievedContext.getBean("scopedTarget.lemsConversion") instanceof LEMSConversionService);
 		Assert.assertNotNull(retrievedContext.getBean("scopedTarget.neuronSimulator"));
 		Assert.assertTrue(retrievedContext.getBean("scopedTarget.neuronSimulator") instanceof NeuronSimulatorService);
+		
+		((NeuronSimulatorService)retrievedContext.getBean("scopedTarget.neuronSimulator")).setNeuronExternalSimulatorConfig(externalConfig);
+		
 		DataManagerHelper.setDataManager(new DefaultGeppettoDataManager());
 	}
 
