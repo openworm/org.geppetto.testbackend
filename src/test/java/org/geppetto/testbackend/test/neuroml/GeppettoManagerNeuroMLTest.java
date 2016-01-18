@@ -391,7 +391,7 @@ public class GeppettoManagerNeuroMLTest
 	public void test13SetWatchedVariables() throws GeppettoExecutionException, GeppettoAccessException
 	{
 		List<String> watchedVariables = new ArrayList<String>();
-		watchedVariables.add("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].v(StateVariable)");
+		watchedVariables.add("mediumNet.baskets_12[0].v");
 		watchedVariables.add("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys.membraneProperties.iCa(StateVariable)");
 		ExperimentState experimentState = manager.setWatchedVariables(watchedVariables, runtimeProject.getActiveExperiment(), geppettoProject);
 		List<VariableValue> recordedVariables = experimentState.getRecordedVariables();
@@ -400,19 +400,20 @@ public class GeppettoManagerNeuroMLTest
 		VariableValue c = recordedVariables.get(2);
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
 
-		// the following line stops recording a
+
 		List<String> watchedVariables2 = new ArrayList<String>();
-		watchedVariables2.add("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].v(StateVariable)");
+		watchedVariables2.add("mediumNet.baskets_12[0].v");
 		ExperimentState experimentState2 = manager.setWatchedVariables(watchedVariables2, runtimeProject.getActiveExperiment(), geppettoProject);
 		List<VariableValue> recordedVariables2 = experimentState2.getRecordedVariables();
 		Assert.assertEquals(2, recordedVariables2.size());
 		Assert.assertEquals(1, addedExperiment.getAspectConfigurations().get(0).getWatchedVariables().size());
 		c = recordedVariables2.get(1);
+							
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
 
 		// Let's add a again and b too
 		List<String> watchedVariables3 = new ArrayList<String>();
-		watchedVariables3.add("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].v(StateVariable)");
+		watchedVariables3.add("mediumNet.baskets_12[0].v");
 		watchedVariables3.add("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys.intracellularProperties.caConc");
 		ExperimentState experimentState3 = manager.setWatchedVariables(watchedVariables3, runtimeProject.getActiveExperiment(), geppettoProject);
 		List<VariableValue> recordedVariables3 = experimentState3.getRecordedVariables();
