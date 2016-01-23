@@ -214,7 +214,7 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertEquals(1, geppettoModel.getVariables().get(0).getTypes().size());
 		Type type = geppettoModel.getVariables().get(0).getTypes().get(0);
 		Assert.assertEquals("network_ACnet2", type.getId());
-		Assert.assertEquals("network - network_ACnet2", type.getName());
+		Assert.assertEquals("Network - network_ACnet2", type.getName());
 
 		// Testing libraries are there
 		Assert.assertEquals(2, geppettoModel.getLibraries().size());
