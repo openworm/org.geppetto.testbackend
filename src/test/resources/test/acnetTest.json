@@ -28,11 +28,11 @@
 		        watchedVariables:[
 			        {
 			            id: 1,
-			            instancePath: "mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].vo2.spiking"
+			            instancePath: "mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].apical2_2.spiking"
 			        },
 					{
 			            id: 1,
-			            instancePath: "mediumNet(network_ACnet2).baskets_12(baskets_12)[0].vo0.v(StateVariable)"
+			            instancePath: "mediumNet(network_ACnet2).baskets_12(baskets_12)[0].soma_0.v(StateVariable)"
 			        }
 		        ],
 		        modelParameters:[
