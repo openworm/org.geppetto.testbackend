@@ -130,8 +130,6 @@ public class GeppettoManagerNeuroMLTest
 
 		ExternalSimulatorConfig externalConfig = new ExternalSimulatorConfig();
 		externalConfig.setSimulatorPath(System.getenv("NEURON_HOME"));
-		
-		
 
 		ContextRefreshedEvent event = new ContextRefreshedEvent(context);
 		ApplicationListenerBean listener = new ApplicationListenerBean();
@@ -145,9 +143,9 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertTrue(retrievedContext.getBean("scopedTarget.lemsConversion") instanceof LEMSConversionService);
 		Assert.assertNotNull(retrievedContext.getBean("scopedTarget.neuronSimulator"));
 		Assert.assertTrue(retrievedContext.getBean("scopedTarget.neuronSimulator") instanceof NeuronSimulatorService);
-		
-		((NeuronSimulatorService)retrievedContext.getBean("scopedTarget.neuronSimulator")).setNeuronExternalSimulatorConfig(externalConfig);
-		
+
+		((NeuronSimulatorService) retrievedContext.getBean("scopedTarget.neuronSimulator")).setNeuronExternalSimulatorConfig(externalConfig);
+
 		DataManagerHelper.setDataManager(new DefaultGeppettoDataManager());
 	}
 
@@ -166,7 +164,7 @@ public class GeppettoManagerNeuroMLTest
 		privileges.add(UserPrivileges.DOWNLOAD);
 		privileges.add(UserPrivileges.DROPBOX_INTEGRATION);
 		privileges.add(UserPrivileges.RUN_EXPERIMENT);
-		IUserGroup userGroup=DataManagerHelper.getDataManager().newUserGroup("unaccountableAristocrats", privileges, value, value * 2);
+		IUserGroup userGroup = DataManagerHelper.getDataManager().newUserGroup("unaccountableAristocrats", privileges, value, value * 2);
 		manager.setUser(DataManagerHelper.getDataManager().newUser("nonna", "passauord", true, userGroup));
 	}
 
@@ -186,7 +184,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws IOException
 	 * @throws GeppettoExecutionException
 	 * @throws GeppettoInitializationException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test03LoadProject() throws IOException, GeppettoInitializationException, GeppettoExecutionException, GeppettoAccessException
@@ -230,7 +228,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#loadExperiment(java.lang.String, org.geppetto.core.data.model.IExperiment)}.
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test05LoadExperiment() throws GeppettoExecutionException, GeppettoAccessException
@@ -268,7 +266,7 @@ public class GeppettoManagerNeuroMLTest
 	 * .
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test07SetModelParametersNegativeNoDesign() throws GeppettoExecutionException, GeppettoAccessException
@@ -286,7 +284,7 @@ public class GeppettoManagerNeuroMLTest
 	 * .
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test08SetWatchedVariablesNegativeNoDesign() throws GeppettoExecutionException, GeppettoAccessException
@@ -295,14 +293,14 @@ public class GeppettoManagerNeuroMLTest
 		// the following line stops recording a
 		watchedVariables.add("testVar(testType).a(StateVariable)");
 		exception.expect(GeppettoExecutionException.class);
-		manager.setWatchedVariables(watchedVariables, runtimeProject.getActiveExperiment(), geppettoProject);
+		manager.setWatchedVariables(watchedVariables, runtimeProject.getActiveExperiment(), geppettoProject, true);
 	}
 
 	/**
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#newExperiment(java.lang.String, org.geppetto.core.data.model.IGeppettoProject)}.
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test09NewExperiment() throws GeppettoExecutionException, GeppettoAccessException
@@ -323,7 +321,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#loadExperiment(java.lang.String, org.geppetto.core.data.model.IExperiment)}.
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test10LoadNewExperiment() throws GeppettoExecutionException, GeppettoAccessException
@@ -342,7 +340,7 @@ public class GeppettoManagerNeuroMLTest
 	 * .
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test11SetModelParameters() throws GeppettoExecutionException, GeppettoAccessException
@@ -366,7 +364,7 @@ public class GeppettoManagerNeuroMLTest
 	 * .
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test12SetModelParametersNegativeWrongParameter() throws GeppettoExecutionException, GeppettoAccessException
@@ -384,7 +382,7 @@ public class GeppettoManagerNeuroMLTest
 	 * .
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test13SetWatchedVariables() throws GeppettoExecutionException, GeppettoAccessException
@@ -392,29 +390,28 @@ public class GeppettoManagerNeuroMLTest
 		List<String> watchedVariables = new ArrayList<String>();
 		watchedVariables.add("mediumNet.baskets_12[0].dend_1.v");
 		watchedVariables.add("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys.membraneProperties.iCa(StateVariable)");
-		ExperimentState experimentState = manager.setWatchedVariables(watchedVariables, runtimeProject.getActiveExperiment(), geppettoProject);
+		ExperimentState experimentState = manager.setWatchedVariables(watchedVariables, runtimeProject.getActiveExperiment(), geppettoProject, true);
 		List<VariableValue> recordedVariables = experimentState.getRecordedVariables();
 		Assert.assertEquals(3, recordedVariables.size()); // a+c+time
 		Assert.assertEquals(2, addedExperiment.getAspectConfigurations().get(0).getWatchedVariables().size()); // no time inside aspectConfiguration
 		VariableValue c = recordedVariables.get(2);
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
 
-
 		List<String> watchedVariables2 = new ArrayList<String>();
 		watchedVariables2.add("mediumNet.baskets_12[0].dend_1.v");
-		ExperimentState experimentState2 = manager.setWatchedVariables(watchedVariables2, runtimeProject.getActiveExperiment(), geppettoProject);
+		ExperimentState experimentState2 = manager.setWatchedVariables(watchedVariables2, runtimeProject.getActiveExperiment(), geppettoProject, false);
 		List<VariableValue> recordedVariables2 = experimentState2.getRecordedVariables();
 		Assert.assertEquals(2, recordedVariables2.size());
 		Assert.assertEquals(1, addedExperiment.getAspectConfigurations().get(0).getWatchedVariables().size());
 		c = recordedVariables2.get(1);
-							
+
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
 
 		// Let's add a again and b too
 		List<String> watchedVariables3 = new ArrayList<String>();
 		watchedVariables3.add("mediumNet.baskets_12[0].dend_1.v");
 		watchedVariables3.add("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys.intracellularProperties.caConc");
-		ExperimentState experimentState3 = manager.setWatchedVariables(watchedVariables3, runtimeProject.getActiveExperiment(), geppettoProject);
+		ExperimentState experimentState3 = manager.setWatchedVariables(watchedVariables3, runtimeProject.getActiveExperiment(), geppettoProject, true);
 		List<VariableValue> recordedVariables3 = experimentState3.getRecordedVariables();
 		Assert.assertEquals(4, recordedVariables3.size());
 		Assert.assertEquals(3, addedExperiment.getAspectConfigurations().get(0).getWatchedVariables().size());
@@ -434,7 +431,7 @@ public class GeppettoManagerNeuroMLTest
 	 * .
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test14SetWatchedVariablesNegativeWrongVariable() throws GeppettoExecutionException, GeppettoAccessException
@@ -443,7 +440,7 @@ public class GeppettoManagerNeuroMLTest
 		watchedVariables.add("testVar(testType).d(Parameter)");
 		// d does not exist
 		exception.expect(GeppettoExecutionException.class);
-		manager.setWatchedVariables(watchedVariables, runtimeProject.getActiveExperiment(), geppettoProject);
+		manager.setWatchedVariables(watchedVariables, runtimeProject.getActiveExperiment(), geppettoProject, true);
 	}
 
 	/**
@@ -463,7 +460,7 @@ public class GeppettoManagerNeuroMLTest
 	 * 
 	 * @throws GeppettoExecutionException
 	 * @throws InterruptedException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test16RunExperiment() throws GeppettoExecutionException, InterruptedException, GeppettoAccessException
@@ -517,7 +514,7 @@ public class GeppettoManagerNeuroMLTest
 	 * 
 	 * @throws GeppettoExecutionException
 	 * @throws InterruptedException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test20RunExperimentAgain() throws GeppettoExecutionException, InterruptedException, GeppettoAccessException
@@ -550,7 +547,7 @@ public class GeppettoManagerNeuroMLTest
 	 * @throws GeppettoExecutionException
 	 * @throws IOException
 	 * @throws NumberFormatException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test22PlayExperiment() throws GeppettoExecutionException, NumberFormatException, IOException, GeppettoAccessException
@@ -652,7 +649,7 @@ public class GeppettoManagerNeuroMLTest
 	 * .
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	public void testUploadResultsToDropBox() throws GeppettoExecutionException, GeppettoAccessException
 	{
@@ -676,7 +673,7 @@ public class GeppettoManagerNeuroMLTest
 	 * .
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test23DownloadModel() throws GeppettoExecutionException, GeppettoAccessException
@@ -693,7 +690,7 @@ public class GeppettoManagerNeuroMLTest
 	 * 
 	 * @throws GeppettoExecutionException
 	 * @throws IOException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test24DownloadResults() throws GeppettoExecutionException, IOException, GeppettoAccessException
@@ -712,7 +709,7 @@ public class GeppettoManagerNeuroMLTest
 	 * .
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test25GetSupportedOuputs() throws GeppettoExecutionException, GeppettoAccessException
@@ -735,7 +732,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#deleteExperiment(java.lang.String, org.geppetto.core.data.model.IExperiment)}.
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test27DeleteExperiment() throws GeppettoExecutionException, GeppettoAccessException
@@ -773,7 +770,7 @@ public class GeppettoManagerNeuroMLTest
 	 * Test method for {@link org.geppetto.simulation.manager.frontend.controllers.GeppettoManager#deleteProject(java.lang.String, org.geppetto.core.data.model.IGeppettoProject)}.
 	 * 
 	 * @throws GeppettoExecutionException
-	 * @throws GeppettoAccessException 
+	 * @throws GeppettoAccessException
 	 */
 	@Test
 	public void test30DeleteProject() throws GeppettoExecutionException, GeppettoAccessException
