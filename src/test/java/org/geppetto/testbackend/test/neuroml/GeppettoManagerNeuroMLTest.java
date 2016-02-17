@@ -579,7 +579,7 @@ public class GeppettoManagerNeuroMLTest
 		experimentState = manager.playExperiment("1", addedExperiment, filter);
 		Assert.assertEquals("time(StateVariable)", time.getPointer().getInstancePath());
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
-		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0]dend_1(compartment).v(StateVariable)", a.getPointer().getInstancePath());
+		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].dend_1(compartment).v(StateVariable)", a.getPointer().getInstancePath());
 		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys(biophys).intracellularProperties(intracellularProperties).caConc(StateVariable)", b.getPointer()
 				.getInstancePath());
 
@@ -606,11 +606,12 @@ public class GeppettoManagerNeuroMLTest
 		ArrayList<Double> storedValues = new ArrayList<Double>();
 
 		// read rest of DAT file and extract values
-		while(input.read() != -1)
+		String line = input.readLine();
+		while(line != null && !line.equals(""))
 		{
-			String line = input.readLine();
 			String[] columns = line.split("\\s+");
 			storedValues.add(Double.valueOf(columns[columnIndexInTheDATFile]));
+			line = input.readLine();
 
 		}
 
