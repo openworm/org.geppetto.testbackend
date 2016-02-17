@@ -468,7 +468,7 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertNotNull(ExperimentRunManager.getInstance());
 		Assert.assertEquals(1, addedExperiment.getAspectConfigurations().size());
 		IAspectConfiguration ac = addedExperiment.getAspectConfigurations().get(0);
-		Assert.assertEquals("mediumNet(network_ACnet2)", ac.getAspect().getInstancePath());
+		Assert.assertEquals("mediumNet(network_ACnet2)", ac.getInstance());
 		Assert.assertNotNull(ac.getSimulatorConfiguration());
 		manager.runExperiment("1", addedExperiment);
 		Assert.assertEquals(3, addedExperiment.getAspectConfigurations().get(0).getWatchedVariables().size());
@@ -522,7 +522,7 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertNotNull(ExperimentRunManager.getInstance());
 		Assert.assertEquals(1, addedExperiment.getAspectConfigurations().size());
 		IAspectConfiguration ac = addedExperiment.getAspectConfigurations().get(0);
-		Assert.assertEquals("mediumNet(network_ACnet2)", ac.getAspect().getInstancePath());
+		Assert.assertEquals("mediumNet(network_ACnet2)", ac.getInstance());
 		Assert.assertNotNull(ac.getSimulatorConfiguration());
 		manager.runExperiment("1", addedExperiment);
 		Assert.assertEquals(3, addedExperiment.getAspectConfigurations().get(0).getWatchedVariables().size());
