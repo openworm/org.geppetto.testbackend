@@ -1,0 +1,71 @@
+{
+    "id": 5,
+    "name": "Primary Auditory Cortex Network",
+    "activeExperimentId": 1,
+    "experiments": [
+	    {
+		  	id:1,      
+		  	name: "Auditory Cortex NEURON simulation",
+		  	status: "COMPLETED",
+		  	description:"Network model of primary auditory cortex in rodents. David Beeman, University of Colorado, Boulder. Model developed in NeuroML. Simulation executed in NEURON. For more information see http://opensourcebrain.org/projects/acnet2.",
+            "lastModified":"1436102517799",
+		  	script: "/test/script.js",
+		  	aspectConfigurations: [
+		    {
+		  		id:1,
+		  		instance: "mediumNet(network_ACnet2)",
+		        simulatorConfiguration: {
+		          id: 1,
+		          simulatorId: "neuronSimulator",
+		          conversionServiceId: "lemsConversion",
+		          timestep: 0.00001,
+		          length: 0.3,
+		          parameters: {target: "network_ACnet2"}
+		        },
+		        watchedVariables:["mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].apical2_2.spiking",
+		        	"mediumNet(network_ACnet2).baskets_12(baskets_12)[0].soma_0.v(StateVariable)"
+			        
+		        ],
+		        modelParameters:[
+			        {
+			        	id: 1,
+			        	variable:"mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys.membraneProperties.Kdr_bask_soma_group.erev",
+				        value: 0.2
+			        },
+					{
+			        	id: 2,
+			        	variable:"mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[6].biophys.membraneProperties.initMembPotential.value",
+				        value: 0.4
+			        }
+		        ]
+		  	}
+		  	],
+		  	simulationResults: [
+		  	{
+		  		id:1,
+		  		format: "GEPPETTO_RECORDING",
+		  		simulatedInstance: "acnet2.baskets_12_0",
+		        result: {
+		          id: 1,
+		          url: "/test/results.h5",
+		          type: "RECORDING"
+		        }
+		  	},
+		  	{
+		  		id:2,
+		  		format: "RAW",
+		  		simulatedInstance: "acnet2.baskets_12_0",
+		        result: {
+		          id: 2,
+		          url: "/test/acnet2.electrical-rawRecording.zip",
+		          type: "RECORDING"
+		        }
+		  	}]
+	}
+    ],
+    "geppettoModel": {
+        "id": 9,
+        "url": "/test/GeppettoModel.xmi",
+        "type": "GEPPETTO_PROJECT"
+    }
+}
