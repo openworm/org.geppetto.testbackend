@@ -83,6 +83,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -116,9 +117,13 @@ public class GeppettoManagerNeuroMLTest
 	{
 		GenericWebApplicationContext context = new GenericWebApplicationContext();
 		BeanDefinition neuroMLModelInterpreterBeanDefinition = new RootBeanDefinition(NeuroMLModelInterpreterService.class);
+		neuroMLModelInterpreterBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
 		BeanDefinition lemsModelInterpreterBeanDefinition = new RootBeanDefinition(LEMSModelInterpreterService.class);
+		lemsModelInterpreterBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
 		BeanDefinition conversionServiceBeanDefinition = new RootBeanDefinition(LEMSConversionService.class);
+		conversionServiceBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
 		BeanDefinition neuronSimulatorServiceBeanDefinition = new RootBeanDefinition(NeuronSimulatorService.class);
+		neuronSimulatorServiceBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_SINGLETON);
 		context.registerBeanDefinition("neuroMLModelInterpreter", neuroMLModelInterpreterBeanDefinition);
 		context.registerBeanDefinition("scopedTarget.neuroMLModelInterpreter", neuroMLModelInterpreterBeanDefinition);
 		context.registerBeanDefinition("lemsModelInterpreter", lemsModelInterpreterBeanDefinition);
@@ -211,7 +216,7 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertEquals(1, geppettoModel.getVariables().get(0).getTypes().size());
 		Type type = geppettoModel.getVariables().get(0).getTypes().get(0);
 		Assert.assertEquals("network_ACnet2", type.getId());
-		Assert.assertEquals("Network - network_ACnet2", type.getName());
+		Assert.assertEquals("network_ACnet2", type.getName());
 
 		// Testing libraries are there
 		Assert.assertEquals(2, geppettoModel.getLibraries().size());
