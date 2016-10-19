@@ -721,7 +721,7 @@ public class GeppettoManagerNeuroMLTest
 	public void test25GetSupportedOuputs() throws GeppettoExecutionException, GeppettoAccessException
 	{
 		List<ModelFormat> formats = manager.getSupportedOuputs("mediumNet(network_ACnet2)", addedExperiment, geppettoProject);
-		Assert.assertEquals(6, formats.size());
+		Assert.assertEquals(8, formats.size());
 		Assert.assertEquals(ServicesRegistry.getModelFormat("NEUROML"), formats.get(0));
 	}
 
