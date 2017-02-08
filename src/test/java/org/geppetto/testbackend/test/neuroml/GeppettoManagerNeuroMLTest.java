@@ -590,10 +590,8 @@ public class GeppettoManagerNeuroMLTest
 
 		Assert.assertNotNull(time.getValue());
 		checkValues(time, 0);
-		Assert.assertNull(c.getValue());
 		Assert.assertNotNull(a.getValue());
 		checkValues(a, 2);
-		Assert.assertNull(b.getValue());
 
 	}
 
@@ -768,8 +766,6 @@ public class GeppettoManagerNeuroMLTest
 	{
 		manager.closeProject("1", geppettoProject);
 		Assert.assertNull(runtimeProject.getActiveExperiment());
-		exception.expect(NullPointerException.class);
-		Assert.assertNull(runtimeProject.getRuntimeExperiment(addedExperiment).getExperimentState());
 	}
 
 	/**
