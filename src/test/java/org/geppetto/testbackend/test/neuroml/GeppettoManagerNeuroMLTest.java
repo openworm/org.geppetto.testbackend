@@ -557,7 +557,7 @@ public class GeppettoManagerNeuroMLTest
 	@Test
 	public void test22PlayExperiment() throws GeppettoExecutionException, NumberFormatException, IOException, GeppettoAccessException
 	{
-		ExperimentState experimentState = manager.playExperiment("1", addedExperiment, null);
+		ExperimentState experimentState = manager.getExperimentState("1", addedExperiment, null);
 		List<VariableValue> recorded = experimentState.getRecordedVariables();
 		Assert.assertEquals(4, recorded.size());
 		VariableValue time = recorded.get(0);
@@ -581,7 +581,7 @@ public class GeppettoManagerNeuroMLTest
 
 		List<String> filter = new ArrayList<String>();
 		filter.add("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].dend_1(compartment).v(StateVariable)");
-		experimentState = manager.playExperiment("1", addedExperiment, filter);
+		experimentState = manager.getExperimentState("1", addedExperiment, filter);
 		Assert.assertEquals("time(StateVariable)", time.getPointer().getInstancePath());
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
 		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].dend_1(compartment).v(StateVariable)", a.getPointer().getInstancePath());
@@ -590,10 +590,8 @@ public class GeppettoManagerNeuroMLTest
 
 		Assert.assertNotNull(time.getValue());
 		checkValues(time, 0);
-		Assert.assertNull(c.getValue());
 		Assert.assertNotNull(a.getValue());
 		checkValues(a, 2);
-		Assert.assertNull(b.getValue());
 
 	}
 
@@ -768,8 +766,6 @@ public class GeppettoManagerNeuroMLTest
 	{
 		manager.closeProject("1", geppettoProject);
 		Assert.assertNull(runtimeProject.getActiveExperiment());
-		exception.expect(NullPointerException.class);
-		Assert.assertNull(runtimeProject.getRuntimeExperiment(addedExperiment).getExperimentState());
 	}
 
 	/**
