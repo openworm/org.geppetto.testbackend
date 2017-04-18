@@ -415,7 +415,7 @@ public class GeppettoManagerNeuroMLTest
 		// Let's add a again and b too
 		List<String> watchedVariables3 = new ArrayList<String>();
 		watchedVariables3.add("mediumNet.baskets_12[0].dend_1.v");
-		watchedVariables3.add("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys.intracellularProperties.caConc");
+		watchedVariables3.add("mediumNet(network_ACnet2).pyramidals_48[0].soma_0.caConc");
 		ExperimentState experimentState3 = manager.setWatchedVariables(watchedVariables3, runtimeProject.getActiveExperiment(), geppettoProject, true);
 		List<VariableValue> recordedVariables3 = experimentState3.getRecordedVariables();
 		Assert.assertEquals(4, recordedVariables3.size());
@@ -425,7 +425,7 @@ public class GeppettoManagerNeuroMLTest
 		VariableValue b = recordedVariables3.get(3);
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
 		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].dend_1(compartment).v(StateVariable)", a.getPointer().getInstancePath());
-		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys(biophys).intracellularProperties(intracellularProperties).caConc(StateVariable)", b.getPointer()
+		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[0].soma_0(compartment).caConc(StateVariable)", b.getPointer()
 				.getInstancePath());
 
 	}
@@ -567,7 +567,7 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertEquals("time(StateVariable)", time.getPointer().getInstancePath());
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
 		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].dend_1(compartment).v(StateVariable)", a.getPointer().getInstancePath());
-		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys(biophys).intracellularProperties(intracellularProperties).caConc(StateVariable)", b.getPointer()
+		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[0].soma_0(compartment).caConc(StateVariable)", b.getPointer()
 				.getInstancePath());
 		Assert.assertNotNull(time.getValue());
 		Assert.assertNotNull(c.getValue());
@@ -585,7 +585,7 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertEquals("time(StateVariable)", time.getPointer().getInstancePath());
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].biophys(biophys).membraneProperties(membraneProperties).iCa(StateVariable)", c.getPointer().getInstancePath());
 		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].dend_1(compartment).v(StateVariable)", a.getPointer().getInstancePath());
-		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys(biophys).intracellularProperties(intracellularProperties).caConc(StateVariable)", b.getPointer()
+		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[0].soma_0(compartment).caConc(StateVariable)", b.getPointer()
 				.getInstancePath());
 
 		Assert.assertNotNull(time.getValue());
