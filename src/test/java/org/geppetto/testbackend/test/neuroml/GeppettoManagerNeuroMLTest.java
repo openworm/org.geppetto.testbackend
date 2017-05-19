@@ -196,7 +196,7 @@ public class GeppettoManagerNeuroMLTest
 	{
 		InputStreamReader inputStreamReader = new InputStreamReader(GeppettoManagerNeuroMLTest.class.getResourceAsStream("/test/acnetTest.json"));
 		geppettoProject = DataManagerHelper.getDataManager().getProjectFromJson(TestUtilities.getGson(), inputStreamReader);
-		manager.loadProject("1", geppettoProject);
+		manager.loadProject("1", geppettoProject,"");
 
 	}
 
