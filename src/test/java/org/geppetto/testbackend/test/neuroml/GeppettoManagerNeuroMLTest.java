@@ -195,7 +195,7 @@ public class GeppettoManagerNeuroMLTest
 	public void test03LoadProject() throws IOException, GeppettoInitializationException, GeppettoExecutionException, GeppettoAccessException
 	{
 		InputStreamReader inputStreamReader = new InputStreamReader(GeppettoManagerNeuroMLTest.class.getResourceAsStream("/test/acnetTest.json"));
-		geppettoProject = DataManagerHelper.getDataManager().getProjectFromJson(TestUtilities.getGson(), inputStreamReader);
+		geppettoProject = DataManagerHelper.getDataManager().getProjectFromJson(TestUtilities.getGson(), inputStreamReader, null);
 		manager.loadProject("1", geppettoProject);
 
 	}
@@ -704,7 +704,7 @@ public class GeppettoManagerNeuroMLTest
 		geppettoRecording.openConnection().connect();
 		URL rawRecording = manager.downloadResults("mediumNet(network_ACnet2)", ResultsFormat.RAW, addedExperiment, geppettoProject);
 		rawRecording.openConnection().connect();
-		Assert.assertTrue(rawRecording.getPath().endsWith("mediumNet(network_ACnet2)/rawRecording.zip"));
+		Assert.assertTrue(rawRecording.getPath().endsWith("experiment/1/rawRecording.zip"));
 	}
 
 	/**
