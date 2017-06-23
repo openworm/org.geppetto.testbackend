@@ -44,3 +44,14 @@ install:
 - cd org.geppetto.persistence
 - mvn install
 - cd ..
+
+sudo: required
+
+services:
+  - docker
+  
+script:
+  - docker build https://github.com/openworm/org.geppetto.git#master:utilities/docker/geppetto/
+  - docker build https://github.com/openworm/org.geppetto.git#master:utilities/docker/geppetto-persistence
+  - docker logs test
+  - curl -sSf http://localhost:80/index.html
