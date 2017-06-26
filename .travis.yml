@@ -11,7 +11,7 @@ services:
   - docker
   
 script:
-  - docker build https://github.com/openworm/org.geppetto.git#master:utilities/docker/geppetto/
-  - docker build https://github.com/openworm/org.geppetto.git#master:utilities/docker/geppetto-persistence
+  - docker build https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
+  - docker build https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto-persistence/
   - docker logs test
   - curl -sSf http://localhost:80/index.html
