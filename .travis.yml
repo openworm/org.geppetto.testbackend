@@ -8,19 +8,19 @@ env:
 install:
 - git clone https://github.com/openworm/org.geppetto.model.git -b development
 - cd org.geppetto.model
-- mvn install
+- mvn install --quiet -q
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.core.git -b development
 - cd org.geppetto.core
-- mvn install
+- mvn install --quiet -q
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.simulation.git -b development
 - cd org.geppetto.simulation
-- mvn install
+- mvn install --quiet -q
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.model.neuroml.git -b development
 - cd org.geppetto.model.neuroml
-- mvn install
+- mvn install --quiet -q
 - cd ..
 - wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.3/nrn-7.3.tar.gz
 - tar xzvf nrn-7.3.tar.gz
@@ -35,15 +35,15 @@ install:
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.simulator.external.git -b development
 - cd org.geppetto.simulator.external
-- mvn install
+- mvn install --quiet -q
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.model.swc.git -b development
 - cd org.geppetto.model.swc
-- mvn install
+- mvn install --quiet -q
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.persistence.git -b development
 - cd org.geppetto.persistence
-- mvn install
+- mvn install --quiet -q
 - cd ..
 - npm install -g phantomjs npm install -g casperjs npm install -g slimerjs
 
