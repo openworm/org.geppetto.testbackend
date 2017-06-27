@@ -6,21 +6,21 @@ env:
     secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
 
 install:
-- git clone https://github.com/openworm/org.geppetto.model.git -b development
+- git clone https://github.com/openworm/org.geppetto.model.git --quiet -b development
 - cd org.geppetto.model
-- mvn install --quiet -q
+- mvn --quiet -q install
 - cd ..
-- git --quiet clone https://github.com/openworm/org.geppetto.core.git -b development
+- git clone https://github.com/openworm/org.geppetto.core.git --quiet -b development
 - cd org.geppetto.core
-- mvn install --quiet -q
+- mvn --quiet -q install
 - cd ..
-- git --quiet clone https://github.com/openworm/org.geppetto.simulation.git -b development
+- git clone https://github.com/openworm/org.geppetto.simulation.git --quiet -b development
 - cd org.geppetto.simulation
-- mvn install --quiet -q
+- mvn --quiet -q install
 - cd ..
-- git --quiet clone https://github.com/openworm/org.geppetto.model.neuroml.git -b development
+- git clone https://github.com/openworm/org.geppetto.model.neuroml.git --quiet -b development
 - cd org.geppetto.model.neuroml
-- mvn install --quiet -q
+- mvn --quiet -q install
 - cd ..
 - wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.3/nrn-7.3.tar.gz
 - tar xzvf nrn-7.3.tar.gz
@@ -33,19 +33,19 @@ install:
 - cd ..
 - cd ..
 - cd ..
-- git --quiet clone https://github.com/openworm/org.geppetto.simulator.external.git -b development
+- git clone https://github.com/openworm/org.geppetto.simulator.external.git --quiet -b development
 - cd org.geppetto.simulator.external
-- mvn install --quiet -q
+- mvn --quiet -q install
 - cd ..
-- git --quiet clone https://github.com/openworm/org.geppetto.model.swc.git -b development
+- git clone https://github.com/openworm/org.geppetto.model.swc.git --quiet -b development
 - cd org.geppetto.model.swc
-- mvn install --quiet -q
+- mvn --quiet -q install
 - cd ..
-- git --quiet clone https://github.com/openworm/org.geppetto.persistence.git -b development
+- git clone https://github.com/openworm/org.geppetto.persistence.git --quiet -b development
 - cd org.geppetto.persistence
-- mvn install --quiet -q
+- mvn --quiet -q install
 - cd ..
-- npm --silent install -g phantomjs npm --silent install -g casperjs npm --silent install -g slimerjs
+- npm install --silent -g phantomjs npm install --silent -g casperjs npm install --silent -g slimerjs
 
 sudo: required
 
