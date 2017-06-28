@@ -55,4 +55,5 @@ services:
 script:
   - docker build https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
   - docker build https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto-persistence/
-  - 
+  - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
+  - casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=slimerjs
