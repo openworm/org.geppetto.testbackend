@@ -6,6 +6,48 @@ env:
     secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
 
 install:
+- git clone https://github.com/openworm/org.geppetto.model.git --quiet -b development
+- cd org.geppetto.model
+- mvn --quiet -q install
+- cd ..
+- git clone https://github.com/openworm/org.geppetto.core.git --quiet -b development
+- cd org.geppetto.core
+- mvn --quiet -q install
+- cd ..
+- git clone https://github.com/openworm/org.geppetto.simulation.git --quiet -b development
+- cd org.geppetto.simulation
+- mvn --quiet -q install
+- cd ..
+- git clone https://github.com/openworm/org.geppetto.model.neuroml.git --quiet -b development
+- cd org.geppetto.model.neuroml
+- mvn --quiet -q install
+- cd ..
+- wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.3/nrn-7.3.tar.gz
+- tar xzvf nrn-7.3.tar.gz
+- cd nrn-7.3
+- ./configure --prefix `pwd` --without-iv --with-nrnpython
+- make
+- make install
+- cd src/nrnpython
+- sudo python setup.py install
+- cd ..
+- cd ..
+- cd ..
+- git clone https://github.com/openworm/org.geppetto.simulator.external.git --quiet -b development
+- cd org.geppetto.simulator.external
+- mvn --quiet -q install
+- cd ..
+- git clone https://github.com/openworm/org.geppetto.model.swc.git --quiet -b development
+- cd org.geppetto.model.swc
+- mvn --quiet -q install
+- cd ..
+- git clone https://github.com/openworm/org.geppetto.persistence.git --quiet -b development
+- cd org.geppetto.persistence
+- mvn --quiet -q install
+- cd ..
+- git clone https://github.com/openworm/org.geppetto.frontend.git -b development
+- cd org.geppetto.frontend
+- mvn --quiet -q install
 - npm install --silent -g phantomjs npm install --silent -g casperjs npm install --silent -g slimerjs
 - sudo apt-get install -y libc6 libstdc++6 libgcc1 libgtk2.0-0 libasound2 libxrender1 libdbus-glib-1-2
 - cd /usr/local && sudo wget --no-verbose -O /tmp/firefox-51.0.tar.bz2 http://ftp.mozilla.org/pub/firefox/releases/51.0/linux-x86_64/en-US/firefox-51.0.tar.bz2
