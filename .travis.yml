@@ -60,5 +60,6 @@ services:
   
 script:
   - sudo export SLIMERJSLAUNCHER=~/firefox/firefox
-  - cd src/main/webapp/js/pages/tests/casperjs
+  - ~/firefox/firefox --version
+  - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=slimerjs
