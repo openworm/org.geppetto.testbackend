@@ -59,7 +59,9 @@ services:
   - docker
   
 script:
-  - sudo export SLIMERJSLAUNCHER=~/firefox/firefox
+  - export SLIMERJSLAUNCHER=~/firefox/firefox
   - ~/firefox/firefox --version
+  - slimerjs -version --debug=true
+  - Versions in /usr/lib/firefox/application.ini 
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=slimerjs
