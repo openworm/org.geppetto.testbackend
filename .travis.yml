@@ -59,7 +59,7 @@ addons:
   firefox: "49.0"
   
 script:
-  - cd /home/travis/firefox-49.0/firefo
+  - cd /home/travis/firefox-49.0/firefox
   - ls -l
   - export SLIMERJSLAUNCHER=/home/travis/firefox-49.0/firefox
   - /home/travis/firefox-49.0/firefox --version
