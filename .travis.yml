@@ -59,7 +59,9 @@ addons:
   firefox: "49.0"
   
 script:
-  - export SLIMERJSLAUNCHER=$HOME/firefox-49.0/firefox
+  - cd /home/travis/firefox-49.0/firefo
+  - ls -l
+  - export SLIMERJSLAUNCHER=/home/travis/firefox-49.0/firefox
   - /home/travis/firefox-49.0/firefox --version
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=slimerjs
