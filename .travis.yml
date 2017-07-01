@@ -60,6 +60,6 @@ addons:
   
 script:
   - export SLIMERJSLAUNCHER=$HOME/firefox-49.0/firefox
-  - $HOME/firefox-49.0/firefoxx --version
+  - /home/travis/firefox-49.0/firefox --version
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=slimerjs
