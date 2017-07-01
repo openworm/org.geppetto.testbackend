@@ -4,7 +4,6 @@ env:
   - NEURON_HOME=$TRAVIS_BUILD_DIR/nrn-7.3/x86_64/bin/
   global:
     secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
-
 install:
 - git clone https://github.com/openworm/org.geppetto.model.git --quiet -b development
 - cd org.geppetto.model
@@ -51,7 +50,8 @@ install:
 - npm install --silent -g phantomjs npm install --silent -g casperjs npm install --silent -g slimerjs
 - sudo apt-get install -y libc6 libstdc++6 libgcc1 libgtk2.0-0 libasound2 libxrender1 libdbus-glib-1-2
 sudo: required
-
+env:
+  - SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0 PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH
 services:
   - docker
   
