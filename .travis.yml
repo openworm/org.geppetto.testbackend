@@ -1,4 +1,6 @@
-language: java
+language: node_js
+node_js:
+  - node
 env:
   matrix:
   - NEURON_HOME=$TRAVIS_BUILD_DIR/nrn-7.3/x86_64/bin/
