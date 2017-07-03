@@ -39,15 +39,15 @@ addons:
 before_script:
   - "sh -e /etc/init.d/xvfb start"
   - "curl https://slimerjs.org/slimerjs-pubkey.gpg | gpg --import"
-  - "wget http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
-  - "wget http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2.asc"
+  - "wget https://download.slimerjs.org/releases/0.10.3/slimerjs-0.10.3.tar.bz2"
+  - "wget https://download.slimerjs.org/releases/0.10.3/slimerjs-0.10.3.tar.bz2.asc"
   - "gpg --verify-files *.asc"
-  - "tar jxfv slimerjs-0.9.6-linux-x86_64.tar.bz2"
-  - "mv slimerjs-0.9.6 ./slimerjs"
+  - "tar jxfv slimerjs-0.10.3.tar.bz2"
+  - "mv slimerjs-0.10.3 ./slimerjs"
 sudo: required
 script:
-  - /home/travis/firefox-37.0/firefox/firefox --version
-  - /home/travis/firefox-37.0/firefox/firefox
+  - /home/travis/firefox-51.0/firefox/firefox --version
+  - /home/travis/firefox-51.0/firefox/firefox
   - slimerjs --debug=true CoreTests.js
   - cd src/main/webapp/js/pages/tests/casperjs
   - casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=slimerjs
