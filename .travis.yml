@@ -35,11 +35,11 @@ services:
   - docker
   
 addons:
-  firefox: "37.0"
+  firefox: "51.0"
   
 script:
-  - export SLIMERJSLAUNCHER=/home/travis/firefox-37.0/firefox/firefox
-  - /home/travis/firefox-37.0/firefox/firefox --version
+  - export SLIMERJSLAUNCHER=/home/travis/firefox-51.0/firefox/firefox
+  - /home/travis/firefox-51.0/firefox/firefox --version
   - slimerjs CoreTests.js --debug=true
   - cd src/main/webapp/js/pages/tests/casperjs
   - casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=slimerjs
