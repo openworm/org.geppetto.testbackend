@@ -26,7 +26,7 @@ install:
 - git clone https://github.com/openworm/org.geppetto.frontend.git -b development
 - cd org.geppetto.frontend
 - mvn --quiet -q install
-- npm install --silent -g phantomjs npm install --silent -g casperjs npm install --silent -g slimerjs
+- npm install --silent -g phantomjs npm install --silent -g casperjs
 - sudo apt-get install -y libc6 libstdc++6 libgcc1 libgtk2.0-0 libasound2 libxrender1 libdbus-glib-1-2
 sudo: required
 env:
@@ -35,12 +35,19 @@ services:
   - docker
   
 addons:
-  firefox: "51.0"
-  
+  firefox: "37.0"
+before_script:
+  - "sh -e /etc/init.d/xvfb start"
+  - "curl https://slimerjs.org/slimerjs-pubkey.gpg | gpg --import"
+  - "wget http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
+  - "wget http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2.asc"
+  - "gpg --verify-files *.asc"
+  - "tar jxfv slimerjs-0.9.6-linux-x86_64.tar.bz2"
+  - "mv slimerjs-0.9.6 ./slimerjs"
+sudo: required
 script:
-  - export SLIMERJSLAUNCHER=/home/travis/firefox-51.0/firefox/firefox
-  - /home/travis/firefox-51.0/firefox/firefox --version
-  - /home/travis/firefox-51.0/firefox/firefox
+  - /home/travis/firefox-37.0/firefox/firefox --version
+  - /home/travis/firefox-37.0/firefox/firefox
   - slimerjs --debug=true CoreTests.js
   - cd src/main/webapp/js/pages/tests/casperjs
   - casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=slimerjs
