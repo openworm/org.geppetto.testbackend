@@ -35,7 +35,7 @@ services:
   - docker
   
 addons:
-  firefox: "37.0"
+  firefox: "51.0"
 before_script:
   - "sh -e /etc/init.d/xvfb start"
   - "curl https://slimerjs.org/slimerjs-pubkey.gpg | gpg --import"
