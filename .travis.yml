@@ -37,8 +37,6 @@ addons:
   
 script:
   - slimerjs --version
-  - cd /home/travis/firefox-49.0/firefox/
-  - ls -l
   - export SLIMERJSLAUNCHER=/home/travis/firefox-49.0/firefox/firefox
   - /home/travis/firefox-49.0/firefox/firefox --version
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
