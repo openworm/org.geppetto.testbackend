@@ -44,6 +44,6 @@ before_script:
   - "mv slimerjs-0.10.3 ./slimerjs"
 sudo: required
 script:
-  - cd /org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
+  - cd S/src/main/webapp/js/pages/tests/casperjs
   - ./slimerjs/slimerjs CoreTests.js
   - casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=./slimerjs/slimerjs
