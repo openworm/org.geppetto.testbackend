@@ -27,11 +27,8 @@ install:
 - npm install --silent -g phantomjs npm install --silent -g casperjs
 - sudo apt-get install -y xvfb libc6 libstdc++6 libgcc1 libgtk2.0-0 libasound2 libxrender1 libdbus-glib-1-2
 sudo: required
-env:
-  - SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0 PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH
 services:
   - docker
-  
 addons:
   firefox: "51.0"
 before_script:
@@ -42,11 +39,9 @@ before_script:
   - "gpg --verify-files *.asc"
   - "tar jxfv slimerjs-0.10.3.tar.bz2"
   - "mv slimerjs-0.10.3 ./slimerjs"
-sudo: required
+  - export SLIMERJSLAUNCHER=/usr/bin/firefox
+  - export SLIMERJS_EXECUTABLE=/home/developer/slimerjs-0.10.3/slimerjs
 script:
-  - cd ./slimerjs
-  - ls -d
   - slimerjs --version
   - cd src/main/webapp/js/pages/tests/casperjs
-  - xvfb-run -a ./slimerjs/slimerjs --debug=true CoreTests.js
-  - casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=./slimerjs/slimerjs
+  - xvfb-run -a casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=slimerjs
