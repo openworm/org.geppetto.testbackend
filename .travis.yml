@@ -45,7 +45,7 @@ before_script:
 sudo: required
 script:
   - cd ./slimerjs
-  - ls
+  - ls -d
   - slimerjs --version
   - cd src/main/webapp/js/pages/tests/casperjs
   - xvfb-run -a ./slimerjs/slimerjs --debug=true CoreTests.js
