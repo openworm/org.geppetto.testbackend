@@ -25,7 +25,7 @@ install:
 - cd org.geppetto.frontend
 - mvn --quiet -q install
 - npm install --silent -g phantomjs npm install --silent -g casperjs
-- sudo apt-get install -y libc6 libstdc++6 libgcc1 libgtk2.0-0 libasound2 libxrender1 libdbus-glib-1-2
+- sudo apt-get install -y xvfb libc6 libstdc++6 libgcc1 libgtk2.0-0 libasound2 libxrender1 libdbus-glib-1-2
 sudo: required
 env:
   - SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0 PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH
@@ -45,5 +45,7 @@ before_script:
 sudo: required
 script:
   - cd src/main/webapp/js/pages/tests/casperjs
-  - ./slimerjs/slimerjs CoreTests.js
+  - xvfb-run ./slimerjs/slimerjs --debug=true CoreTests.js
+  - cd /usr/local/share/slimerjs-0.10.3/slimerjs 
+  - ls 
   - casperjs test --includes=CoreTestsUtility.js CoreTests.js --engine=./slimerjs/slimerjs
