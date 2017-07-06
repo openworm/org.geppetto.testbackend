@@ -54,5 +54,6 @@ services:
   
 script:
   - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
-  - docker run -i -t geppetto
-  - docker build https://github.com/jrmartin/tests-download-project.git#master:geppetto/
+  - docker run  -t -dit --name=geppetto_container -p  8080:8080 geppetto
+  - docker build https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto-casperjs/
+  - docker stop $(docker ps -a -q)
