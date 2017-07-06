@@ -54,3 +54,4 @@ services:
   
 script:
   - docker build https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
+  - docker build https://github.com/jrmartin/tests-download-project.git#master:geppetto/
