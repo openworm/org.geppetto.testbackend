@@ -48,13 +48,24 @@ install:
 - npm install --silent -g phantomjs npm install --silent -g casperjs npm install --silent -g slimerjs
 
 sudo: required
-
 services:
   - docker
-  
+addons:
+  firefox: "51.0"
+before_script:
+  - "sh -e /etc/init.d/xvfb start"
+  - export SLIMERJS_EXECUTABLE=/home/travis/.nvm/versions/node/v7.4.0/bin/slimerjs slimerjs
+    
 script:
   - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
   - docker run  -t -dit --name=geppetto_container -p  8080:8080 geppetto
-  - docker build -t="geppetto_casper" https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto-casperjs/
-  - docker run  -t -it --name=geppetto_casper_container geppetto_casper
-  - docker stop $(docker ps -a -q)
+  - export SLIMERJSLAUNCHER=/home/travis/firefox-51.0/firefox/firefox
+  - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
+  - /home/travis/firefox-51.0/firefox/firefox --version
+  - slimerjs --version
+  - casperjs --version
+  - cd src/main/webapp/js/pages/tests/casperjs
+  - chmod +x test_geppetto_server.sh
+  - docker ps
+  - bash test_geppetto_server.sh
+  - xvfb-run -a casperjs test --includes=CoreTestsUtility.js CoreTests.js --host='http://0.0.0.0:8080/' --engine=slimerjs --debug=yes
