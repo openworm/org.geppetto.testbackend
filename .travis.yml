@@ -41,11 +41,15 @@ install:
 - cd org.geppetto.model.swc
 - mvn --quiet -q install
 - cd ..
+- git clone https://github.com/openworm/org.geppetto.frontend.git --quiet -b development
+- cd org.geppetto.frontend
+- mvn --quiet -q install
+- cd ..
 - git clone https://github.com/openworm/org.geppetto.persistence.git --quiet -b development
 - cd org.geppetto.persistence
 - mvn --quiet -q install
 - cd ..
-- npm install --silent -g phantomjs npm install --silent -g casperjs npm install --silent -g slimerjs
+- npm install --silent -g phantomjs npm install --silent -g casperjs npm install --silent -g slimerjs npm install --silent -g gl
 
 sudo: required
 services:
@@ -58,7 +62,7 @@ before_script:
     
 script:
   - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
-  - docker run  -t -dit --name=geppetto_container -p  8080:8080 geppetto
+  - docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto
   - export SLIMERJSLAUNCHER=/home/travis/firefox-51.0/firefox/firefox
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
   - /home/travis/firefox-51.0/firefox/firefox --version
@@ -68,4 +72,4 @@ script:
   - chmod +x test_geppetto_server.sh
   - docker ps
   - bash test_geppetto_server.sh
-  - xvfb-run -a casperjs test --includes=CoreTestsUtility.js CoreTests.js --host='http://0.0.0.0:8080/' --engine=slimerjs --debug=yes
+  - xvfb-run -a casperjs test --includes=CoreTestsUtility.js CoreTests.js --host='http://localhost:28081/' --engine=slimerjs
