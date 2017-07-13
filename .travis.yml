@@ -76,8 +76,15 @@ before_script:
     
 script:
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
+  - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
+  - docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto
+  - chmod +x $TRAVIS_BUILD_DIR/test_geppetto_server.sh
+  - bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
+  - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test --includes=CoreTestsUtility.js CoreTests.js --host='http://localhost:28081/' --engine=slimerjs
+  - docker stop $(docker ps -a -q)
+  - docker rm $(docker ps -a -q)
   - docker build -t="geppetto_persistence" https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto-persistence/
   - docker run  -t -dit --name=geppetto_persistence_container -h localhost -p  28081:8080 geppetto_persistence
   - chmod +x $TRAVIS_BUILD_DIR/test_geppetto_server.sh
   - bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
-  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test UITests.js --host='http://localhost:28081/' --engine=slimerjs --debug=yes
+  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test UITests.js --host='http://localhost:28081/' --engine=slimerjs
