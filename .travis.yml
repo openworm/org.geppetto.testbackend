@@ -45,10 +45,6 @@ install:
 - cd org.geppetto.frontend
 - mvn --quiet -q install
 - cd ..
-- git clone https://github.com/openworm/org.geppetto.persistence.git --quiet -b development
-- cd org.geppetto.persistence
-- mvn --quiet -q install
-- cd ..
 - npm install --silent -g phantomjs 
 - npm install --silent -g casperjs 
 - npm install --silent -g slimerjs
@@ -82,12 +78,12 @@ script:
   - bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
   - sleep 100
   - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test --includes=CoreTestsUtility.js CoreTests.js --host=http://localhost:28081/ --engine=slimerjs
-  #- docker stop $(docker ps -a -q)
-  #- docker rm $(docker ps -a -q)
-  #- docker build -t="geppetto_persistence" --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto-persistence/
-  #- docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
-  #- chmod +x $TRAVIS_BUILD_DIR/test_geppetto_server.sh
-  #- bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
-  #- xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test UITests.js --host='http://localhost:28081/' --engine=slimerjs
-  #- sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
-  #- tail /etc/log.log -n 200
+  - docker stop $(docker ps -a -q)
+  - docker rm $(docker ps -a -q)
+  - docker build -t="geppetto_persistence" --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto-persistence/
+  - docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
+  - chmod +x $TRAVIS_BUILD_DIR/test_geppetto_server.sh
+  - bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
+  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test UITests.js --host='http://localhost:28081/' --engine=slimerjs
+  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
+  - tail /etc/log.log -n 200
