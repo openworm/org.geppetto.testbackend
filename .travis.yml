@@ -4,32 +4,7 @@ sudo: required
 dist: trusty
 node_js:
   - "7"
-env:
-  matrix:
-  - NEURON_HOME=$TRAVIS_BUILD_DIR/nrn-7.4/x86_64/bin/
-  global:
-    secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
 install:
-- git clone https://github.com/openworm/org.geppetto.model.git --quiet -b development
-- cd org.geppetto.model
-- mvn --quiet -q install
-- cd ..
-- git clone https://github.com/openworm/org.geppetto.core.git --quiet -b development
-- cd org.geppetto.core
-- mvn --quiet -q install
-- cd ..
-- git clone https://github.com/openworm/org.geppetto.simulation.git --quiet -b development
-- cd org.geppetto.simulation
-- mvn --quiet -q install
-- cd ..
-- git clone https://github.com/openworm/org.geppetto.model.neuroml.git --quiet -b development
-- cd org.geppetto.model.neuroml
-- mvn --quiet -q install
-- cd ..
-- git clone https://github.com/openworm/org.geppetto.model.swc.git --quiet -b development
-- cd org.geppetto.model.swc
-- mvn --quiet -q install
-- cd ..
 - git clone https://github.com/openworm/org.geppetto.frontend.git --quiet -b $TRAVIS_BRANCH
 - cd org.geppetto.frontend
 - cd ..
@@ -57,7 +32,7 @@ before_script:
     
 script:
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
-  - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto/
+  - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
   - docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto
   - chmod +x $TRAVIS_BUILD_DIR/test_geppetto_server.sh
   - bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
@@ -65,7 +40,7 @@ script:
   - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test --includes=CoreTestsUtility.js CoreTests.js --host=http://localhost:28081/ --engine=slimerjs
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
-  - docker build -t="geppetto_persistence" --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto-persistence/
+  - docker build -t="geppetto_persistence" --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto-persistence/
   - docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
   - bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
   - sleep 60
