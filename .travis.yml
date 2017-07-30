@@ -36,6 +36,9 @@ script:
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
   - docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto
+  - docker ps -a
+  - sudo docker cp geppetto_container:/home/developer/virgo/serviceability/logs/log.log /etc
+  - tail /etc/log.log -n 100
   - chmod +x $TRAVIS_BUILD_DIR/test_geppetto_server.sh
   - bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
   - sleep 60
@@ -47,6 +50,7 @@ script:
   - bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
   - sleep 60
   - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test PersistenceTests.js --host=http://localhost:28081/ --engine=slimerjs
+  - docker ps -a
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
