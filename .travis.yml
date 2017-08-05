@@ -35,8 +35,6 @@ script:
   - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto/
   - docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto
   - docker ps -a
-  - sudo docker cp geppetto_container:/home/developer/virgo/serviceability/logs/log.log /etc
-  - tail /etc/log.log -n 100
   - chmod +x $TRAVIS_BUILD_DIR/test_geppetto_server.sh
   - docker logs --details geppetto_container
   - bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
@@ -70,6 +68,5 @@ script:
   - "curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'}"
   - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test PersistenceTests.js --host=http://localhost:28081/ --engine=slimerjs
   - docker ps -a
-  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
