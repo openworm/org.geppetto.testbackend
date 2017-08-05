@@ -31,6 +31,7 @@ before_script:
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
     
 script:
+  - echo "$TRAVIS_BRANCH"
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto/
   - docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto
