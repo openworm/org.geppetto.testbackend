@@ -33,7 +33,7 @@ before_script:
 script:
   - echo "$TRAVIS_BRANCH"
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
-  - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto/
+  - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
   - docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto
   - docker ps -a
   - chmod +x $TRAVIS_BUILD_DIR/test_geppetto_server.sh
@@ -55,7 +55,7 @@ script:
   - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test --includes=CoreTestsUtility.js CoreTests.js --host=http://localhost:28081/ --engine=slimerjs
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
-  - docker build -t="geppetto_persistence" --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto-persistence/
+  - docker build -t="geppetto_persistence" --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto-persistence/
   - docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
   - bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
   - sleep 60
