@@ -63,7 +63,7 @@ script:
   - if [ "$http_status" == "404" ]; then
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
-      docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto;
+      docker run  -t -dit --name=geppetto_persistence_container -h localhost -p  28081:8080 geppetto;
       bash $TRAVIS_BUILD_DIR/src/main/webapp/js/pages/tests/casperjs/test_geppetto_server.sh;
       sleep 60;
     fi
