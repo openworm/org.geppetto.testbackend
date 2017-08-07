@@ -47,7 +47,7 @@ script:
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
       docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto;
-      bash  $TRAVIS_BUILD_DIR/test_geppetto_server.sh;
+      bash test_geppetto_server.sh;
       sleep 60;
       http_status=$(curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'});
     done
@@ -55,7 +55,7 @@ script:
   - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test --includes=CoreTestsUtility.js CoreTests.js --host=http://localhost:28081/ --engine=slimerjs
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
-  - docker build -t="geppetto_persistence" --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto-persistence/
+  - docker build -t="geppetto_persistence" --build-arg frontendBranch=development --build-arg persistenceBranch=development --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto-persistence/
   - docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
   - bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh
   - sleep 60
@@ -66,7 +66,7 @@ script:
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
       docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence;
-      bash $TRAVIS_BUILD_DIR/test_geppetto_server.sh;
+      bash test_geppetto_server.sh;
       sleep 60;
       http_status=$(curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'});
     done
