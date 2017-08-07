@@ -33,7 +33,7 @@ before_script:
 script:
   - echo "$TRAVIS_BRANCH"
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
-  - docker build -t="geppetto" https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
+  - docker build -t="geppetto" --build-arg frontendBranch=development --build-arg persistenceBranch=development https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
   - docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto
   - docker ps -a
   - chmod +x $TRAVIS_BUILD_DIR/test_geppetto_server.sh
