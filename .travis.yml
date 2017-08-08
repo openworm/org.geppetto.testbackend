@@ -33,11 +33,12 @@ before_script:
 script:
   - echo "$TRAVIS_BRANCH"
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
-  - docker build -t="geppetto" --build-arg frontendBranch=development --build-arg persistenceBranch=development https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
+  - docker build -t="geppetto" --build-arg frontendBranch=development https://github.com/openworm/org.geppetto.git#docker-casperjs:utilities/docker/geppetto/
   - docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto
   - docker ps -a
   - docker logs --details geppetto_container
-  - sleep 120
+  - bash test_geppetto_server.sh
+  - sleep 60
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
   - echo $http_status;
   - while [ "$http_status" == "404" ]; do
@@ -45,7 +46,8 @@ script:
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
       docker run  -t -dit --name=geppetto_container -h localhost -p  28081:8080 geppetto;
-      sleep 150;
+      bash test_geppetto_server.sh;
+      sleep 60;
       http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'});
     done
   - curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'}
@@ -54,7 +56,8 @@ script:
   - docker rm $(docker ps -a -q)
   - docker build -t="geppetto_persistence" --build-arg frontendBranch=development --build-arg persistenceBranch=development --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto-persistence/
   - docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
-  - sleep 120
+  - bash test_geppetto_server.sh
+  - sleep 100
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
   - while [ "$http_status" == "404" ]; do
@@ -62,7 +65,8 @@ script:
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
       docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence;
-      sleep 200;
+      bash test_geppetto_server.sh;
+      sleep 100;
       http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'});
     done
   - "curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'}"
