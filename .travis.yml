@@ -3,7 +3,7 @@ os: linux
 sudo: required
 dist: trusty
 node_js:
-  - "7"
+  - "5"
 install:
 - git clone https://github.com/openworm/org.geppetto.frontend.git --quiet -b $TRAVIS_BRANCH
 - cd org.geppetto.frontend
