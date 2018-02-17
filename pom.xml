@@ -5,7 +5,7 @@
 	<groupId>org.geppetto</groupId>
 	<artifactId>testbackend</artifactId>
 	<name>Geppetto Test Backend Bundle</name>
-	<version>0.3.8</version>
+	<version>0.3.9</version>
 	<packaging>bundle</packaging>
 	<properties>
 		<spring.version>4.2.4.RELEASE</spring.version>
