@@ -18,19 +18,19 @@ install:
 - npm config set registry http://registry.npmjs.org/
 - git clone https://github.com/openworm/org.geppetto.model.git -b $TRAVIS_BRANCH
 - cd org.geppetto.model
-- mvn install
+- mvn --quiet install
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.core.git -b $TRAVIS_BRANCH
 - cd org.geppetto.core
-- mvn install
+- mvn --quiet install
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.simulation.git -b $TRAVIS_BRANCH
 - cd org.geppetto.simulation
-- mvn install
+- mvn --quiet install
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.model.neuroml.git -b $TRAVIS_BRANCH
 - cd org.geppetto.model.neuroml
-- mvn install
+- mvn --quiet install
 - cd ..
 - wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.3/nrn-7.3.tar.gz
 - tar xzvf nrn-7.3.tar.gz
@@ -45,15 +45,15 @@ install:
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.simulator.external.git -b $TRAVIS_BRANCH
 - cd org.geppetto.simulator.external
-- mvn install
+- mvn --quiet install
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.model.swc.git -b $TRAVIS_BRANCH
 - cd org.geppetto.model.swc
-- mvn install
+- mvn --quiet install
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.persistence.git -b $TRAVIS_BRANCH
 - cd org.geppetto.persistence
-- mvn install
+- mvn --quiet install
 - cd ..
 
 services:
