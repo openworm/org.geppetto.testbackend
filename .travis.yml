@@ -19,7 +19,7 @@ install:
 - svn checkout svn://svn.code.sf.net/p/neuroml/code/jNeuroMLJar
 - export JNML_HOME=$PWD/jNeuroMLJar
 
-- git clone https://github.com/openworm/org.geppetto.frontend.git --quiet -b $TRAVIS_BRANCH
+- git clone https://github.com/openworm/org.geppetto.frontend.git --quiet -b development
 - cd org.geppetto.frontend
 - cd ..
 - npm install --silent -g phantomjs 
