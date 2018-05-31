@@ -185,7 +185,7 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertEquals(1, geppettoModel.getVariables().get(0).getTypes().size());
 		Type type = geppettoModel.getVariables().get(0).getTypes().get(0);
 		Assert.assertEquals("network_ACnet2", type.getId());
-		Assert.assertEquals("network_ACnet2", type.getName());
+		Assert.assertEquals("network", type.getName());
 
 		// Testing libraries are there
 		Assert.assertEquals(2, geppettoModel.getLibraries().size());
@@ -216,10 +216,10 @@ public class GeppettoManagerNeuroMLTest
 		VariableValue b = recordedVariables.get(0);
 		Assert.assertEquals("mediumNet(network_ACnet2).pyramidals_48(pyramidals_48)[4].apical2_2(compartment).spiking(StateVariable)", b.getPointer().getInstancePath());
 		VariableValue p1 = parameters.get(1);
-		Assert.assertEquals("mediumNet(network_ACnet2).baskets_12(baskets_12)[0].biophys(biophys).membraneProperties(membraneProperties).Kdr_bask_soma_group(Kdr_bask_soma_group).erev(Parameter)", p1
-				.getPointer().getInstancePath());
+		Assert.assertEquals("neuroMLLibrary.pyr_4_sym.biophys.membraneProperties.initMembPotential.value", p1
+				.getPointer().getPath());
 		Quantity q = (Quantity) p1.getValue();
-		Assert.assertEquals(0.2, q.getValue(), 0);
+		Assert.assertEquals(0.4, q.getValue(), 0);
 
 	}
 
