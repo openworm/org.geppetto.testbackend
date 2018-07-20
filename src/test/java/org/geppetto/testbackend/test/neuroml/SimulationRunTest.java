@@ -146,26 +146,4 @@ public class SimulationRunTest
 		
 		Thread.sleep(90000);		
 	}
-	
-	@Test
-	public void test05LoadProject() throws IOException, GeppettoInitializationException, GeppettoExecutionException, GeppettoAccessException
-	{
-		InputStreamReader inputStreamReader = new InputStreamReader(GeppettoManagerNeuroMLTest.class.getResourceAsStream("/simulationJNeuromlTest/GEPPETTO.json"));
-		geppettoProject = DataManagerHelper.getDataManager().getProjectFromJson(TestUtilities.getGson(), inputStreamReader, null);
-		manager.loadProject("1", geppettoProject);
-
-	}
-
-	@Test
-	public void test06ExperimentJNeuromlRun() throws GeppettoExecutionException, GeppettoAccessException, InterruptedException
-	{			
-		List<? extends IExperiment> status = manager.checkExperimentsStatus("1", geppettoProject);
-		Assert.assertEquals(1, status.size());
-		Assert.assertEquals(ExperimentStatus.DESIGN, status.get(0).getStatus());
-		
-		manager.runExperiment("1", geppettoProject.getExperiments().get(0));
-		
-		Thread.sleep(90000);		
-	}
-
 }
