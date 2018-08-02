@@ -2,12 +2,13 @@
 
 package org.geppetto.testbackend.test.neuroml;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geppetto.core.beans.SimulatorConfig;
 import org.geppetto.core.common.GeppettoAccessException;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
@@ -20,14 +21,13 @@ import org.geppetto.core.data.model.IUserGroup;
 import org.geppetto.core.data.model.UserPrivileges;
 import org.geppetto.core.manager.Scope;
 import org.geppetto.core.services.registry.ApplicationListenerBean;
-import org.geppetto.core.simulation.ISimulationRunExternalListener;
 import org.geppetto.core.simulator.ExternalSimulatorConfig;
 import org.geppetto.model.neuroml.services.LEMSConversionService;
 import org.geppetto.model.neuroml.services.LEMSModelInterpreterService;
 import org.geppetto.model.neuroml.services.NeuroMLModelInterpreterService;
-import org.geppetto.simulation.manager.ExperimentRunManager;
 import org.geppetto.simulation.manager.GeppettoManager;
 import org.geppetto.simulator.external.services.NeuronSimulatorService;
+import org.geppetto.simulator.scidash.services.ScidashSimulatorService;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -40,11 +40,16 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SimulationRunTest implements ISimulationRunExternalListener 
+public class SimulationSciDashRunTest
 {	
 	private static GeppettoManager manager = new GeppettoManager(Scope.CONNECTION);
 	private static IGeppettoProject geppettoProject;
+	private static ScidashSimulatorService simulator;
 
+	public SimulationSciDashRunTest()
+	{
+	}
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -53,6 +58,7 @@ public class SimulationRunTest implements ISimulationRunExternalListener
 	public static void setUp() throws Exception
 	{
 		GenericWebApplicationContext context = new GenericWebApplicationContext();
+		BeanDefinition scidashSimulatorServiceBeanDefinition = new RootBeanDefinition(ScidashSimulatorService.class);
 		BeanDefinition neuroMLModelInterpreterBeanDefinition = new RootBeanDefinition(NeuroMLModelInterpreterService.class);
 		BeanDefinition lemsModelInterpreterBeanDefinition = new RootBeanDefinition(LEMSModelInterpreterService.class);
 		BeanDefinition conversionServiceBeanDefinition = new RootBeanDefinition(LEMSConversionService.class);
@@ -66,26 +72,39 @@ public class SimulationRunTest implements ISimulationRunExternalListener
 		context.registerBeanDefinition("scopedTarget.lemsConversion", conversionServiceBeanDefinition);
 		context.registerBeanDefinition("neuronSimulator", neuronSimulatorServiceBeanDefinition);
 		context.registerBeanDefinition("scopedTarget.neuronSimulator", neuronSimulatorServiceBeanDefinition);
-
-		ExternalSimulatorConfig externalConfig = new ExternalSimulatorConfig();
-		externalConfig.setSimulatorPath(System.getenv("NEURON_HOME"));
+		
+		context.registerBeanDefinition("scidashSimulator", scidashSimulatorServiceBeanDefinition);
+		context.registerBeanDefinition("scopedTarget.scidashSimulator", scidashSimulatorServiceBeanDefinition);
 		
 		ContextRefreshedEvent event = new ContextRefreshedEvent(context);
 		ApplicationListenerBean listener = new ApplicationListenerBean();
 		listener.onApplicationEvent(event);
-		ApplicationContext retrievedContext = ApplicationListenerBean.getApplicationContext("neuroMLModelInterpreter");
-		Assert.assertNotNull(retrievedContext.getBean("scopedTarget.neuroMLModelInterpreter"));
-		Assert.assertTrue(retrievedContext.getBean("scopedTarget.neuroMLModelInterpreter") instanceof NeuroMLModelInterpreterService);
-		Assert.assertNotNull(retrievedContext.getBean("scopedTarget.lemsModelInterpreter"));
-		Assert.assertTrue(retrievedContext.getBean("scopedTarget.lemsModelInterpreter") instanceof LEMSModelInterpreterService);
-		Assert.assertNotNull(retrievedContext.getBean("scopedTarget.lemsConversion"));
-		Assert.assertTrue(retrievedContext.getBean("scopedTarget.lemsConversion") instanceof LEMSConversionService);
-		Assert.assertNotNull(retrievedContext.getBean("scopedTarget.neuronSimulator"));
-		Assert.assertTrue(retrievedContext.getBean("scopedTarget.neuronSimulator") instanceof NeuronSimulatorService);
+		ApplicationContext retrievedContext = ApplicationListenerBean.getApplicationContext("scidashSimulator");
+		Assert.assertNotNull(retrievedContext.getBean("scopedTarget.scidashSimulator"));
+		Assert.assertTrue(retrievedContext.getBean("scopedTarget.scidashSimulator") instanceof ScidashSimulatorService);
+		
+		String neuron_home = System.getenv("NEURON_HOME");
+		if (!(new File(neuron_home+"/nrniv")).exists())
+		{
+		    neuron_home = System.getenv("NEURON_HOME")+"/bin/";
+		    if (!(new File(neuron_home+"/nrniv")).exists())
+		    {
+		        throw new GeppettoExecutionException("Please set the environment variable NEURON_HOME to point to your local install of NEURON 7.4");
+		    }
+		}
+		ExternalSimulatorConfig externalConfig = new ExternalSimulatorConfig();
+		externalConfig.setSimulatorPath(neuron_home);
+		Assert.assertNotNull(externalConfig.getSimulatorPath());
+		SimulatorConfig simulatorConfig = new SimulatorConfig();
+		simulatorConfig.setSimulatorID("neuronSimulator");
+		simulatorConfig.setSimulatorName("neuronSimulator");
 		
 		((NeuronSimulatorService)retrievedContext.getBean("scopedTarget.neuronSimulator")).setNeuronExternalSimulatorConfig(externalConfig);
-		
+		((NeuronSimulatorService)retrievedContext.getBean("scopedTarget.neuronSimulator")).setNeuronSimulatorConfig(simulatorConfig);
+				
 		DataManagerHelper.setDataManager(new DefaultGeppettoDataManager());
+		
+		simulator = new ScidashSimulatorService(manager);
 	}
 	
 	/**
@@ -101,7 +120,7 @@ public class SimulationRunTest implements ISimulationRunExternalListener
 		privileges.add(UserPrivileges.RUN_EXPERIMENT);
 		privileges.add(UserPrivileges.READ_PROJECT);
 		IUserGroup userGroup = DataManagerHelper.getDataManager().newUserGroup("unaccountableAristocrats", privileges, value, value * 2);
-		manager.setUser(DataManagerHelper.getDataManager().newUser("neurontestuser", "passauord", true, userGroup));
+		manager.setUser(DataManagerHelper.getDataManager().newUser("scidashtestuser", "passauord", true, userGroup));
 	}
 
 	/**
@@ -110,7 +129,7 @@ public class SimulationRunTest implements ISimulationRunExternalListener
 	@Test
 	public void test02GetUser()
 	{
-		Assert.assertEquals("neurontestuser", manager.getUser().getName());
+		Assert.assertEquals("scidashtestuser", manager.getUser().getName());
 		Assert.assertEquals("passauord", manager.getUser().getPassword());
 	}
 	
@@ -130,19 +149,9 @@ public class SimulationRunTest implements ISimulationRunExternalListener
 		Assert.assertEquals(1, status.size());
 		Assert.assertEquals(ExperimentStatus.DESIGN, status.get(0).getStatus());
 		
-		ExperimentRunManager.getInstance().setExternalExperimentListener(this);
-		manager.runExperiment("1", geppettoProject.getExperiments().get(0));
+		simulator.runExperiment(geppettoProject.getExperiments().get(0).getId(), geppettoProject.getId(), 233333);
+		//manager.runExperiment("1", geppettoProject.getExperiments().get(0));
 		
 		Thread.sleep(90000);		
-	}
-
-	@Override
-	public void simulationDone(IExperiment experiment, List<URL> results) throws GeppettoExecutionException {
-		int resultsSize = results.size();
-		Assert.assertEquals(4, resultsSize);
-	}
-
-	@Override
-	public void simulationFailed(String errorMessage, Exception e, IExperiment experiment) {		
 	}
 }
