@@ -1,5 +1,3 @@
-
-
 package org.geppetto.testbackend.test.neuroml;
 
 import java.io.File;
@@ -8,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.beans.SimulatorConfig;
 import org.geppetto.core.common.GeppettoAccessException;
 import org.geppetto.core.common.GeppettoExecutionException;
@@ -42,13 +42,9 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SimulationSciDashRunTest
 {	
+	private static Log logger = LogFactory.getLog(SimulationSciDashRunTest.class);
 	private static GeppettoManager manager = new GeppettoManager(Scope.CONNECTION);
 	private static IGeppettoProject geppettoProject;
-	private static ScidashSimulatorService simulator;
-
-	public SimulationSciDashRunTest()
-	{
-	}
 	
 	/**
 	 * @throws java.lang.Exception
@@ -71,8 +67,7 @@ public class SimulationSciDashRunTest
 		context.registerBeanDefinition("lemsConversion", conversionServiceBeanDefinition);
 		context.registerBeanDefinition("scopedTarget.lemsConversion", conversionServiceBeanDefinition);
 		context.registerBeanDefinition("neuronSimulator", neuronSimulatorServiceBeanDefinition);
-		context.registerBeanDefinition("scopedTarget.neuronSimulator", neuronSimulatorServiceBeanDefinition);
-		
+		context.registerBeanDefinition("scopedTarget.neuronSimulator", neuronSimulatorServiceBeanDefinition);		
 		context.registerBeanDefinition("scidashSimulator", scidashSimulatorServiceBeanDefinition);
 		context.registerBeanDefinition("scopedTarget.scidashSimulator", scidashSimulatorServiceBeanDefinition);
 		
@@ -95,16 +90,19 @@ public class SimulationSciDashRunTest
 		ExternalSimulatorConfig externalConfig = new ExternalSimulatorConfig();
 		externalConfig.setSimulatorPath(neuron_home);
 		Assert.assertNotNull(externalConfig.getSimulatorPath());
-		SimulatorConfig simulatorConfig = new SimulatorConfig();
-		simulatorConfig.setSimulatorID("neuronSimulator");
-		simulatorConfig.setSimulatorName("neuronSimulator");
+		SimulatorConfig neuronSimulatorConfig = new SimulatorConfig();
+		neuronSimulatorConfig.setSimulatorID("neuronSimulator");
+		neuronSimulatorConfig.setSimulatorName("neuronSimulator");
 		
-		((NeuronSimulatorService)retrievedContext.getBean("scopedTarget.neuronSimulator")).setNeuronExternalSimulatorConfig(externalConfig);
-		((NeuronSimulatorService)retrievedContext.getBean("scopedTarget.neuronSimulator")).setNeuronSimulatorConfig(simulatorConfig);
+		SimulatorConfig scidashSimulatorConfig = new SimulatorConfig();
+		scidashSimulatorConfig.setSimulatorID("scidashSimulator");
+		scidashSimulatorConfig.setSimulatorName("scidashSimulator");
+
+		((ScidashSimulatorService)retrievedContext.getBean("scopedTarget.scidashSimulator")).setScidashSimulatorConfig(scidashSimulatorConfig);
+		((ScidashSimulatorService)retrievedContext.getBean("scopedTarget.scidashSimulator")).setNeuronExternalSimulatorConfig(externalConfig);
+		((ScidashSimulatorService)retrievedContext.getBean("scopedTarget.scidashSimulator")).setNeuronSimulatorConfig(neuronSimulatorConfig);
 				
 		DataManagerHelper.setDataManager(new DefaultGeppettoDataManager());
-		
-		simulator = new ScidashSimulatorService(manager);
 	}
 	
 	/**
@@ -136,7 +134,7 @@ public class SimulationSciDashRunTest
 	@Test
 	public void test03LoadProject() throws IOException, GeppettoInitializationException, GeppettoExecutionException, GeppettoAccessException
 	{
-		InputStreamReader inputStreamReader = new InputStreamReader(GeppettoManagerNeuroMLTest.class.getResourceAsStream("/simulationNeuronTest/GEPPETTO.json"));
+		InputStreamReader inputStreamReader = new InputStreamReader(GeppettoManagerNeuroMLTest.class.getResourceAsStream("/scidashSimulationNeuronTest/GEPPETTO.json"));
 		geppettoProject = DataManagerHelper.getDataManager().getProjectFromJson(TestUtilities.getGson(), inputStreamReader, null);
 		manager.loadProject("1", geppettoProject);
 
@@ -147,11 +145,20 @@ public class SimulationSciDashRunTest
 	{			
 		List<? extends IExperiment> status = manager.checkExperimentsStatus("1", geppettoProject);
 		Assert.assertEquals(1, status.size());
-		Assert.assertEquals(ExperimentStatus.DESIGN, status.get(0).getStatus());
+		Assert.assertEquals(ExperimentStatus.DESIGN, status.get(0).getStatus());  //test design status on experiment
+		Assert.assertEquals(0, status.get(0).getSimulationResults().size());  //test empty experiment results list pre-running
 		
-		simulator.runExperiment(geppettoProject.getExperiments().get(0).getId(), geppettoProject.getId(), 233333);
-		//manager.runExperiment("1", geppettoProject.getExperiments().get(0));
+		manager.runExperiment("1",geppettoProject.getExperiments().get(0));
 		
-		Thread.sleep(90000);		
+		Thread.sleep(50000);
+		
+		status = manager.checkExperimentsStatus("1", geppettoProject);
+		if(status.get(0).getStatus() == ExperimentStatus.RUNNING) {
+			Thread.sleep(30000);
+		}
+		status = manager.checkExperimentsStatus("1", geppettoProject);
+		Assert.assertEquals(1, status.size());  
+		Assert.assertEquals(ExperimentStatus.COMPLETED, status.get(0).getStatus());  //test completion of experiment run
+		Assert.assertEquals(2, status.get(0).getSimulationResults().size());  //test experiment simulation list results
 	}
 }
