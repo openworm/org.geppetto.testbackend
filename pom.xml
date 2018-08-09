@@ -40,11 +40,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.geppetto</groupId>
-			<artifactId>simulator.external</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.geppetto</groupId>
 			<artifactId>simulator.scidash</artifactId>
 			<version>${project.version}</version>
 		</dependency>

@@ -2,7 +2,6 @@ package org.geppetto.testbackend.test.neuroml;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import org.geppetto.core.simulator.ExternalSimulatorConfig;
 import org.geppetto.model.neuroml.services.LEMSConversionService;
 import org.geppetto.model.neuroml.services.LEMSModelInterpreterService;
 import org.geppetto.model.neuroml.services.NeuroMLModelInterpreterService;
-import org.geppetto.simulation.manager.ExperimentRunManager;
 import org.geppetto.simulation.manager.GeppettoManager;
 import org.geppetto.simulator.external.services.NeuronSimulatorService;
 import org.junit.Assert;
