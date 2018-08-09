@@ -4,7 +4,6 @@ package org.geppetto.testbackend.test.neuroml;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +19,10 @@ import org.geppetto.core.data.model.IUserGroup;
 import org.geppetto.core.data.model.UserPrivileges;
 import org.geppetto.core.manager.Scope;
 import org.geppetto.core.services.registry.ApplicationListenerBean;
-import org.geppetto.core.simulation.ISimulationRunExternalListener;
 import org.geppetto.core.simulator.ExternalSimulatorConfig;
 import org.geppetto.model.neuroml.services.LEMSConversionService;
 import org.geppetto.model.neuroml.services.LEMSModelInterpreterService;
 import org.geppetto.model.neuroml.services.NeuroMLModelInterpreterService;
-import org.geppetto.simulation.manager.ExperimentRunManager;
-import org.geppetto.simulation.manager.GeppettoManager;
 import org.geppetto.simulator.external.services.NeuronSimulatorService;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -40,7 +36,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SimulationRunTest implements ISimulationRunExternalListener 
+public class SimulationRunTest
 {	
 	private static GeppettoManager manager = new GeppettoManager(Scope.CONNECTION);
 	private static IGeppettoProject geppettoProject;
@@ -130,19 +126,8 @@ public class SimulationRunTest implements ISimulationRunExternalListener
 		Assert.assertEquals(1, status.size());
 		Assert.assertEquals(ExperimentStatus.DESIGN, status.get(0).getStatus());
 		
-		ExperimentRunManager.getInstance().setExternalExperimentListener(this);
 		manager.runExperiment("1", geppettoProject.getExperiments().get(0));
 		
 		Thread.sleep(90000);		
-	}
-
-	@Override
-	public void simulationDone(IExperiment experiment, List<URL> results) throws GeppettoExecutionException {
-		int resultsSize = results.size();
-		Assert.assertEquals(4, resultsSize);
-	}
-
-	@Override
-	public void simulationFailed(String errorMessage, Exception e, IExperiment experiment) {		
 	}
 }
