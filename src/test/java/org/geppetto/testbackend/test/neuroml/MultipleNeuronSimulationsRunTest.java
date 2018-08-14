@@ -37,12 +37,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SimulationRunTest 
+public class MultipleNeuronSimulationsRunTest 
 {	
 	private static GeppettoManager manager = new GeppettoManager(Scope.CONNECTION);
 	private static IGeppettoProject geppettoProject;
 	
-	private static Log logger = LogFactory.getLog(SimulationRunTest.class);
+	private static Log logger = LogFactory.getLog(MultipleNeuronSimulationsRunTest.class);
 
 	/**
 	 * @throws java.lang.Exception
@@ -116,7 +116,7 @@ public class SimulationRunTest
 	@Test
 	public void test03LoadProject() throws IOException, GeppettoInitializationException, GeppettoExecutionException, GeppettoAccessException
 	{
-		InputStreamReader inputStreamReader = new InputStreamReader(GeppettoManagerNeuroMLTest.class.getResourceAsStream("/simulationNeuronTest/GEPPETTO.json"));
+		InputStreamReader inputStreamReader = new InputStreamReader(GeppettoManagerNeuroMLTest.class.getResourceAsStream("/multipleSimulationNeuronTest/GEPPETTO.json"));
 		geppettoProject = DataManagerHelper.getDataManager().getProjectFromJson(TestUtilities.getGson(), inputStreamReader, null);
 		manager.loadProject("1", geppettoProject);
 
@@ -126,16 +126,43 @@ public class SimulationRunTest
 	public void test04ExperimentNeuronRun() throws GeppettoExecutionException, GeppettoAccessException, InterruptedException
 	{			
 		List<? extends IExperiment> status = manager.checkExperimentsStatus("1", geppettoProject);
-		Assert.assertEquals(1, status.size());
-		Assert.assertEquals(ExperimentStatus.DESIGN, status.get(0).getStatus());
+		Assert.assertEquals(5, status.size());
+		Assert.assertEquals(ExperimentStatus.DESIGN, status.get(0).getStatus());  //test design status on experiment
+		Assert.assertEquals(ExperimentStatus.DESIGN, status.get(1).getStatus());  //test design status on experiment
+		Assert.assertEquals(ExperimentStatus.DESIGN, status.get(2).getStatus());  //test design status on experiment
+		Assert.assertEquals(ExperimentStatus.DESIGN, status.get(3).getStatus());  //test design status on experiment
+		Assert.assertEquals(ExperimentStatus.DESIGN, status.get(4).getStatus());  //test design status on experiment
 		
-		manager.runExperiment("1", geppettoProject.getExperiments().get(0));
+		Assert.assertEquals(0, status.get(0).getSimulationResults().size());  //test empty experiment results list pre-running
+		Assert.assertEquals(0, status.get(1).getSimulationResults().size());  //test empty experiment results list pre-running
+		Assert.assertEquals(0, status.get(2).getSimulationResults().size());  //test empty experiment results list pre-running
+		Assert.assertEquals(0, status.get(3).getSimulationResults().size());  //test empty experiment results list pre-running
+		Assert.assertEquals(0, status.get(4).getSimulationResults().size());  //test empty experiment results list pre-running
 		
-		Thread.sleep(90000);
+		manager.runExperiment("1",geppettoProject.getExperiments().get(0));
+		manager.runExperiment("1",geppettoProject.getExperiments().get(1));
+		manager.runExperiment("1",geppettoProject.getExperiments().get(2));
+		manager.runExperiment("1",geppettoProject.getExperiments().get(3));
+		manager.runExperiment("1",geppettoProject.getExperiments().get(4));
 		
+		Thread.sleep(150000);
+		
+		status = manager.checkExperimentsStatus("5", geppettoProject);
+		if(status.get(0).getStatus() != ExperimentStatus.COMPLETED) {
+			Thread.sleep(30000);
+		}
 		status = manager.checkExperimentsStatus("1", geppettoProject);
-		logger.info("Simulatio done");
-		Assert.assertEquals(1, status.size());
-		Assert.assertEquals(ExperimentStatus.COMPLETED, status.get(0).getStatus());
+		Assert.assertEquals(5, status.size());  
+		Assert.assertEquals(ExperimentStatus.COMPLETED, status.get(0).getStatus());  //test completion of experiment run
+		Assert.assertEquals(ExperimentStatus.COMPLETED, status.get(1).getStatus());  //test completion of experiment run
+		Assert.assertEquals(ExperimentStatus.COMPLETED, status.get(2).getStatus());  //test completion of experiment run
+		Assert.assertEquals(ExperimentStatus.COMPLETED, status.get(3).getStatus());  //test completion of experiment run
+		Assert.assertEquals(ExperimentStatus.COMPLETED, status.get(4).getStatus());  //test completion of experiment run
+
+		Assert.assertEquals(2, status.get(0).getSimulationResults().size());  //test experiment simulation list results
+		Assert.assertEquals(2, status.get(1).getSimulationResults().size());  //test experiment simulation list results
+		Assert.assertEquals(2, status.get(2).getSimulationResults().size());  //test experiment simulation list results
+		Assert.assertEquals(2, status.get(3).getSimulationResults().size());  //test experiment simulation list results
+		Assert.assertEquals(2, status.get(4).getSimulationResults().size());  //test experiment simulation list results
 	}
 }
