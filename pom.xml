@@ -44,6 +44,11 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.geppetto</groupId>
+			<artifactId>simulator.external</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>io.takari.junit</groupId>
 			<artifactId>takari-cpsuite</artifactId>
 			<version>1.2.7</version>
