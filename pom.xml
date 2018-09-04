@@ -5,7 +5,7 @@
 	<groupId>org.geppetto</groupId>
 	<artifactId>testbackend</artifactId>
 	<name>Geppetto Test Backend Bundle</name>
-	<version>0.3.8</version>
+	<version>0.4.1</version>
 	<packaging>bundle</packaging>
 	<properties>
 		<spring.version>4.2.4.RELEASE</spring.version>
@@ -35,17 +35,17 @@
 		</dependency>
 		<dependency>
 			<groupId>org.geppetto</groupId>
+			<artifactId>model</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geppetto</groupId>
 			<artifactId>model.swc</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.geppetto</groupId>
 			<artifactId>simulator.external</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.geppetto</groupId>
-			<artifactId>persistence</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -58,8 +58,22 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
+		<dependency>
+			<groupId>org.lemsml</groupId>
+			<artifactId>jlems</artifactId>
+			<version>0.9.9.0</version>
+		</dependency>
 	</dependencies>
 	<repositories>
+		<repository>
+			<id>org.geppetto-mvn-repo</id>
+			<url>https://raw.github.com/openworm/org.geppetto.maven/mvn-repo</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+
 		<repository>
 			<id>com.springsource.repository.bundles.release</id>
 			<name>SpringSource Enterprise Bundle Repository - SpringSource Releases</name>
