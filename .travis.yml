@@ -54,3 +54,7 @@ install:
 - cd org.geppetto.model.swc
 - mvn -quiet -Dmaven.test.skip=true install
 - cd ..
+- git clone https://github.com/openworm/org.geppetto.persistence.git -b development
+- cd org.geppetto.persistence
+- mvn -quiet -Dmaven.test.skip=true install
+- cd ..
