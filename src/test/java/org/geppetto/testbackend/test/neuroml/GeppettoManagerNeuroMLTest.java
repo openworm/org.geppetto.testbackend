@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.geppetto.core.beans.SimulatorConfig;
 import org.geppetto.core.common.GeppettoAccessException;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
@@ -85,13 +86,40 @@ public class GeppettoManagerNeuroMLTest
 	public static void setUp() throws Exception
 	{
 		GenericWebApplicationContext context = new GenericWebApplicationContext();
+		
+		//needed to have newly created config beans available at time of services creation
+		context.refresh();
+		
+		String neuron_home = System.getenv("NEURON_HOME");
+		if (!(new File(neuron_home+"/nrniv")).exists())
+		{
+			neuron_home = System.getenv("NEURON_HOME")+"/bin/";
+			if (!(new File(neuron_home+"/nrniv")).exists())
+			{
+				throw new GeppettoExecutionException("Please set the environment variable NEURON_HOME to point to your local install of NEURON 7.4");
+			}
+		}
+
+		//Create configuration beans used by neuron and scidash services
+		BeanDefinition neuronConfiguration = new RootBeanDefinition(SimulatorConfig.class);
+		BeanDefinition neuronExternalConfig = new RootBeanDefinition(ExternalSimulatorConfig.class);
+
+		//register config beans with spring context
+		context.registerBeanDefinition("neuronExternalSimulatorConfig", neuronExternalConfig);
+		context.registerBeanDefinition("neuronSimulatorConfig", neuronConfiguration);
+
+		//retrieve config beans from context and set properties 
+		((ExternalSimulatorConfig)context.getBean("neuronExternalSimulatorConfig")).setSimulatorPath(neuron_home);
+		((SimulatorConfig)context.getBean("neuronSimulatorConfig")).setSimulatorID("neuronSimulator");
+		((SimulatorConfig)context.getBean("neuronSimulatorConfig")).setSimulatorID("neuronSimulator");
+		
 		BeanDefinition neuroMLModelInterpreterBeanDefinition = new RootBeanDefinition(NeuroMLModelInterpreterService.class);
 		neuroMLModelInterpreterBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
 		BeanDefinition lemsModelInterpreterBeanDefinition = new RootBeanDefinition(LEMSModelInterpreterService.class);
 		lemsModelInterpreterBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
 		BeanDefinition conversionServiceBeanDefinition = new RootBeanDefinition(LEMSConversionService.class);
 		conversionServiceBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
-		BeanDefinition neuronSimulatorServiceBeanDefinition = new RootBeanDefinition(NeuronSimulatorService.class);
+		BeanDefinition neuronSimulatorServiceBeanDefinition = new RootBeanDefinition(NeuronSimulatorService.class,2,false);
 		neuronSimulatorServiceBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_SINGLETON);
 		context.registerBeanDefinition("neuroMLModelInterpreter", neuroMLModelInterpreterBeanDefinition);
 		context.registerBeanDefinition("scopedTarget.neuroMLModelInterpreter", neuroMLModelInterpreterBeanDefinition);
@@ -117,8 +145,6 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertTrue(retrievedContext.getBean("scopedTarget.lemsConversion") instanceof LEMSConversionService);
 		Assert.assertNotNull(retrievedContext.getBean("scopedTarget.neuronSimulator"));
 		Assert.assertTrue(retrievedContext.getBean("scopedTarget.neuronSimulator") instanceof NeuronSimulatorService);
-
-		((NeuronSimulatorService) retrievedContext.getBean("scopedTarget.neuronSimulator")).setNeuronExternalSimulatorConfig(externalConfig);
 
 		DataManagerHelper.setDataManager(new DefaultGeppettoDataManager());
 	}
