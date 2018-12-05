@@ -526,7 +526,7 @@ public class GeppettoManagerNeuroMLTest
 		Assert.assertNotNull(ac.getSimulatorConfiguration());
 		manager.runExperiment("1", addedExperiment);
 		Assert.assertEquals(3, addedExperiment.getAspectConfigurations().get(0).getWatchedVariables().size());
-		Thread.sleep(40000);
+		Thread.sleep(120000);
 	}
 
 	/**
