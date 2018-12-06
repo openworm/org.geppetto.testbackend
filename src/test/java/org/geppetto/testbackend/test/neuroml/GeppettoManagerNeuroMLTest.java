@@ -699,7 +699,7 @@ public class GeppettoManagerNeuroMLTest
 		geppettoRecording.openConnection().connect();
 		URL rawRecording = manager.downloadResults("mediumNet(network_ACnet2)", ResultsFormat.RAW, addedExperiment, geppettoProject);
 		rawRecording.openConnection().connect();
-		Assert.assertTrue(rawRecording.getPath().endsWith("experiment/1/rawRecording.zip"));
+		Assert.assertTrue(rawRecording.getPath().endsWith("rawRecording.zip"));
 	}
 
 	/**
