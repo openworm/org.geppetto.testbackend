@@ -62,6 +62,7 @@ public class MultipleNeuronSimulationsRunTest
 	{
 		context = new GenericWebApplicationContext();
 
+		context.refresh();
 		String neuron_home = System.getenv("NEURON_HOME");
 		if (!(new File(neuron_home+"/nrniv")).exists())
 		{
@@ -85,16 +86,13 @@ public class MultipleNeuronSimulationsRunTest
 		((SimulatorConfig)context.getBean("neuronSimulatorConfig")).setSimulatorID("neuronSimulator");
 		((SimulatorConfig)context.getBean("neuronSimulatorConfig")).setSimulatorID("neuronSimulator");
 
-		//needed to have newly created config beans available at time of services creation
-		context.refresh();
-		
 		BeanDefinition neuroMLModelInterpreterBeanDefinition = new RootBeanDefinition(NeuroMLModelInterpreterService.class);
 		neuroMLModelInterpreterBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
 		BeanDefinition lemsModelInterpreterBeanDefinition = new RootBeanDefinition(LEMSModelInterpreterService.class);
 		lemsModelInterpreterBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
 		BeanDefinition conversionServiceBeanDefinition = new RootBeanDefinition(LEMSConversionService.class);
 		conversionServiceBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
-		BeanDefinition neuronSimulatorServiceBeanDefinition = new RootBeanDefinition(NeuronSimulatorService.class,2);
+		BeanDefinition neuronSimulatorServiceBeanDefinition = new RootBeanDefinition(NeuronSimulatorService.class,2,false);
 		neuronSimulatorServiceBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
 		
 		context.registerBeanDefinition("neuroMLModelInterpreter", neuroMLModelInterpreterBeanDefinition);
@@ -181,11 +179,11 @@ public class MultipleNeuronSimulationsRunTest
 		manager.runExperiment("1",geppettoProject.getExperiments().get(3));
 		manager.runExperiment("1",geppettoProject.getExperiments().get(4));
 		
-		Thread.sleep(150000);
+		Thread.sleep(90000);
 		
 		status = manager.checkExperimentsStatus("5", geppettoProject);
-		if(status.get(0).getStatus() != ExperimentStatus.COMPLETED) {
-			Thread.sleep(30000);
+		if(status.get(4).getStatus() != ExperimentStatus.COMPLETED) {
+			Thread.sleep(60000);
 		}
 		status = manager.checkExperimentsStatus("1", geppettoProject);
 		Assert.assertEquals(5, status.size());  

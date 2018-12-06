@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.beans.PathConfiguration;
+import org.geppetto.core.beans.SimulatorConfig;
 import org.geppetto.core.common.GeppettoAccessException;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.common.GeppettoInitializationException;
@@ -33,6 +34,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -54,11 +56,40 @@ public class NeuronSimulationRunTest
 	public static void setUp() throws Exception
 	{
 		GenericWebApplicationContext context = new GenericWebApplicationContext();
-		BeanDefinition neuroMLModelInterpreterBeanDefinition = new RootBeanDefinition(NeuroMLModelInterpreterService.class);
-		BeanDefinition lemsModelInterpreterBeanDefinition = new RootBeanDefinition(LEMSModelInterpreterService.class);
-		BeanDefinition conversionServiceBeanDefinition = new RootBeanDefinition(LEMSConversionService.class);
-		BeanDefinition neuronSimulatorServiceBeanDefinition = new RootBeanDefinition(NeuronSimulatorService.class);
+		context.refresh();
+
+		String neuron_home = System.getenv("NEURON_HOME");
+		if (!(new File(neuron_home+"/nrniv")).exists())
+		{
+			neuron_home = System.getenv("NEURON_HOME")+"/bin/";
+			if (!(new File(neuron_home+"/nrniv")).exists())
+			{
+				throw new GeppettoExecutionException("Please set the environment variable NEURON_HOME to point to your local install of NEURON 7.4");
+			}
+		}
+
+		//Create configuration beans used by neuron service
+		BeanDefinition neuronConfiguration = new RootBeanDefinition(SimulatorConfig.class);
+		BeanDefinition neuronExternalConfig = new RootBeanDefinition(ExternalSimulatorConfig.class);
+
+		//register config beans with spring context
+		context.registerBeanDefinition("neuronExternalSimulatorConfig", neuronExternalConfig);
+		context.registerBeanDefinition("neuronSimulatorConfig", neuronConfiguration);
+
+		//retrieve config beans from context and set properties 
+		((ExternalSimulatorConfig)context.getBean("neuronExternalSimulatorConfig")).setSimulatorPath(neuron_home);
+		((SimulatorConfig)context.getBean("neuronSimulatorConfig")).setSimulatorID("neuronSimulator");
+		((SimulatorConfig)context.getBean("neuronSimulatorConfig")).setSimulatorID("neuronSimulator");
 		
+		BeanDefinition neuroMLModelInterpreterBeanDefinition = new RootBeanDefinition(NeuroMLModelInterpreterService.class);
+		neuroMLModelInterpreterBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
+		BeanDefinition lemsModelInterpreterBeanDefinition = new RootBeanDefinition(LEMSModelInterpreterService.class);
+		lemsModelInterpreterBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
+		BeanDefinition conversionServiceBeanDefinition = new RootBeanDefinition(LEMSConversionService.class);
+		conversionServiceBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
+		BeanDefinition neuronSimulatorServiceBeanDefinition = new RootBeanDefinition(NeuronSimulatorService.class,2,false);
+		neuronSimulatorServiceBeanDefinition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
+
 		context.registerBeanDefinition("neuroMLModelInterpreter", neuroMLModelInterpreterBeanDefinition);
 		context.registerBeanDefinition("scopedTarget.neuroMLModelInterpreter", neuroMLModelInterpreterBeanDefinition);
 		context.registerBeanDefinition("lemsModelInterpreter", lemsModelInterpreterBeanDefinition);
@@ -68,9 +99,6 @@ public class NeuronSimulationRunTest
 		context.registerBeanDefinition("neuronSimulator", neuronSimulatorServiceBeanDefinition);
 		context.registerBeanDefinition("scopedTarget.neuronSimulator", neuronSimulatorServiceBeanDefinition);
 
-		ExternalSimulatorConfig externalConfig = new ExternalSimulatorConfig();
-		externalConfig.setSimulatorPath(System.getenv("NEURON_HOME"));
-		
 		ContextRefreshedEvent event = new ContextRefreshedEvent(context);
 		ApplicationListenerBean listener = new ApplicationListenerBean();
 		listener.onApplicationEvent(event);
@@ -83,9 +111,7 @@ public class NeuronSimulationRunTest
 		Assert.assertTrue(retrievedContext.getBean("scopedTarget.lemsConversion") instanceof LEMSConversionService);
 		Assert.assertNotNull(retrievedContext.getBean("scopedTarget.neuronSimulator"));
 		Assert.assertTrue(retrievedContext.getBean("scopedTarget.neuronSimulator") instanceof NeuronSimulatorService);
-		
-		((NeuronSimulatorService)retrievedContext.getBean("scopedTarget.neuronSimulator")).setNeuronExternalSimulatorConfig(externalConfig);
-		
+				
 		DataManagerHelper.setDataManager(new DefaultGeppettoDataManager());
 	}
 	
