@@ -25,6 +25,7 @@ import org.geppetto.core.simulator.ExternalSimulatorConfig;
 import org.geppetto.model.neuroml.services.LEMSConversionService;
 import org.geppetto.model.neuroml.services.LEMSModelInterpreterService;
 import org.geppetto.model.neuroml.services.NeuroMLModelInterpreterService;
+import org.geppetto.simulation.GeppettoManagerConfiguration;
 import org.geppetto.simulation.manager.GeppettoManager;
 import org.geppetto.simulator.external.services.NeuronSimulatorService;
 import org.junit.Assert;
@@ -47,7 +48,7 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MultipleNeuronSimulationsRunTest 
 {	
-	private static GeppettoManager manager = new GeppettoManager(Scope.CONNECTION);
+	private static GeppettoManager manager;
 	private static IGeppettoProject geppettoProject;
 	
 	private static Log logger = LogFactory.getLog(MultipleNeuronSimulationsRunTest.class);
@@ -119,6 +120,10 @@ public class MultipleNeuronSimulationsRunTest
 		Assert.assertTrue(retrievedContext.getBean("scopedTarget.neuronSimulator") instanceof NeuronSimulatorService);
 				
 		DataManagerHelper.setDataManager(new DefaultGeppettoDataManager());
+		
+		GeppettoManagerConfiguration geppettoManagerConfiguration = new GeppettoManagerConfiguration();
+		geppettoManagerConfiguration.setAllowVolatileProjectsSimulation(true);
+		manager = new GeppettoManager(Scope.CONNECTION, geppettoManagerConfiguration);
 	}
 	
 	/**
