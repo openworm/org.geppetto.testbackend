@@ -1,6 +1,10 @@
-language: java
-jdk:
-  - oraclejdk8
+language: node_js
+os: linux
+sudo: required
+dist: trusty
+group: deprecated-2017Q4
+node_js:
+  - "7"
 env:
   matrix:
   - NEURON_HOME=$TRAVIS_BUILD_DIR/nrn-7.4/x86_64/bin/
