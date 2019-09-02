@@ -32,7 +32,6 @@ install:
 - sudo apt-get install python-tk
 - sudo pip install matplotlib
 
-- java -version
 # Install jNeuroML
 - svn checkout svn://svn.code.sf.net/p/neuroml/code/jNeuroMLJar
 - export JNML_HOME=$PWD/jNeuroMLJar
@@ -63,5 +62,5 @@ install:
 - cd ..
 - git clone https://github.com/openworm/org.geppetto.persistence.git -b development
 - cd org.geppetto.persistence
-- mvn clean install -DskipTests=true
+- mvn -quiet -Dmaven.test.skip=true install
 - cd ..
