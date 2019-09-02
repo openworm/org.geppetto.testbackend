@@ -1,4 +1,6 @@
 language: java
+jdk:
+  - oraclejdk8
 env:
   matrix:
   - NEURON_HOME=$TRAVIS_BUILD_DIR/nrn-7.4/x86_64/bin/
