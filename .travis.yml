@@ -7,7 +7,13 @@ env:
   - NEURON_HOME=$TRAVIS_BUILD_DIR/nrn-7.4/x86_64/bin/
   global:
     secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
+before_install:
+- sudo apt-get update
+- sudo apt-get install python3
+- sudo apt-get install python3-pip
 install:
+- alias python=python3
+- alias pip=pip3
 # Install NEURON
 - wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
 - tar xzvf nrn-7.4.tar.gz
