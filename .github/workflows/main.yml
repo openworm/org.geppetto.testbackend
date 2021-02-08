@@ -28,5 +28,5 @@ jobs:
         with:
           java-version: '9.0.4'
           architecture: x64
-      - name: Build with Maven
+      - name: Maven Install
         run: mvn install
