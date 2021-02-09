@@ -25,8 +25,6 @@ jobs:
         repository:  openworm/org.geppetto.model.git
         path : ./org.geppetto.model  
     - name : Build org.geppetto.model
-      with:
-        path : ./org.geppetto.model
       run : mvn -e clean install 
     
     - name : Checkout org.geppetto.core
@@ -35,8 +33,6 @@ jobs:
         repository:  openworm/org.geppetto.core.git
         path : ./org.geppetto.core
     - name : Build org.geppetto.core
-      with:
-        path : ./org.geppetto.core
       run : mvn -e clean install
     
     - name : Checkout org.geppetto.simulation
@@ -45,8 +41,6 @@ jobs:
         repository:  openworm/org.geppetto.simulation.git
         path : ./org.geppetto.simulation  
     - name : Build org.geppetto.simulation
-      with:
-        path : ./org.geppetto.simulation
       run : mvn -e clean install
     
     - name : Checkout org.geppetto.model.neuroml
@@ -55,8 +49,6 @@ jobs:
         repository:  openworm/org.geppetto.model.neuroml.git
         path : ./org.geppetto.model.neuroml 
     - name : Build org.geppetto.model.neuroml
-      with:
-        path : ./org.geppetto.model.neuroml
       run : mvn -e clean install
     
     - name : Checkout org.geppetto.simulator.external
@@ -65,8 +57,6 @@ jobs:
         repository:  openworm/org.simulator.external.git
         path : ./org.geppetto.simulator.external  
     - name : Build org.geppetto.simulator.external
-      with:
-        path : ./org.geppetto.simulator.external
       run : mvn -e clean install
     
     - name : Checkout org.geppetto.model.swc
@@ -75,8 +65,6 @@ jobs:
         repository:  openworm/org.model.swc.git
         path : ./org.geppetto.model.swc
     - name : Build org.geppetto.model.swc
-      with:
-        path : ./org.geppetto.model.swc
       run : mvn -e clean install
     
     - name : Checkout org.geppetto.persistence
@@ -85,8 +73,6 @@ jobs:
         repository:  openworm/org.persistence.git
         path : ./org.geppetto.persistence  
     - name : Build org.geppetto.persistence
-      with:
-        path : ./org.geppetto.persistence
       run : mvn -e clean install
     
     - name: Set up JDK 1.8
