@@ -19,10 +19,11 @@ jobs:
         
     - name : Install Neuron
       run : |
+        apt install libx11-dev git bison flex automake libtool libxext-dev libncurses-dev python3-dev xfonts-100dpi cython3 libopenmpi-dev python3-scipy make zlib1g-dev
         wget https://neuron.yale.edu/ftp/neuron/versions/v7.7/nrn-7.7.tar.gz
         tar xzvf nrn-7.7.tar.gz
         cd nrn-7.7
-        ./configure --prefix `pwd` --without-iv --with-nrnpython
+        ./configure --prefix `pwd` --without-iv --with-nrnpython=python3
         make -j
         make install -j
         cd src/nrnpython
