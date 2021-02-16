@@ -16,14 +16,36 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    - name: Install dependencies
+        
+    - name : Install Neuron
+      run : |
+        wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
+        tar xzvf nrn-7.4.tar.gz
+        cd nrn-7.4
+        ./configure --prefix `pwd` --without-iv --with-nrnpython
+        make 
+        make install
+        cd src/nrnpython
+        sudo python setup.py install
+        cd ../../..
+
+    - name : Install jNeuroML
+      run : |
+        svn checkout svn://svn.code.sf.net/p/neuroml/code/jNeuroMLJar
+        export JNML_HOME=$PWD/jNeuroMLJar
+              
+    - name: Install python-tk
+      run: apt-get install python-tk
+      
+    - name: Install PIP Dependencies
       run: python -m pip install --upgrade pip netpyne numpy scipy lxml libneuroml pyneuroml matplotlib
     
     - name : Checkout org.geppetto.model
       uses : actions/checkout@development
       with : 
         repository:  openworm/org.geppetto.model.git
-        path : ./org.geppetto.model  
+        path : ./org.geppetto.model
+        ref: development  
     - name : Build org.geppetto.model
       with:
         path : ./org.geppetto.model
@@ -34,6 +56,7 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.core.git
         path : ./org.geppetto.core
+        ref: development
     - name : Build org.geppetto.core
       with:
         path : ./org.geppetto.core
@@ -43,7 +66,8 @@ jobs:
       uses : actions/checkout@development
       with : 
         repository:  openworm/org.geppetto.simulation.git
-        path : ./org.geppetto.simulation  
+        path : ./org.geppetto.simulation
+        ref: development  
     - name : Build org.geppetto.simulation
       with:
         path : ./org.geppetto.simulation
@@ -53,7 +77,8 @@ jobs:
       uses : actions/checkout@development
       with : 
         repository:  openworm/org.geppetto.model.neuroml.git
-        path : ./org.geppetto.model.neuroml 
+        path : ./org.geppetto.model.neuroml
+        ref: development 
     - name : Build org.geppetto.model.neuroml
       with:
         path : ./org.geppetto.model.neuroml
@@ -63,7 +88,8 @@ jobs:
       uses : actions/checkout@development
       with : 
         repository:  openworm/org.simulator.external.git
-        path : ./org.geppetto.simulator.external  
+        path : ./org.geppetto.simulator.external
+        ref: development  
     - name : Build org.geppetto.simulator.external
       with:
         path : ./org.geppetto.simulator.external
@@ -74,6 +100,7 @@ jobs:
       with : 
         repository:  openworm/org.model.swc.git
         path : ./org.geppetto.model.swc
+        ref: development
     - name : Build org.geppetto.model.swc
       with:
         path : ./org.geppetto.model.swc
@@ -83,7 +110,8 @@ jobs:
       uses : actions/checkout@development
       with : 
         repository:  openworm/org.persistence.git
-        path : ./org.geppetto.persistence  
+        path : ./org.geppetto.persistence
+        ref: development  
     - name : Build org.geppetto.persistence
       with:
         path : ./org.geppetto.persistence
