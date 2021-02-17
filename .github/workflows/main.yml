@@ -47,9 +47,10 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.model.git
         path : ./org.geppetto.model
-        ref: ${{ github.ref }}
+        ref: development
     - name : Build org.geppetto.model
       run : |
+        git checkout -b ${{ github.ref }}
         cd ./org.geppetto.model
         mvn -e clean install
         cd ..
@@ -59,9 +60,10 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.core.git
         path : ./org.geppetto.core
-        ref: ${{ github.ref }}
+        ref: development
     - name : Build org.geppetto.core
       run : |
+        git checkout -b ${{ github.ref }}
         cd ./org.geppetto.core
         mvn -e clean install
         cd ..
@@ -71,9 +73,10 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.simulation.git
         path : ./org.geppetto.simulation
-        ref: ${{ github.ref }}  
+        ref: development  
     - name : Build org.geppetto.simulation
       run : |
+        git checkout -b ${{ github.ref }}
         cd ./org.geppetto.simulation
         mvn -e clean install
         cd ..
@@ -83,9 +86,10 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.model.neuroml.git
         path : ./org.geppetto.model.neuroml
-        ref: ${{ github.ref }} 
+        ref: development 
     - name : Build org.geppetto.model.neuroml
       run : |
+        git checkout -b ${{ github.ref }}
         cd ./org.geppetto.model.neuroml
         mvn -e clean install
         cd ..
@@ -95,9 +99,10 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.simulator.external.git
         path : ./org.geppetto.simulator.external
-        ref: ${{ github.ref }}  
+        ref: development  
     - name : Build org.geppetto.simulator.external
       run : |
+        git checkout -b ${{ github.ref }}
         cd ./org.geppetto.simulator.external
         mvn -e clean install
         cd ..
@@ -107,9 +112,10 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.model.swc.git
         path : ./org.geppetto.model.swc
-        ref: ${{ github.ref }}
+        ref: development
     - name : Build org.geppetto.model.swc
       run : |
+        git checkout -b ${{ github.ref }}
         cd ./org.geppetto.model.swc
         mvn -e clean install
         cd ..
@@ -119,9 +125,10 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.persistence.git
         path : ./org.geppetto.persistence
-        ref: ${{ github.ref }}  
+        ref: development  
     - name : Build org.geppetto.persistence
       run : |
+        git checkout -b ${{ github.ref }}
         cd ./org.geppetto.persistence
         mvn -e clean install
         cd ..
