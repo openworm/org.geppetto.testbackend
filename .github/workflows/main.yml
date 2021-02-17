@@ -32,7 +32,7 @@ jobs:
         cd src/nrnpython
         sudo python3 setup.py install
         cd ../../..
-        export NEURON_HOME=$PWD/nrn-7.4/x86_64/bin/
+        export NEURON_HOME=$PWD/nrn-7.7/x86_64/bin/
 
     - name : Install jNeuroML
       run : |
