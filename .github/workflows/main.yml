@@ -34,7 +34,7 @@ jobs:
         cd src/nrnpython
         sudo python3 setup.py install
         cd ../../..
-        export NEURON_HOME=$PWD/nrn-7.7/x86_64/bin/
+        echo "::set-env name=NEURON_HOME::$PWD/nrn-7.7/x86_64/bin/"
 
     - name : Install jNeuroML
       run : |
@@ -109,6 +109,7 @@ jobs:
       run : |
         cd ./org.geppetto.simulator.external
         git checkout ${{ steps.git_branch.outputs.branch }} || git checkout development
+        export NEURON_HOME=${{ env.NEURON_HOME }}
         mvn -e clean install
         cd ..
     
