@@ -47,7 +47,7 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.model.git
         path : ./org.geppetto.model
-        ref: ${GITHUB_REF##*/}
+        ref: ${{ github.ref }}
     - name : Build org.geppetto.model
       run : |
         cd ./org.geppetto.model
@@ -59,7 +59,7 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.core.git
         path : ./org.geppetto.core
-        ref: ${GITHUB_REF##*/}
+        ref: ${{ github.ref }}
     - name : Build org.geppetto.core
       run : |
         cd ./org.geppetto.core
@@ -71,7 +71,7 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.simulation.git
         path : ./org.geppetto.simulation
-        ref: ${GITHUB_REF##*/}  
+        ref: ${{ github.ref }}  
     - name : Build org.geppetto.simulation
       run : |
         cd ./org.geppetto.simulation
@@ -83,7 +83,7 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.model.neuroml.git
         path : ./org.geppetto.model.neuroml
-        ref: ${GITHUB_REF##*/} 
+        ref: ${{ github.ref }} 
     - name : Build org.geppetto.model.neuroml
       run : |
         cd ./org.geppetto.model.neuroml
@@ -95,7 +95,7 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.simulator.external.git
         path : ./org.geppetto.simulator.external
-        ref: ${GITHUB_REF##*/}  
+        ref: ${{ github.ref }}  
     - name : Build org.geppetto.simulator.external
       run : |
         cd ./org.geppetto.simulator.external
@@ -107,7 +107,7 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.model.swc.git
         path : ./org.geppetto.model.swc
-        ref: ${GITHUB_REF##*/}
+        ref: ${{ github.ref }}
     - name : Build org.geppetto.model.swc
       run : |
         cd ./org.geppetto.model.swc
@@ -119,7 +119,7 @@ jobs:
       with : 
         repository:  openworm/org.geppetto.persistence.git
         path : ./org.geppetto.persistence
-        ref: ${GITHUB_REF##*/}  
+        ref: ${{ github.ref }}  
     - name : Build org.geppetto.persistence
       run : |
         cd ./org.geppetto.persistence
