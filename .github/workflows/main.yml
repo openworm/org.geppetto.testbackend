@@ -144,5 +144,7 @@ jobs:
         with:
           java-version: 1.8
     
-      - name: Build with maven
-        run: mvn -e clean install
+      - name: Build testbackend
+        run: |
+          cd ..
+          mvn -e clean install
