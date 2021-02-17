@@ -50,9 +50,9 @@ jobs:
         ref: development
     - name : Build org.geppetto.model
       run : |
+        cd ./org.geppetto.model
         git fetch origin
         git branch -r --contains ${{ github.ref }}
-        cd ./org.geppetto.model
         mvn -e clean install
         cd ..
         
@@ -64,9 +64,9 @@ jobs:
         ref: development
     - name : Build org.geppetto.core
       run : |
+        cd ./org.geppetto.core
         git fetch origin
         git branch -r --contains ${{ github.ref }}
-        cd ./org.geppetto.core
         mvn -e clean install
         cd ..
     
@@ -78,9 +78,9 @@ jobs:
         ref: development  
     - name : Build org.geppetto.simulation
       run : |
+        cd ./org.geppetto.simulation
         git fetch origin
         git branch -r --contains ${{ github.ref }}
-        cd ./org.geppetto.simulation
         mvn -e clean install
         cd ..
     
@@ -92,9 +92,9 @@ jobs:
         ref: development 
     - name : Build org.geppetto.model.neuroml
       run : |
+        cd ./org.geppetto.model.neuroml
         git fetch origin
         git branch -r --contains ${{ github.ref }}
-        cd ./org.geppetto.model.neuroml
         mvn -e clean install
         cd ..
     
@@ -106,9 +106,9 @@ jobs:
         ref: development  
     - name : Build org.geppetto.simulator.external
       run : |
+        cd ./org.geppetto.simulator.external
         git fetch origin
         git branch -r --contains ${{ github.ref }}
-        cd ./org.geppetto.simulator.external
         mvn -e clean install
         cd ..
     
@@ -120,9 +120,9 @@ jobs:
         ref: development
     - name : Build org.geppetto.model.swc
       run : |
+        cd ./org.geppetto.model.swc
         git fetch origin
         git branch -r --contains ${{ github.ref }}
-        cd ./org.geppetto.model.swc
         mvn -e clean install
         cd ..
     
@@ -134,9 +134,9 @@ jobs:
         ref: development  
     - name : Build org.geppetto.persistence
       run : |
+        cd ./org.geppetto.persistence
         git fetch origin
         git branch -r --contains ${{ github.ref }}
-        cd ./org.geppetto.persistence
         mvn -e clean install
         cd ..
     
