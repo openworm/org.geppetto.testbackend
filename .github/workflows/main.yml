@@ -140,3 +140,8 @@ jobs:
           git checkout ${{ steps.git_branch.outputs.branch }} || git checkout development
           mvn -e clean install
           cd ..
+       
+      - name : Build testbackend
+        run : |
+          mvn -e clean install
+          cd ..
